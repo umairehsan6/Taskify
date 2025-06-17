@@ -1,0 +1,55 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none sticky-top p-3 shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="#">Tâskify.</a>
+        <div class="d-flex align-items-center order-lg-3">
+            <div class="icons me-3" style="padding:0; font-size:1.5rem; color: #333;">
+                <i class="fa fa-bell"></i>
+            </div>
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasSidebar"
+                    aria-controls="offcanvasSidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- offcanvas sidebar toggle for small screens -->
+<div class="offcanvas offcanvas-start bg-dark text-white"
+     tabindex="-1" id="offcanvasSidebar"
+     aria-labelledby="offcanvasSidebarLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title fw-bold" id="offcanvasSidebarLabel">Tâskify.</h5>
+        <button type="button" class="btn-close btn-close-white"
+                data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-flex flex-column">
+        <nav class="w-100">
+            <a href="{% url 'new_employee_dashboard' %}" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-chart-line"></i> Dashboard
+            </a>
+            <a href="{% url 'employee_statistics' %}" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-chart-pie"></i> Statistics
+            </a>
+            <a href="{% url 'employee_profile' %}" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-users"></i> Your Profile
+            </a>
+            <a href="{% url 'employee_company_profile' %}" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-users"></i> About Company
+            </a>
+            <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-inbox"></i> Inbox
+            </a>
+            <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2">
+                <i class="fa fa-cog"></i> Settings
+            </a>
+        </nav>
+        <a href="{% url 'logout' %}"
+           class="logout mt-auto d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none">
+            <i class="fa fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>

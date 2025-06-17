@@ -1,0 +1,232 @@
+{% include 'header.html' %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Company Profile</h2>
+        {% if user_role == 'admin' %}
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editCompanyModal">
+            <i class="fas fa-edit"></i> Edit Company Details
+        </button>
+        {% endif %}
+    </div>
+
+    <div class="row">
+        <!-- Company Logo and Basic Info -->
+        <div class="col-md-4 mb-4">
+            <div class="glass-card h-100">
+                <div class="card-body text-center">
+                    {% if company.company_logo %}
+                        <img src="{{ company.company_logo.url }}" alt="{{ company.company_name }}" class="img-fluid rounded-circle mb-3" style="max-width: 200px; height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-light mb-3 mx-auto" style="width: 200px; height: 200px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-building fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <h3 class="mb-3">{{ company.company_name|default:"Company Name" }}</h3>
+                    <!-- Social Media Links -->
+                    {% if company.company_social_media_links %}
+                    <div class="mt-4">
+                        <h5 class="mb-3"><i class="fas fa-share-alt me-2"></i>Connect With Us</h5>
+                        <div class="d-flex flex-wrap gap-4 justify-content-center">
+                            {% for platform, link in company.company_social_media_links.items %}
+                                {% if link %}
+                                <a href="{{ link }}" target="_blank" class="text-decoration-none" title="{{ platform|title }}">
+                                    <i class="fab fa-{{ platform }} fa-2x text-primary"></i>
+                                </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Description -->
+        <div class="col-md-8 mb-4">
+            <div class="glass-card h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">About Us</h4>
+                    <p class="mb-4">{{ company.company_description|default:"No description available." }}</p>
+                    
+                    <div class="row text-center">
+                        {% if company.company_phone %}
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-phone me-2"></i>Phone</h5>
+                            <p class="mb-0">{{ company.company_phone }}</p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_email %}
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-envelope me-2"></i>Email</h5>
+                            <p class="mb-0"><a href="mailto:{{ company.company_email }}" class="text-decoration-none">{{ company.company_email }}</a></p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_website %}
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-globe me-2"></i>Website</h5>
+                            <p class="mb-0"><a href="{{ company.company_website }}" target="_blank" class="text-decoration-none">{{ company.company_website }}</a></p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_address %}
+                        <div class="col-md-6 mb-3">
+                            <h5><i class="fas fa-map-marker-alt me-2"></i>Address</h5>
+                            <p class="mb-0">{{ company.company_address }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Company Modal -->
+{% if user_role == 'admin' %}
+<div class="modal fade" id="editCompanyModal" tabindex="-1" aria-labelledby="editCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCompanyModalLabel">Edit Company Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'about_company' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <!-- Basic Information -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Name*</label>
+                            <input type="text" class="form-control" name="company_name" value="{{ company.company_name }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Company Logo</label>
+                            <input type="file" class="form-control" name="company_logo" accept="image/*" id="company_logo">
+                            {% if company.company_logo %}
+                                <div class="mt-2">
+                                    <small class="text-muted">Current logo:</small><br>
+                                    <img src="{{ company.company_logo.url }}" alt="Current Logo" class="img-thumbnail mt-1" style="max-height: 50px;">
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Company Description</label>
+                            <textarea class="form-control" name="company_description" rows="3">{{ company.company_description }}</textarea>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" name="company_email" value="{{ company.company_email }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-control" name="company_phone" value="{{ company.company_phone }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Website</label>
+                            <input type="url" class="form-control" name="company_website" value="{{ company.company_website }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Founded Date</label>
+                            <input type="date" class="form-control" name="company_founded_date" value="{{ company.company_founded_date|date:'Y-m-d' }}">
+                        </div>
+
+                        <!-- Address -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Address</label>
+                            <textarea class="form-control" name="company_address" rows="2">{{ company.company_address }}</textarea>
+                        </div>
+
+                        <!-- Social Media Links -->
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Social Media Links</label>
+                            <div class="social-media-inputs">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="social_platform[]" value="facebook" readonly>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="url" class="form-control" name="social_url[]" placeholder="Facebook URL" value="{{ company.company_social_media_links.facebook|default:'' }}">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="social_platform[]" value="twitter" readonly>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="url" class="form-control" name="social_url[]" placeholder="Twitter URL" value="{{ company.company_social_media_links.twitter|default:'' }}">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="social_platform[]" value="linkedin" readonly>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="url" class="form-control" name="social_url[]" placeholder="LinkedIn URL" value="{{ company.company_social_media_links.linkedin|default:'' }}">
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="social_platform[]" value="instagram" readonly>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <input type="url" class="form-control" name="social_url[]" placeholder="Instagram URL" value="{{ company.company_social_media_links.instagram|default:'' }}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('#editCompanyModal form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Create social media links object
+        const platforms = form.querySelectorAll('input[name="social_platform[]"]');
+        const urls = form.querySelectorAll('input[name="social_url[]"]');
+        const socialLinks = {};
+        
+        platforms.forEach((platform, index) => {
+            if (urls[index].value) {
+                socialLinks[platform.value] = urls[index].value;
+            }
+        });
+        
+        // Add social links to form data
+        const formData = new FormData(form);
+        formData.append('company_social_media_links', JSON.stringify(socialLinks));
+        
+        // Submit form
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                window.location.reload();
+            }
+        });
+    });
+});
+</script>
+{% endif %}
+
+{% include 'footer.html' %}
+
+{% include 'footer.html' %}

@@ -1,0 +1,197 @@
+{% include 'header.html' %}
+
+<div class="glass-card">
+    <h3 class="text-center mb-4">Dashboard Settings</h3>
+    
+    <!-- Office Hours Section -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4>Office Hours</h4>
+            <p>DEBUG: {{ user_role }}</p>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addOfficeHoursModal">
+                Add Working Days
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Break Start</th>
+                        <th>Break End</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for office_hour in office_hours %}
+                    <tr>
+                        <td>{{ office_hour.get_day_display }}</td>
+                        <td>{{ office_hour.start_time|time:"g:i A" }}</td>
+                        <td>{{ office_hour.end_time|time:"g:i A" }}</td>
+                        <td>{{ office_hour.break_start_time|time:"g:i A"|default:"-" }}</td>
+                        <td>{{ office_hour.break_end_time|time:"g:i A"|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if office_hour.is_working_day %}bg-success{% else %}bg-danger{% endif %} rounded-pill">
+                                {% if office_hour.is_working_day %}Working Day{% else %}Non-working Day{% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" 
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#editOfficeHoursModal"
+                                    data-day="{{ office_hour.day }}"
+                                    data-start-time="{{ office_hour.start_time|time:'H:i' }}"
+                                    data-end-time="{{ office_hour.end_time|time:'H:i' }}"
+                                    data-break-start="{{ office_hour.break_start_time|time:'H:i'|default:'' }}"
+                                    data-break-end="{{ office_hour.break_end_time|time:'H:i'|default:'' }}"
+                                    data-is-working="{{ office_hour.is_working_day }}">
+                                Edit
+                            </button>
+                            <form method="POST" action="{% url 'delete_office_hours' %}" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="day" value="{{ office_hour.day }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                        onclick="return confirm('Are you sure you want to delete office hours for {{ office_hour.get_day_display }}?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No office hours configured yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Office Hours Modal -->
+<div class="modal fade" id="addOfficeHoursModal" tabindex="-1" aria-labelledby="addOfficeHoursModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOfficeHoursModalLabel">Add Working Day</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'add_office_hours' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="day" class="form-label">Day</label>
+                        <select class="form-select" id="day" name="day" required>
+                            {% for value, label in days_of_week %}
+                            <option value="{{ value }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="start_time" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="start_time" name="start_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="end_time" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="end_time" name="end_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="break_start_time" class="form-label">Break Start Time</label>
+                        <input type="time" class="form-control" id="break_start_time" name="break_start_time">
+                    </div>
+                    <div class="mb-3">
+                        <label for="break_end_time" class="form-label">Break End Time</label>
+                        <input type="time" class="form-control" id="break_end_time" name="break_end_time">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="is_working_day" name="is_working_day" checked>
+                            <label class="form-check-label" for="is_working_day">
+                                Working Day
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Office Hours Modal -->
+<div class="modal fade" id="editOfficeHoursModal" tabindex="-1" aria-labelledby="editOfficeHoursModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editOfficeHoursModalLabel">Edit Working Day</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'edit_office_hours' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="edit_day" name="day">
+                    <div class="mb-3">
+                        <label for="edit_start_time" class="form-label">Start Time</label>
+                        <input type="time" class="form-control" id="edit_start_time" name="start_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_end_time" class="form-label">End Time</label>
+                        <input type="time" class="form-control" id="edit_end_time" name="end_time" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_break_start_time" class="form-label">Break Start Time</label>
+                        <input type="time" class="form-control" id="edit_break_start_time" name="break_start_time">
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_break_end_time" class="form-label">Break End Time</label>
+                        <input type="time" class="form-control" id="edit_break_end_time" name="break_end_time">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="edit_is_working_day" name="is_working_day">
+                            <label class="form-check-label" for="edit_is_working_day">
+                                Working Day
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle edit modal data population
+    const editModal = document.getElementById('editOfficeHoursModal');
+    editModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const day = button.getAttribute('data-day');
+        const startTime = button.getAttribute('data-start-time');
+        const endTime = button.getAttribute('data-end-time');
+        const breakStart = button.getAttribute('data-break-start');
+        const breakEnd = button.getAttribute('data-break-end');
+        const isWorking = button.getAttribute('data-is-working') === 'True';
+
+        document.getElementById('edit_day').value = day;
+        document.getElementById('edit_start_time').value = startTime;
+        document.getElementById('edit_end_time').value = endTime;
+        document.getElementById('edit_break_start_time').value = breakStart;
+        document.getElementById('edit_break_end_time').value = breakEnd;
+        document.getElementById('edit_is_working_day').checked = isWorking;
+    });
+});
+</script>
+
+{% include 'footer.html' %}

@@ -1,0 +1,250 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    width: 100vw;
+    font-family: 'Jost', sans-serif;
+    /* Ensure body takes at least full height */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Input field styling */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+    border-color: #8a63d2;
+    box-shadow: 0 0 8px rgba(138, 99, 210, 0.5);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.register-bg {
+    background: radial-gradient(ellipse at center, #4a4a4a 0%, #1a1a1a 70%);
+    min-height: 100vh; /* Minimum height */
+    height: 100%; /* Allow it to grow if content pushes it */
+    width: 100vw;
+    display: flex;
+    align-items: center; /* Vertically center the container */
+    justify-content: center; /* Horizontally center the container */
+    padding: 30px 15px; /* Adjusted padding for all screen sizes */
+    box-sizing: border-box;
+    flex-grow: 1; /* Allow background to take available space if body uses flex */
+}
+
+.signup-container {
+    width: 100%;
+    max-width: 550px;
+    background-color: rgba(50, 50, 50, 0.6);
+    border-radius: 15px;
+    overflow: hidden; 
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 1.5s ease-in-out;
+    color: white;
+    padding: 35px 40px 35px 40px; /* Adjusted padding for all screen sizes */
+    /* Added max-height relative to viewport height, with scroll for overflow */
+    max-height: 90vh; /* Limit height to 90% of viewport */
+    overflow-y: auto; /* Add scrollbar ONLY if content exceeds max-height */
+}
+/* Style scrollbar for webkit browsers (optional) */
+.signup-container::-webkit-scrollbar {
+    width: 6px;
+}
+.signup-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+}
+.signup-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+
+.signup-container h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 30px;
+    text-align: center;
+    color: #ffffff;
+}
+
+label {
+    font-weight: 500;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 8px;
+    color: #cccccc;
+}
+
+/* style.css */
+
+/* ... (previous CSS rules) ... */
+
+.custom-select {
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 15px;
+    border-radius: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    outline: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 20px;
+    padding-right: 40px;
+}
+
+.custom-select:focus {
+    border-color: #8a63d2;
+    box-shadow: 0 0 8px rgba(138, 99, 210, 0.5);
+}
+
+.custom-select option {
+    background-color: #2a2a2a;
+    color: white;
+}
+
+/* ... (input::placeholder, input:focus rules) ... */
+
+.signup-button {
+    background-color: #8a63d2;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-sizing: border-box; /* Add this line */
+}
+
+/* ... (rest of the CSS rules) ... */
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+input:focus {
+    border-color: #8a63d2;
+    box-shadow: 0 0 8px rgba(138, 99, 210, 0.5);
+}
+
+
+
+.signup-button:hover {
+    background-color: #7955b8;
+    transform: scale(1.02);
+}
+
+.register-link {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: #cccccc;
+}
+
+/* Added rule to remove margin below the paragraph */
+.register-link p {
+    margin-bottom: 0;
+}
+
+.register-link a {
+    color: #a086d3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link a:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.popup-message {
+    color: #ff6b6b;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.form-row {
+     margin-left: -10px;
+     margin-right: -10px;
+}
+.form-row > .col-md-6 {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Simplified media query */
+@media (max-width: 600px) {
+    .register-bg {
+        padding: 20px 15px;
+    }
+    .signup-container {
+        padding: 30px 25px;
+         max-width: 95%; /* Allow container to take more width on small screens */
+         max-height: 95vh; /* Adjust max height for smaller screens */
+    }
+     .signup-container h1 {
+        font-size: 24px;
+     }
+     /* Stack form fields */
+     .form-row > .col-md-6 {
+         flex: 0 0 100%;
+         max-width: 100%;
+         padding-left: 0;
+         padding-right: 0;
+     }
+     .form-row {
+         margin-left: 0;
+         margin-right: 0;
+     }
+}
+ /* Adjustments for very short screens */
+@media (max-height: 650px) {
+    .register-bg {
+         align-items: flex-start; /* Align to top if screen is very short */
+         padding-top: 30px;
+         padding-bottom: 30px;
+    }
+    .signup-container {
+         max-height: none; /* Remove max-height limit if screen is short */
+         margin-top: 0;
+         overflow-y: auto; /* Ensure scroll still works if needed */
+    }
+}

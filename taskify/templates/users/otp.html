@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+  <div class="register-bg">
+    <div class="signup-container">
+      <h1>OTP VERIFICATION</h1>
+
+      {% if messages %}
+        {% for message in messages %}
+          <div class="popup-message" style="color: green;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+      {% if message %}
+        <div class="popup-message">{{ message }}</div>
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="form-group"> 
+            <label for="otp">OTP</label>
+            <input type="text" id="otp" name="otp" placeholder="Enter otp" required />
+        </div>
+        <button type="submit" class="signup-button">Verify OTP</button>
+        </form>
+    </div>
+  </div>
+  </body>
+</html>

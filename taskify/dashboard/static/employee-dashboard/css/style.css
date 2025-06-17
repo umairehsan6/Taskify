@@ -1,0 +1,911 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: rgb(255, 255, 255);
+    overflow-x: hidden;
+}
+
+/* Sidebar Wrapper - controls visibility of the entire sidebar */
+.sidebar-wrapper {
+    height: 100vh;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 30px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    flex-shrink: 0;
+}
+
+/* Actual Sidebar styling */
+.sidebar {
+    height: 100%;
+    width: 100%;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar .logo {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.sidebar nav a,
+.sidebar .logout {
+    width: 100%;
+    text-align: left;
+    padding: 12px 0;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-decoration: none;
+    transition: transform 0.3s ease; 
+}
+
+.sidebar nav a:hover,
+.sidebar .logout:hover {
+    background: none; 
+    transform: scale(1.1); 
+}
+
+.sidebar .logout {
+    margin-top: auto;
+}
+
+/* Header & Greeting */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.greeting-card {
+    flex: 1;
+    padding-top: 25px; 
+    padding-bottom: 25px;
+    padding-left: 25px; 
+    padding-right: 0; 
+    border-radius: 24px;
+    background-color: rgba(141, 141, 141, 0.15);
+    height: auto;
+    min-height: 150px;
+    position: relative; 
+    overflow: hidden;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.greeting-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/memphis-mini.png');
+    opacity: 0.05;
+}
+
+.greeting-card h2 {
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+/* Greeting Text */
+.greeting-text {
+    flex-shrink: 0;
+    width: 50%; 
+    padding-right: 24px;
+    box-sizing: border-box;
+}
+
+/* Greeting Image and Overlay */
+.greeting-image {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 50%; 
+    border-radius: 0 24px 24px 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.greeting-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0; 
+}
+.greeting-image .image-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 0 24px 24px 0; 
+    z-index: 1;
+}
+
+/* Create Task Button */
+.btn-primary {
+    background-color: transparent;
+    border: 2px solid #121212;
+    color: #121212;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-primary:hover {
+    background-color: #121212;
+    color: white;
+    border-color: #121212;
+}
+
+.btn-primary i {
+    font-size: 1.1rem;
+    color: inherit;
+}
+
+/* Override Bootstrap's default blue hover state */
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary:hover {
+    background-color: #121212 ;
+    border-color: #121212 ;
+    color: white ;
+    box-shadow: none ;
+}
+
+.icons{
+    display: flex;
+    gap: 10px; /* Adjusted spacing between icons */
+    color: black;
+    padding: 0;
+    font-size: 28.8px; /* Match the size from the screenshot */
+    justify-content: flex-end;
+}
+
+.create-task-btn .text-block {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    text-align: center;
+    flex-grow: 1; 
+    justify-content: center; 
+}
+
+.create-task-btn .text-block .title {
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.create-task-btn .text-block .subtitle {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.7);
+}
+
+.create-task-btn .plus-icon {
+    width: 36px;
+    height: 36px;
+    background-color: transparent; 
+    border: 1px solid white; 
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff; 
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.create-task-btn .plus-icon:hover {
+    background-color: white;
+    color: black;
+}
+
+/* Default Card Style */
+.card {
+    border: none;
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+    background-color: rgba(141, 141, 141, 0.15);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/black-linen.png');
+    opacity: 0.05;
+    pointer-events: none;
+}
+
+/* Custom Card Overrides */
+.stats-card {
+    background-color: #fff !important; /* Pure white */
+    box-shadow: 0 44px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-card {
+    background-color: #fff !important;
+    box-shadow: 0 44px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Task Items & Project Summary Cards */
+.task-card,
+.project-summary-card {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("../images/cardimg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: none;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    position: relative;
+    color: white; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.ongoing-task-item { 
+    background-color: rgba(141, 141, 141, 0.15); 
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+    border: none;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: auto; 
+}
+
+.task-card h6,
+.task-card p,
+.project-summary-card h6,
+.project-summary-card p {
+    color: white !important; 
+}
+
+.ongoing-task-item h6,
+.ongoing-task-item p {
+    color: #333 !important; 
+}
+
+/* Set consistent margin-bottom for paragraph */
+.project-summary-card p,
+.task-card p,
+.ongoing-task-item p {
+    margin-bottom: 1rem;
+}
+
+
+/* Project card buttons styling */
+.project-card-buttons {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0 10px;
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.project-card-buttons .btn,
+.modal-footer .btn { 
+    border-radius: 25px;
+    border: 1px solid white;
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: transparent;
+}
+
+.project-card-buttons .btn:hover,
+.modal-footer .btn:hover {
+    background-color: white;
+    color: black;
+}
+
+/* New button style for task actions with icons and text on hover */
+.task-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; 
+    height: 40px; 
+    border-radius: 25px;
+    border: 1px solid #333;
+    color: #333;
+    background-color: transparent;
+    padding: 0; 
+    overflow: hidden; 
+    transition: width 0.3s ease, background-color 0.3s, color 0.3s;
+    white-space: nowrap;
+    font-size: 0.85rem; 
+    text-decoration: none; 
+    cursor: pointer;
+    position: relative;
+}
+
+.task-action-btn i {
+    margin: 0; 
+    font-size: 1rem;
+    transition: margin-right 0.3s ease;
+}
+
+.task-action-btn span {
+    display: inline-block;
+    max-width: 0; 
+    opacity: 0; 
+    transition: max-width 0.3s ease, opacity 0.3s ease;
+    vertical-align: middle;
+}
+
+.task-action-btn:hover {
+    width: auto; /* Allow width to expand */
+    padding: 0 15px; /* Add padding on hover */
+    background-color: #333;
+    color: white;
+}
+
+.task-action-btn:hover i {
+    margin-right: 8px; /* Add margin to icon on hover */
+}
+
+.task-action-btn:hover span {
+    max-width: 150px; /* Show text on hover, adjust as needed */
+    opacity: 1; /* Make text visible */
+}
+
+/* Buttons for ongoing-task-item (light grey background) */
+.ongoing-task-item .task-card-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 0; /* Remove padding from container, handled by buttons */
+    flex-wrap: wrap;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Priority Light Styling */
+.priority-light {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2); /* Small border for definition */
+}
+
+.task-card[data-priority="high"] .priority-light,
+.ongoing-task-item[data-priority="high"] .priority-light {
+    background-color: #dc3545; /* Red */
+}
+
+.task-card[data-priority="medium"] .priority-light,
+.ongoing-task-item[data-priority="medium"] .priority-light {
+    background-color: #ffc107; /* Yellow */
+}
+
+.task-card[data-priority="low"] .priority-light,
+.ongoing-task-item[data-priority="low"] .priority-light {
+    background-color: #28a745; /* Green */
+}
+
+
+.calendar-day,
+.calendar-date {
+    padding: 8px 0;
+    font-weight: 500;
+}
+
+.calendar-highlight {
+    background-color: #000;
+    color: #fff;
+    border-radius: 999px;
+    padding: 4px 12px;
+    display: inline-block;
+}
+
+/* Custom button style for black background */
+.btn-black {
+    background-color: black;
+    color: white;
+    border: none;
+}
+.btn-black:hover {
+    background-color: #333;
+    color: white;
+}
+
+/* Blur effect for modal */
+.main-dashboard-content.blurred {
+    filter: blur(5px);
+    transition: filter 0.3s ease-out;
+}
+.stats-card .form-select {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+.stats-card .form-select option {
+    background-color: #fff;
+    color: #333;
+}
+
+/* Task meta info (time spent, due date) */
+.task-meta {
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+.ongoing-task-item .task-meta {
+    color: #555; 
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 991px) {
+    
+    .sidebar-wrapper {
+        display: none;
+    }
+
+    /* Greeting Card Padding and Width */
+    .greeting-card {
+        padding: 24px !important; 
+        margin-right: 0; 
+        width: 100%;
+        flex-direction: column; 
+        align-items: flex-start;
+        height: auto;
+        min-height: unset; 
+    }
+
+    /* Hide the greeting image and its contents on mobile/tablet */
+    .greeting-image {
+        display: none;
+    }
+
+    /* Make greeting text take full width */
+    .greeting-card .greeting-text {
+        width: 100% !important;
+        padding-right: 0;
+        margin-bottom: 1rem; 
+    }
+
+    /* Adjust header row for mobile */
+    .header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 20px; 
+    }
+
+    /* Toolbar adjustments for mobile */
+    .toolbar {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-top: 20px; 
+    }
+    .toolbar .icons {
+        display: none; /* Hide icons next to Create Task button on mobile */
+        padding: 0;
+        margin-bottom: 0;
+    }
+    .create-task-btn {
+        width: 100%; 
+        max-width: none;
+    }
+
+    /* Statistic Summary Cards - Remove bottom margin */
+    .row.text-center.mb-4 .col-md-4 {
+        margin-bottom: 0 !important; 
+    }
+    .row.text-center.mb-4 .col-md-4 .card {
+        margin-bottom: 1rem; 
+    }
+
+    /* Responsive adjustments for project card buttons on small screens */
+    .project-card-buttons,
+    .task-card-buttons,
+    .ongoing-task-item .task-card-buttons { 
+        justify-content: center; 
+        padding: 0 5px; 
+    }
+    .project-card-buttons .btn,
+    .task-card-buttons .btn,
+    .ongoing-task-item .task-card-buttons .btn { 
+        flex-grow: 1; 
+        max-width: 100%; 
+        margin-bottom: 5px; 
+    }
+}
+
+/* Responsive adjustments for project card buttons on tablet screens */
+@media (min-width: 768px) and (max-width: 991px) {
+    .project-card-buttons,
+    .task-card-buttons,
+    .ongoing-task-item .task-card-buttons {
+        justify-content: center; 
+        padding: 0 8px;
+    }
+    .project-card-buttons .btn,
+    .task-card-buttons .btn,
+    .ongoing-task-item .task-card-buttons .btn { 
+        flex-grow: 0;
+    }
+}
+
+
+/* Show mobile navbar only on small screens */
+.navbar.d-lg-none {
+    display: none;
+}
+@media (max-width: 991px) {
+    .navbar.d-lg-none {
+        display: flex !important; 
+    }
+}
+
+/* Offcanvas sidebar styling */
+.offcanvas-header {
+    background-color: #121212;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.offcanvas-header .btn-close {
+    filter: invert(1); 
+}
+.offcanvas-body .nav-link {
+    color: #fff;
+}
+.offcanvas-body .nav-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Buttons specifically within task-card-buttons */
+.task-card-buttons2 .task-action-btn {
+    border: 1px solid white;
+    color: white;
+    
+}
+
+.task-card-buttons2 .task-action-btn:hover {
+    background-color: white;
+    color: black; 
+    border-color: white; 
+}
+.active-bulb {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: transparent;
+    position: relative;
+    margin-right: 8px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    display: none;
+}
+
+.active-bulb::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.194);
+    transition: all 0.3s ease;
+    display: none;
+}
+
+.active-bulb.active {
+    background-color: #585858;
+    border-color: #585858;
+    transform: scale(1.1);
+    display: block;
+}
+
+.active-bulb.active::before {
+    box-shadow: 0 0 8px 2px rgba(255, 255, 255, 0.5);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(255, 255, 255, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.0);
+    }
+}
+
+.profile-picture-small {
+    width: 28.8px !important;
+    height: 28.8px !important;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+.profile-link:hover .profile-picture-small {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+.profile-link {
+    text-decoration: none;
+    display: flex !important; /* Make the link a flex container to center its content */
+    align-items: center !important; /* Center content vertically */
+    justify-content: center !important; /* Center content horizontally for the default icon */
+    line-height: 1 !important; /* Ensure consistent line-height */
+}
+.icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important; /* Adjusted spacing between icons */
+    color: black !important;
+    padding: 0 !important;
+    font-size: 28.8px !important; /* Match the size from the screenshot */
+    justify-content: flex-end !important;
+}
+.icons .fa {
+    font-size: 28.8px !important; /* Match the size from the screenshot */
+    line-height: 1 !important; /* Ensure consistent line-height for font icons */
+    margin: 0 !important; /* Remove any default margins */
+}
+/* Specific style for the default user icon within its rounded circle container */
+.profile-picture-small.rounded-circle.bg-light.d-flex.align-items-center.justify-content-center .fa {
+    font-size: 28.8px !important; /* Adjusted for better fit within the smaller circle, consistent with other icons */
+}
+
+
+/* Ensure the notification dot is visible */
+.task-action-btn .notification-dot {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 103 !important;
+}
+
+/* WhatsApp-like notification dot */
+.notification-dot {
+    position: absolute;
+    top: 0px;
+    right: 103px;
+    width: 18px;
+    height: 18px;
+    background-color: #ff3b30;
+    border: 2px solid #121212;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    animation: pulse 2s infinite;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 6px rgba(255, 59, 48, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
+    }
+}
+
+/* Unread message badge - more specific selector */
+.task-action-btn .unread-badge {
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    width: 12px !important;
+    height: 12px !important;
+    background-color: #ff3b30 !important;
+    border: 2px solid #121212 !important;
+    border-radius: 50% !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    pointer-events: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Override any hover effects on the badge */
+.task-action-btn:hover .unread-badge {
+    background-color: #ff3b30 !important;
+    border-color: #121212 !important;
+    transform: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Ensure parent button has relative positioning */
+.task-action-btn {
+    position: relative ;
+    overflow: visible ;
+}
+
+/* Message indicator - completely independent style */
+.message-indicator {
+    position: absolute ;
+    top: -5px ;
+    right: -5px ;
+    width: 12px ;
+    height: 12px ;
+    min-width: 12px ; /* Ensure minimum width */
+    min-height: 12px ; /* Ensure minimum height */
+    background-color: #ff3b30 ;
+    border: 2px solid #121212 ;
+    border-radius: 50% ;
+    display: block ;
+    visibility: visible ;
+    opacity: 1 ;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) ;
+    pointer-events: none ;
+    animation: none ;
+    transition: none ;
+    transform: none ;
+    box-sizing: content-box ; /* Prevent collapsing due to padding/border */
+}
+
+/* Ensure the parent div has relative positioning */
+.task-card-buttons > div {
+    position: relative ;
+    display: inline-block ;
+}
+
+/* Override any hover effects */
+.task-action-btn:hover ~ .message-indicator,
+.task-action-btn:active ~ .message-indicator,
+.task-action-btn:focus ~ .message-indicator {
+    opacity: 1 ;
+    visibility: visible ;
+    transform: none ;
+    background-color: #ff3b30;
+    border-color: #121212; 
+}
+
+/* Remove any animations */
+@keyframes none {
+    0% { transform: none; }
+    100% { transform: none; }
+}
+
+.profile-picture-small {
+    width: 28.8px;
+    height: 28.8px;
+    object-fit: cover;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+.profile-link:hover .profile-picture-small {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+.profile-link {
+    text-decoration: none;
+    display: inline-block;
+}
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjusted spacing between icons */
+    padding: 10px; /* Ensure no unwanted padding */
+}
+.icons .fa {
+    font-size: 28.8px; /* Match the size from the screenshot */
+    line-height: 1; /* Ensure consistent line-height for font icons */
+    margin: 0 !important; /* Remove any default margins */
+}
+.profile-picture-small.rounded-circle.bg-light.d-flex.align-items-center.justify-content-center .fa {
+    font-size: 1.2rem; /* Adjusted for better fit within the smaller circle */
+}
+
+/* Custom styles for aligning messages */
+.message-right {
+    margin-left: auto; /* Align Bob's message to the right */
+    max-width: 70%;
+}
+
+.message-left {
+    margin-right: auto;
+    max-width: 70%;
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4);
+    }
+    70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 6px rgba(255, 68, 68, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+    }
+}
+
+/* Make sure the button has relative positioning for the dot */
+.task-action-btn {
+    position: relative;
+}
+
+/* Message indicator styles */
+.message-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 10px;
+    height: 10px;
+    background-color: #ff4444;
+    border-radius: 50%;
+    display: none;
+    z-index: 1000;
+}
+
+.message-indicator.show {
+    display: block;
+}
+
+.position-relative {
+    position: relative;
+}
+
+/* Style for Show Tasks button with indicator */
+[data-bs-target="#projectTasksModal"] {
+    position: relative;
+}
+
+[data-bs-target="#projectTasksModal"] .message-indicator {
+    top: -8px;
+    right: -8px;
+    width: 12px;
+    height: 12px;
+    border: 2px solid #fff;
+}

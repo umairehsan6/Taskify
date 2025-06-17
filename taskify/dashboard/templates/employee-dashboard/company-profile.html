@@ -1,0 +1,85 @@
+{% extends "employee-dashboard/base.html" %}
+{% load static %}
+
+{% block title %}About Company | Taskify{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Company Profile</h2>
+    </div>
+
+    <div class="row justify-content-center">
+        <!-- Company Logo and Basic Info -->
+        <div class="col-md-8 mb-4">
+            <div class="glass-card h-100">
+                <div class="card-body text-center">
+                    {% if company.company_logo %}
+                        <img src="{{ company.company_logo.url }}" alt="{{ company.company_name }}" class="img-fluid rounded-circle mb-3" style="max-width: 200px; height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-light mb-3 mx-auto" style="width: 200px; height: 200px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-building fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    <h3 class="mb-3">{{ company.company_name|default:"Company Name" }}</h3>
+                    <!-- Social Media Links -->
+                    {% if company.company_social_media_links %}
+                    <div class="mt-4">
+                        <h5 class="mb-3"><i class="fas fa-share-alt me-2"></i>Connect With Us</h5>
+                        <div class="d-flex flex-wrap gap-4 justify-content-center">
+                            {% for platform, link in company.company_social_media_links.items %}
+                                {% if link %}
+                                <a href="{{ link }}" target="_blank" class="text-decoration-none" title="{{ platform|title }}">
+                                    <i class="fab fa-{{ platform }} fa-2x text-primary"></i>
+                                </a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Description -->
+        <div class="col-md-8 mb-4">
+            <div class="glass-card h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">About Us</h4>
+                    <p class="mb-4">{{ company.company_description|default:"No description available." }}</p>
+                    
+                    <div class="d-flex flex-wrap gap-4">
+                        {% if company.company_phone %}
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-phone me-2"></i>
+                            <span>{{ company.company_phone }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_email %}
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-envelope me-2"></i>
+                            <a href="mailto:{{ company.company_email }}" class="text-decoration-none">{{ company.company_email }}</a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_website %}
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-globe me-2"></i>
+                            <a href="{{ company.company_website }}" target="_blank" class="text-decoration-none">{{ company.company_website }}</a>
+                        </div>
+                        {% endif %}
+                        
+                        {% if company.company_address %}
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            <span>{{ company.company_address }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

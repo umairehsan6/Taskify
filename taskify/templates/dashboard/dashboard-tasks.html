@@ -1,0 +1,194 @@
+<!-- Assigned Tasks Section -->
+{%include 'header.html'%}
+
+    <div id="assignedTasksSection" class="glass-card">
+        <h3 class="text-center mb-4">Assigned Tasks</h3>
+        <div class="mb-3">
+            <label for="projectDropdown" class="form-label">Select Project</label>
+            <select id="projectDropdown" class="form-select custom-dropdown" onchange="adminFilterTasksByProject()">
+                <option value="" selected>Select a Project</option>
+                {% for project in projects %}
+                    {% if project.status == 'ongoing' %}
+                    <option value="{{ project.id }}">{{ project.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div id="tasksTableContainer" class="table-responsive d-none">
+            <table class="table">
+            <thead class="table-dark">
+                <tr>
+                <th>#</th>
+                <th>Task Name</th>
+                <th>Assigned To</th>
+                <th>Assigned From</th>
+                <th>Time Spent</th>
+                <th>Status</th>
+                <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="tasksTableBody">
+            </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- View Files Modal -->
+    <div class="modal fade" id="viewFilesModal" tabindex="-1" aria-labelledby="viewFilesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="viewFilesModalLabel">Task Files & Feedback</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- File Section -->
+              <div class="mb-3">
+                <label class="form-label">Uploaded File:</label>
+                <div id="fileDisplay">
+                  <p class="text-muted">No file uploaded</p>
+                </div>
+              </div>
+              <!-- Report Section -->
+              <div class="mb-3">
+                <label class="form-label">Report:</label>
+                <div id="reportDisplay">
+                  <p class="text-muted">No report submitted</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<script>
+function adminFilterTasksByProject() {
+    const projectId = document.getElementById('projectDropdown').value;
+    const tasksTableContainer = document.getElementById('tasksTableContainer');
+    const tasksTableBody = document.getElementById('tasksTableBody');
+
+    if (!projectId) {
+        tasksTableContainer.classList.add('d-none');
+        return;
+    }
+
+    tasksTableBody.innerHTML = '';
+    fetch("{% url 'get-tasks' %}?project_id=" + projectId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.tasks.length > 0) {
+                tasksTableContainer.classList.remove('d-none');
+                data.tasks.forEach((task, index) => {
+                    const statusClass = task.status === 'completed' ? 'bg-success' :
+                                      task.status === 'in_progress' ? 'bg-primary' :
+                                      task.status === 'on_hold' ? 'bg-warning' : 'bg-secondary';
+
+                    const actionButtons = getAdminActionButtons(task);
+
+                    const row = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${task.name}</td>
+                            <td>${task.assigned_to}</td>
+                            <td>${task.assigned_from}</td>
+                            <td>${task.time_spent || '0h 0m'}</td>
+                            <td><span class="badge ${statusClass} rounded-pill">${task.status_display}</span></td>
+                            <td>${actionButtons}</td>
+                        </tr>
+                    `;
+                    tasksTableBody.innerHTML += row;
+                });
+            } else {
+                tasksTableContainer.classList.remove('d-none');
+                tasksTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center">No tasks found for this project.</td>
+                    </tr>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching tasks:', error);
+            tasksTableContainer.classList.remove('d-none');
+            tasksTableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">Error loading tasks. Please try again.</td>
+                </tr>
+            `;
+        });
+}
+
+function getAdminActionButtons(task) {
+    let buttons = '';
+    
+    if (task.status === 'not_assigned') {
+        buttons += `
+            <form action="/approve-task/${task.id}/" method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-sm">Approve</button>
+            </form>`;
+    }
+
+    buttons += `
+        <a href="/delete-task/${task.project.id}/?task_id=${task.id}" 
+           class="btn btn-danger btn-sm" 
+           onclick="return confirm('Are you sure you want to delete this task?');">
+            Delete
+        </a>`;
+
+    if (task.status === 'completed') {
+        buttons += `
+            <button type="button"
+                    class="btn btn-outline-info btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewFilesModal"
+                    data-task-id="${task.id}"
+                    data-file-url="${task.file_url}"
+                    data-file-name="${task.file_name}"
+                    data-report-text="${task.report}">
+                View Files
+            </button>`;
+    }
+
+    return buttons;
+}
+
+// Initialize modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const viewFilesModal = document.getElementById('viewFilesModal');
+    if (viewFilesModal) {
+        viewFilesModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const taskId = button.getAttribute('data-task-id');
+            const fileUrl = button.getAttribute('data-file-url');
+            const fileName = button.getAttribute('data-file-name');
+            const reportText = button.getAttribute('data-report-text');
+
+            const fileDisplay = viewFilesModal.querySelector('#fileDisplay');
+            const reportDisplay = viewFilesModal.querySelector('#reportDisplay');
+
+            if (fileUrl && fileUrl !== '#') {
+                fileDisplay.innerHTML = `
+                    <div class="mb-2">
+                        <a href="${fileUrl}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-file"></i> ${fileName}
+                        </a>
+                    </div>`;
+            } else {
+                fileDisplay.innerHTML = '<p class="text-muted">No file uploaded</p>';
+            }
+
+            if (reportText) {
+                reportDisplay.innerHTML = `
+                    <div class="border p-3 mb-3">
+                        ${reportText}
+                    </div>`;
+            } else {
+                reportDisplay.innerHTML = '<p class="text-muted">No report submitted</p>';
+            }
+        });
+    }
+});
+</script>
+
+{%include 'footer.html'%}

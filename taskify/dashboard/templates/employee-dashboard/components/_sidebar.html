@@ -1,0 +1,26 @@
+<aside class="sidebar">
+    <div class="logo">Tâskify.</div>
+    <nav>
+        <a href="{% url 'new_employee_dashboard' %}" class="{% if active_page == 'new_employee_dashboard' %}active{% endif %} d-flex align-items-center gap-2">
+            <div class="active-bulb {% if active_page == 'new_employee_dashboard' %}active{% endif %}"></div>
+            <i class="fa fa-chart-line"></i> Dashboard
+        </a>
+        <a href="{% url 'employee_statistics' %}" class="{% if active_page == 'employee_statistics' %}active{% endif %} d-flex align-items-center gap-2">
+            <div class="active-bulb {% if active_page == 'employee_statistics' %}active{% endif %}"></div>
+            <i class="fa fa-chart-pie"></i> Statistics
+        </a>
+        <a href="{% url 'employee_profile' %}" class="d-flex align-items-center gap-2">
+                <i class="fa fa-inbox"></i> Your Profile
+        </a>
+        <a href="{% url 'employee_company_profile' %}" class="{% if active_page == 'employee_company_profile' %}active{% endif %} d-flex align-items-center gap-2">
+            <div class="active-bulb {% if active_page == 'employee_company_profile' %}active{% endif %}"></div>
+            <i class="fa fa-building"></i> About Company
+        </a>
+        <a href="#" class="d-flex align-items-center gap-2">
+            <i class="fa fa-cog"></i> Settings
+        </a>
+    </nav>
+    <a href="{% url 'logout' %}" class="logout">
+        <i class="fa fa-sign-out-alt"></i> Logout
+    </a>
+</aside>

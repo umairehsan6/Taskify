@@ -1,0 +1,304 @@
+
+body {
+  margin: 0;
+  background: linear-gradient(to bottom right, #000000, #2c2c2c);
+  font-family: 'Jost', sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  color: white;
+}
+
+.topbar {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 100%;
+  padding: 15px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.sidebar {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 250px;
+  padding: 20px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  height: calc(100% - 60px);
+  backdrop-filter: blur(10px);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 20px 0;
+}
+
+.sidebar ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2rem;
+  padding-left: 10px;
+  transition: padding-left 0.3s ease;
+  position: relative;
+}
+
+.sidebar ul li a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: #6c63ff;
+  transition: width 0.3s ease;
+}
+
+.sidebar ul li a.active::after {
+  width: 100%;
+}
+
+.sidebar ul li a:hover {
+  padding-left: 20px;
+}
+
+.sidebar ul li a:hover::after {
+  width: 100%;
+}
+
+.main-content {
+  margin-left: 250px;
+  padding: 90px 30px 30px 30px;
+  width: calc(100% - 250px);
+  height: 100%;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 30px;
+  color: white;
+  width: 100%;
+  margin: auto;
+}
+
+.table {
+  margin: auto;
+  overflow: hidden;
+  background-color: transparent;
+  color: white;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th, .table td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: transparent;
+  color: white;
+}
+
+.table th {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.table tbody tr:nth-child(odd) {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.btn-primary, .btn-danger, .btn-secondary {
+  border-radius: 50px;
+  padding: 10px 20px;
+  margin-right: 10px;
+}
+
+.btn-primary {
+  background-color: #6c63ff;
+  color: #fff;
+  border: none;
+}
+
+.btn-danger {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+}
+
+.btn-secondary {
+  background-color: #666;
+  color: #fff;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #574fd6;
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f;
+}
+
+.btn-secondary:hover {
+  background-color: #444;
+}
+
+.dropdown-menu {
+  background-color: #000;
+  border-radius: 10px;
+}
+
+.dropdown-item {
+  color: #fff;
+}
+
+.dropdown-item:hover {
+  background-color: #6c63ff;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding-top: 100px;
+    width: 100%;
+  }
+
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    padding: 10px;
+  }
+}
+
+.btn-gold {
+  background-color: #FFD700;
+  color: white;
+  border: none;
+}
+
+/* Style for transparent input field with white text and rounded corners */
+.input-group input[type="text"] {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 15px;
+  transition: background-color 0.3s ease;
+}
+
+.input-group input[type="text"]:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
+}
+.custom-dropdown {
+  background-color: #000;          /* black background */
+  color: white;                    /* white text */
+  border: 1px solid lightgrey;
+  border-radius: 50px;
+  padding: 10px 20px;
+  appearance: none;                /* removes default styling on some browsers */
+}
+
+.custom-dropdown option {
+  background-color: #000;
+  color: rgb(255, 255, 255);
+}
+
+
+/* Modal Styling */
+.modal-content {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  color: white;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-body .form-control {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 5px;
+}
+
+.modal-body .form-control:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #6c63ff;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  color: white;
+}
+
+.modal-body .form-label {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.modal-body input[type="date"] {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 5px;
+}
+
+/* Button Styling */
+.btn {
+  font-weight: 500;
+  border-radius: 5px;
+}
+
+.btn-outline-primary {
+  color: #6c63ff;
+  border: 1px solid #6c63ff;
+}
+
+.btn-outline-primary:hover {
+  background: #6c63ff;
+  color: white;
+}
+
+.btn-outline-success {
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-outline-success:hover {
+  background: #28a745;
+  color: white;
+}
+
+/* Dropdown Styling */
+#assignedTo {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 5px;
+}
+
+#assignedTo option {
+  background: #2c2c2c;
+  color: white;
+}

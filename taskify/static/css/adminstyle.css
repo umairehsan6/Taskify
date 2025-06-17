@@ -1,0 +1,80 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(to bottom right, #000000, #2c2c2c, #ffffff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Jost', sans-serif;
+    padding: 20px;
+  }
+  
+  .glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    padding: 40px;
+    width: 100%;
+    max-width: 400px;
+    color: #f1f1f1;
+  }
+  
+  .glass-card h3 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #e0e0e0;
+  }
+  
+  .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #e0e0e0;
+    border: none;
+    border-radius: 30px;
+    height: 50px;
+    padding: 0 20px;
+    font-size: 1rem;
+  }
+  
+  .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(173, 216, 230, 0.5);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+  
+  .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .btn-primary {
+    background-color: #6c63ff;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    height: 50px;
+    border-radius: 50px;
+    font-size: 1rem;
+  }
+  
+  .btn-primary:hover {
+    background-color: #574fd6;
+  }
+  
+  @media (max-width: 576px) {
+    .glass-card {
+      padding: 30px 20px;
+    }
+  
+    .form-control {
+      height: 45px;
+      font-size: 0.95rem;
+    }
+  
+    .btn-primary {
+      height: 45px;
+      font-size: 0.95rem;
+    }
+  }
+  

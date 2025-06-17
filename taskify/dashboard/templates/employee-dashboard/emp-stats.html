@@ -1,0 +1,163 @@
+{% extends "employee-dashboard/base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Home | Taskify{% endblock %}
+
+{% block content %}
+<!-- Add Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<h5 class="fw-semibold mb-3">This Week</h5>
+    <div class="row text-center mb-4">
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold" id="totalTimeToday">{{ total_time_this_week }}</h3>
+                <p class="text-secondary">Hours Worked</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold">{{ total_tasks_this_week }}</h3>
+                <p class="text-secondary">Total Tasks</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold">{{ tasks_done_this_week }}</h3>
+                <p class="text-secondary">Tasks Done</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold">{{ tasks_on_time_this_week }}</h3>
+                <p class="text-secondary">Tasks On Time</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold">{{ late_submissions }}</h3>
+                <p class="text-secondary">Late Submissions</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 mb-3">
+                <h3 class="fw-bold">{{ performance_statistics }}%</h3>
+                <p class="text-secondary">Performance</p>
+            </div>
+        </div>
+    </div>
+
+<!-- Chart Container -->
+<div>
+    <div class="card  p-3 mb-4">
+        <h5 class="fw-semibold mb-3">Expected Time vs Time Spent</h5>
+        <div style="height: 287px;">
+            <canvas id="workHoursChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Task Details Section -->
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Task Details This Week</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Task Name</th>
+                        <th>Project</th>
+                        <th>Actual Hours</th>
+                        <th>Expected Hours</th>
+                        <th>Time Difference</th>
+                        <th>Status</th>
+                        <th>Completed On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in task_details %}
+                    <tr>
+                        <td>{{ task.name }}</td>
+                        <td>{{ task.project }}</td>
+                        <td>{{ task.actual_hours }}h</td>
+                        <td>{{ task.expected_hours }}h</td>
+                        <td>
+                            <span class="{% if task.time_difference > 0 %}text-danger{% elif task.time_difference < 0 %}text-success{% else %}text-warning{% endif %}">
+                                {{ task.time_difference }}h
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge {% if task.status == 'Over Time' %}bg-danger{% elif task.status == 'Under Time' %}bg-success{% else %}bg-warning{% endif %}">
+                                {{ task.status }}
+                            </span>
+                        </td>
+                        <td>{{ task.completion_date }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center">No tasks completed this week</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Data as JSON -->
+{{ chart_data|json_script:"chart-data" }}
+
+<!-- Chart Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('workHoursChart').getContext('2d');
+    console.log('Canvas context:', ctx);
+    
+    const chartDataScript = document.getElementById('chart-data');
+    let chartData = null;
+    if (chartDataScript) {
+        try {
+            chartData = JSON.parse(chartDataScript.textContent);
+            console.log('Chart data:', chartData);
+        } catch (e) {
+            console.error('Error parsing chart data JSON:', e);
+        }
+    } else {
+        console.error('Chart data script tag not found.');
+    }
+
+    if (ctx && chartData) {
+        new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                backgroundColor: 'black',
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Hours'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Weekly Working Hours'
+                    }
+                }
+            }
+        });
+    } else if (!ctx) {
+        console.error('Could not get canvas context for chart.');
+    }
+});
+</script>
+
+{% endblock %}
