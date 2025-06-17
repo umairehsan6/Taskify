@@ -48,4 +48,3 @@ urlpatterns = [
     # path('add-task-comment/', views.add_task_comment, name='add-task-comment'),
     # path('check-unread-messages/<int:task_id>/', views.check_unread_messages, name='check-unread-messages'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#its a change
