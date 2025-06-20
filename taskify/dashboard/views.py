@@ -17,6 +17,9 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .models import ChatMessage, TaskReadStatus
+import logging
+from django.views.decorators.csrf import csrf_exempt
+logger = logging.getLogger(__name__)
 
 
 
@@ -218,12 +221,17 @@ def CreateTask(request):
                 
             )
             messages.success(request, "Task successfully created.")
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            else:
+                return redirect('new_employee_dashboard')
         except Projects.DoesNotExist:
             messages.error(request, "Project does not exist.")
         except UserDepartment.DoesNotExist:
             messages.error(request, "The selected user does not belong to the project's department.")
         except Exception as e:
             messages.error(request, f"Error creating task: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
 
         # Redirect based on user role
         if user_role == 'admin':
@@ -766,7 +774,11 @@ def new_employee_dashboard(request):
             if (not last_read_status or latest_comment.timestamp > last_read_status.last_read_at) and \
                latest_comment.user != signup_user:
                 task.has_unread_messages = True
-        print(f"Task {task.task_name} (ID: {task.id}): has_unread_messages = {task.has_unread_messages}") # Debugging line
+                logger.info(f"Task {task.id} ({task.task_name}) has unread messages for user {signup_user.id}")
+            else:
+                logger.debug(f"Task {task.id} ({task.task_name}) has no unread messages for user {signup_user.id}")
+        else:
+            logger.debug(f"Task {task.id} ({task.task_name}) has no messages")
     
     if department_tasks:
         for task in department_tasks:
@@ -783,10 +795,28 @@ def new_employee_dashboard(request):
                 if (not last_read_status or latest_comment.timestamp > last_read_status.last_read_at) and \
                    latest_comment.user != signup_user:
                     task.has_unread_messages = True
-            print(f"Department Task {task.task_name} (ID: {task.id}): has_unread_messages = {task.has_unread_messages}") # Debugging line
+                    logger.info(f"Task {task.id} ({task.task_name}) has unread messages for user {signup_user.id}")
+                else:
+                    logger.debug(f"Task {task.id} ({task.task_name}) has no unread messages for user {signup_user.id}")
+            else:
+                logger.debug(f"Task {task.id} ({task.task_name}) has no messages")
     
     for project in projects:
         project.has_tasks_assigned = Tasks.objects.filter(project=project, assigned_to__user=signup_user).exists()
+        
+        # Check if any tasks in this project have unread messages
+        project.has_unread_messages = False
+        project_tasks = Tasks.objects.filter(project=project)
+        for task in project_tasks:
+            last_read_status = TaskReadStatus.objects.filter(user=signup_user, task=task).first()
+            latest_comment = ChatMessage.objects.filter(task=task).order_by('-timestamp').first()
+            
+            if latest_comment:
+                if (not last_read_status or latest_comment.timestamp > last_read_status.last_read_at) and \
+                   latest_comment.user != signup_user:
+                    project.has_unread_messages = True
+                    logger.info(f"Project {project.id} ({project.name}) has unread messages for user {signup_user.id}")
+                    break  # No need to check other tasks if we found unread messages
     
     #tasks expiring today 
     today = timezone.now().date()
@@ -1330,6 +1360,9 @@ def get_project_tasks(request, project_id):
         project = Projects.objects.get(id=project_id)
         logging.info(f"Successfully fetched project: {project.name} (ID: {project.id})")
         
+        # Get the current user
+        signup_user = SignupUser.objects.get(id=request.session['user_id'])
+        
         tasks = Tasks.objects.filter(project=project).select_related('assigned_to__user')
         logging.info(f"Found {tasks.count()} tasks for project {project.name}.")
         
@@ -1339,6 +1372,25 @@ def get_project_tasks(request, project_id):
             if task.assigned_to and task.assigned_to.user:  # Check both assigned_to and user exist
                 assigned_user = task.assigned_to.user
                 assigned_name = f"{assigned_user.first_name} {assigned_user.last_name}" if assigned_user.first_name else assigned_user.username
+            
+            # Check for unread messages
+            has_unread_messages = False
+            last_read_status = TaskReadStatus.objects.filter(user=signup_user, task=task).first()
+            latest_comment = ChatMessage.objects.filter(task=task).order_by('-timestamp').first()
+
+            if latest_comment:
+                # A message is unread if: 
+                # 1. There is no last_read_status for this user/task, OR
+                # 2. The latest comment is newer than the last_read_at timestamp, AND
+                # 3. The latest comment was NOT sent by the current user.
+                if (not last_read_status or latest_comment.timestamp > last_read_status.last_read_at) and \
+                   latest_comment.user != signup_user:
+                    has_unread_messages = True
+                    logger.info(f"Task {task.id} ({task.task_name}) has unread messages for user {signup_user.id}")
+                else:
+                    logger.debug(f"Task {task.id} ({task.task_name}) has no unread messages for user {signup_user.id}")
+            else:
+                logger.debug(f"Task {task.id} ({task.task_name}) has no messages")
             
             task_data = {
                 'id': task.id,
@@ -1351,7 +1403,8 @@ def get_project_tasks(request, project_id):
                 'file_name': task.task_file.name.split('/')[-1] if task.task_file else None,
                 'file_url': f"/dashboard/download_task_file/{task.id}/" if task.task_file else None,  # <-- ADD THIS LINE
                 'assigned_to': assigned_name,
-                'time_spent': task.get_total_time_spent()
+                'time_spent': task.get_total_time_spent(),
+                'has_unread_messages': has_unread_messages  # Add unread message status
             }
             tasks_data.append(task_data)
         
@@ -1503,3 +1556,100 @@ def get_task_comments(request, task_id):
             'error': 'Internal server error',
             'details': str(e)
         }, status=500)
+
+def check_project_unread(request, project_id):
+    """Check if a project has any unread messages for the current user"""
+    if 'user_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    try:
+        signup_user = SignupUser.objects.get(id=request.session['user_id'])
+        project = Projects.objects.get(id=project_id)
+        
+        # Check if any tasks in this project have unread messages
+        has_unread = False
+        project_tasks = Tasks.objects.filter(project=project)
+        
+        for task in project_tasks:
+            last_read_status = TaskReadStatus.objects.filter(user=signup_user, task=task).first()
+            latest_comment = ChatMessage.objects.filter(task=task).order_by('-timestamp').first()
+            
+            if latest_comment:
+                if (not last_read_status or latest_comment.timestamp > last_read_status.last_read_at) and \
+                   latest_comment.user != signup_user:
+                    has_unread = True
+                    break
+        
+        return JsonResponse({'has_unread': has_unread})
+        
+    except (Projects.DoesNotExist, SignupUser.DoesNotExist):
+        return JsonResponse({'error': 'Project or user not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+def test_project_notification(request, project_id):
+    """Test endpoint to manually trigger project notifications"""
+    if 'user_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+    
+    try:
+        from channels.layers import get_channel_layer
+        from asgiref.sync import async_to_sync
+        import json
+        
+        channel_layer = get_channel_layer()
+        user_id = request.session['user_id']
+        
+        # Send test project notification
+        async_to_sync(channel_layer.group_send)(
+            f'user_{user_id}',
+            {
+                'type': 'project_unread_notification',
+                'project_id': project_id,
+                'has_unread': True
+            }
+        )
+        
+        return JsonResponse({'success': True, 'message': f'Test notification sent for project {project_id}'})
+        
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+    
+def pending_tasks_json(request):
+    # Get the logged-in user's UserDepartment
+    from .models import UserDepartment
+    if 'user_id' not in request.session:
+        return JsonResponse({'tasks': []})
+    try:
+        user_department = UserDepartment.objects.get(user_id=request.session['user_id'])
+    except UserDepartment.DoesNotExist:
+        return JsonResponse({'tasks': []})
+
+    pending_tasks = Tasks.objects.filter(status='pending', assigned_to=user_department).order_by('-id')
+    tasks_data = []
+    for task in pending_tasks:
+        tasks_data.append({
+            'id': task.id,
+            'task_name': task.task_name,
+            'project': task.project.name if task.project else '',
+            'priority': task.get_priority_display(),
+            'status': task.get_status_display(),
+            'due_date': task.due_date.strftime('%B %d, %Y') if task.due_date else '',
+            'time_spent': task.get_total_time_spent() if hasattr(task, 'get_total_time_spent') else '0h 0m',
+            'description': task.task_description or '',
+        })
+    return JsonResponse({'tasks': tasks_data})
+
+def start_task(request, task_id):
+    if request.method == 'POST':
+        try:
+            task = Tasks.objects.get(id=task_id)
+            if task.status == 'pending':
+                task.status = 'in_progress'
+                task.save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': 'Task cannot be started from current status.'}, status=400)
+        except Tasks.DoesNotExist:
+            return JsonResponse({'error': 'Task not found.'}, status=404)
+    return JsonResponse({'error': 'Invalid request.'}, status=400)

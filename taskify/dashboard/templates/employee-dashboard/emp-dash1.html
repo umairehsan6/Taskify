@@ -105,12 +105,15 @@
                                         <a href="{% url 'update-project-status' project.id 'completed' %}" class="btn btn-outline-success">
                                             Complete Project
                                         </a>
-                                        <button class="btn btn-outline-info"
+                                        <button class="btn btn-outline-info position-relative"
                                             data-bs-toggle="modal"
                                             data-bs-target="#projectTasksModal"
                                             data-project-id="{{ project.id }}"
                                             data-project-name="{{ project.name }}">
                                             Show Tasks
+                                            {% if project.has_unread_messages %}
+                                            <span class="message-indicator" style="display: block !important;"></span>
+                                            {% endif %}
                                         </button>
                                     {% endif %}
                                 {% endif %}
@@ -250,12 +253,13 @@
                                 <button class="task-action-btn bg-dark text-white"
                                         data-bs-toggle="modal"
                                         data-bs-target="#commentsModal"
-                                        data-task-id="{{ task.id }}">
+                                        data-task-id="{{ task.id }}"
+                                        data-has-unread="{{ task.has_unread_messages|yesno:'true,false' }}">
                                     <i class="fas fa-comment-dots"></i>
                                     <span>Comments</span>
                                 </button>
                                 {% if task.has_unread_messages %}
-                                <span class="message-indicator"></span>
+                                <span class="message-indicator" style="display: block;"></span>
                                 {% endif %}
                                 </div>
                                 <button class="task-action-btn bg-dark text-white"
@@ -281,11 +285,6 @@
                         </div>
                     </div>
                 {% endfor %}
-                <div class="col-12">
-                        <div class="ongoing-task-item card p-3 align-items-center" role="alert">
-                            <p class="text-center mb-0">No Other ongoing tasks available.</p>
-                        </div>
-                </div>
             </div>
         </div>
 
@@ -339,9 +338,6 @@
                             <p class="text-center mb-0">No Other Pending Approval</p>
                         </div>
                     {% endfor %}
-                    <div class="card p-3 mb-3">
-                            <p class="text-center mb-0">No Other Pending Approval</p>
-                    </div>
                 {% else %}
                     {% for task in tasks %}
                         {% if task.status == 'not_assigned' %}
@@ -370,48 +366,50 @@
                         {% endif %}
                     {% endfor %}
                     <div class="card p-3">
-                        <p class="text-center mb-0">No Other Pending Approval</p>
+                        <p class="text-center mb-0">No Other Pending Task</p>
                     </div>
                 {% endif %}
             </div>
 
             <div class="mt-4">
                 <h5 class="fw-semibold mb-3">Pending Tasks</h5>
-                {% for task in tasks %}
-                    {% if task.status == 'pending' %}
-                        <div class="task-card card p-3 mb-3" data-priority="high">
-                            <div class="priority-light"></div>
-                            <h6 class="fw-semibold">Name: {{ task.task_name }}</h6>
-                            <p class="text-secondary">Description: {{ task.task_description|truncatewords:8 }}</p>
-                            <p>Due Date: {{ task.due_date }}</p>
-                            <p>Status: {{ task.get_status_display }}</p>
-                            <div class="task-card-buttons2 d-flex gap-2 mt-2">
-                                <form method="POST" action="{% url 'start_task_initial' task.id %}">
-                                    {% csrf_token %}    
-                                    <button class="task-action-btn">
-                                        <i class="fa fa-play-circle"></i>
-                                        <span>Start Task</span>
+                <div id="pendingTasksContainer">
+                    {% comment %} {% for task in tasks %}
+                        {% if task.status == 'pending' %}
+                            <div class="task-card card p-3 mb-3" data-priority="high">
+                                <div class="priority-light"></div>
+                                <h6 class="fw-semibold">Name: {{ task.task_name }}</h6>
+                                <p class="text-secondary">Description: {{ task.task_description|truncatewords:8 }}</p>
+                                <p>Due Date: {{ task.due_date }}</p>
+                                <p>Status: {{ task.get_status_display }}</p>
+                                <div class="task-card-buttons2 d-flex gap-2 mt-2">
+                                    <form method="POST" action="{% url 'start_task_initial' task.id %}">
+                                        {% csrf_token %}    
+                                        <button class="task-action-btn">
+                                            <i class="fa fa-play-circle"></i>
+                                            <span>Start Task</span>
+                                        </button>
+                                    </form>
+                                    <button class="task-action-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#taskDetailsModal"
+                                            data-task-name="{{ task.task_name }}"
+                                            data-task-project="{{ task.project.name }}"
+                                            data-task-priority="{{ task.get_priority_display }}"
+                                            data-task-status="{{ task.get_status_display }}"
+                                            data-task-due-date="{{ task.due_date|date:'F d, Y' }}"
+                                            data-task-time-spent="{{ task.get_total_time_spent }}"
+                                            data-task-description="{{ task.task_description }}">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span>Read More</span>
                                     </button>
-                                </form>
-                                <button class="task-action-btn"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#taskDetailsModal"
-                                        data-task-name="{{ task.task_name }}"
-                                        data-task-project="{{ task.project.name }}"
-                                        data-task-priority="{{ task.get_priority_display }}"
-                                        data-task-status="{{ task.get_status_display }}"
-                                        data-task-due-date="{{ task.due_date|date:'F d, Y' }}"
-                                        data-task-time-spent="{{ task.get_total_time_spent }}"
-                                        data-task-description="{{ task.task_description }}">
-                                    <i class="fa fa-info-circle"></i>
-                                    <span>Read More</span>
-                                </button>
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                <div class="card p-3">
-                        <p class="text-center mb-0">No Other Pending Task</p>
+                        {% endif %}
+                    {% endfor %} {% endcomment %}
+                </div>
+                <div class="card p-3" id="no-pending-tasks-message" style="display: none;">
+                    <p class="text-center mb-0">No Other Pending Task</p>
                 </div>
             </div>
         </div>
@@ -501,8 +499,11 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="{% url 'create_task' %}">
+                    <form id="createTaskForm" method="POST" action="{% url 'create_task' %}">
                         {% csrf_token %}
+                        <div id="createTaskMessage" class="alert alert-success d-none" role="alert">
+                            Task created successfully!
+                        </div>
                         <div class="mb-3">
                             <label for="project_id" class="form-label">Project</label>
                             <select class="form-select bg-dark text-white border-secondary" id="project_id" name="project_id" required>

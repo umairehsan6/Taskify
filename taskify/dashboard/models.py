@@ -270,7 +270,7 @@ class ChatMessage(models.Model):
 class TaskReadStatus(models.Model):
     user = models.ForeignKey(SignupUser, on_delete=models.CASCADE)
     task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
-    last_read_at = models.DateTimeField(auto_now=True)
+    last_read_at = models.DateTimeField()
 
     class Meta:
         unique_together = ('user', 'task') # Ensures one entry per user per task

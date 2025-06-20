@@ -19,10 +19,12 @@ urlpatterns = [
     path('update-project-status/<int:project_id>/<str:new_status>/', views.UpdateProjectStatus, name='update-project-status'),
     path('all-projects/', views.AllProjects, name='all-projects'),
     path('get-project-tasks/<int:project_id>/', views.get_project_tasks, name='get-project-tasks'),
+    path('check-project-unread/<int:project_id>/', views.check_project_unread, name='check-project-unread'),
+    path('test-project-notification/<int:project_id>/', views.test_project_notification, name='test-project-notification'),
     #Tasks
     path('create-task/', views.CreateTask, name='create_task'),
     path('update-task-status/<int:task_id>/', views.UpdateTaskStatus, name='update_task_status'),
-    path('start-task/<int:task_id>/', views.hold_task, name='start_task_initial'),
+    path('start-task/<int:task_id>/', views.start_task, name='start_task'),
     path('complete-task/<int:task_id>/', views.UpdateTaskStatus, name='complete_task'),
     path('start-working/<int:task_id>/', views.start_working, name='start_working'),
     path('stop-working/<int:task_id>/', views.stop_working, name='stop_working'),
@@ -47,4 +49,6 @@ urlpatterns = [
     path('get-task-comments/<int:task_id>/', views.get_task_comments, name='get-task-comments'),
     # path('add-task-comment/', views.add_task_comment, name='add-task-comment'),
     # path('check-unread-messages/<int:task_id>/', views.check_unread_messages, name='check-unread-messages'),
+
+    path('pending-tasks/' , views.pending_tasks_json , name ='pending-tasks')
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

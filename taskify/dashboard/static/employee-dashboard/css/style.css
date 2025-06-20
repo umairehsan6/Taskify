@@ -769,111 +769,59 @@ body {
     overflow: visible ;
 }
 
-/* Message indicator - completely independent style */
+/* Message indicator styles - Fixed for ongoing tasks */
 .message-indicator {
-    position: absolute ;
-    top: -5px ;
-    right: -5px ;
-    width: 12px ;
-    height: 12px ;
-    min-width: 12px ; /* Ensure minimum width */
-    min-height: 12px ; /* Ensure minimum height */
-    background-color: #ff3b30 ;
-    border: 2px solid #121212 ;
-    border-radius: 50% ;
-    display: block ;
-    visibility: visible ;
-    opacity: 1 ;
-
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) ;
-    pointer-events: none ;
-    animation: none ;
-    transition: none ;
-    transform: none ;
-    box-sizing: content-box ; /* Prevent collapsing due to padding/border */
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    width: 12px !important;
+    height: 12px !important;
+    min-width: 12px !important;
+    min-height: 12px !important;
+    background-color: #ff3b30 !important;
+    border: 2px solid #121212 !important;
+    border-radius: 50% !important;
+    display: none !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 9999 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    pointer-events: none !important;
+    transition: none !important;
+    transform: none !important;
 }
 
-/* Ensure the parent div has relative positioning */
-.task-card-buttons > div {
-    position: relative ;
-    display: inline-block ;
+/* Force display when explicitly set */
+.message-indicator[style*="display: block"],
+.message-indicator[style*="display:block"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
-/* Override any hover effects */
-.task-action-btn:hover ~ .message-indicator,
-.task-action-btn:active ~ .message-indicator,
-.task-action-btn:focus ~ .message-indicator {
-    opacity: 1 ;
-    visibility: visible ;
-    transform: none ;
-    background-color: #ff3b30;
-    border-color: #121212; 
+/* Remove all hover effects that might interfere */
+.task-action-btn:hover .message-indicator,
+.task-action-btn:active .message-indicator,
+.task-action-btn:focus .message-indicator,
+.position-relative:hover .message-indicator,
+.ongoing-task-item:hover .message-indicator {
+    display: inherit !important;
+    visibility: inherit !important;
+    opacity: inherit !important;
+    transform: none !important;
+    background-color: #ff3b30 !important;
+    border-color: #121212 !important;
 }
 
-/* Remove any animations */
-@keyframes none {
-    0% { transform: none; }
-    100% { transform: none; }
+/* Ensure parent containers don't interfere */
+.position-relative {
+    position: relative !important;
+    display: inline-block !important;
 }
 
-.profile-picture-small {
-    width: 28.8px;
-    height: 28.8px;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-}
-.profile-link:hover .profile-picture-small {
-    transform: scale(1.1);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-.profile-link {
-    text-decoration: none;
-    display: inline-block;
-}
-.icons {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Adjusted spacing between icons */
-    padding: 10px; /* Ensure no unwanted padding */
-}
-.icons .fa {
-    font-size: 28.8px; /* Match the size from the screenshot */
-    line-height: 1; /* Ensure consistent line-height for font icons */
-    margin: 0 !important; /* Remove any default margins */
-}
-.profile-picture-small.rounded-circle.bg-light.d-flex.align-items-center.justify-content-center .fa {
-    font-size: 1.2rem; /* Adjusted for better fit within the smaller circle */
-}
-
-/* Custom styles for aligning messages */
-.message-right {
-    margin-left: auto; /* Align Bob's message to the right */
-    max-width: 70%;
-}
-
-.message-left {
-    margin-right: auto;
-    max-width: 70%;
-}
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.4);
-    }
-    70% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 6px rgba(255, 68, 68, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
-    }
-}
-
-/* Make sure the button has relative positioning for the dot */
 .task-action-btn {
-    position: relative;
+    position: relative !important;
+    overflow: visible !important;
 }
 
 /* Message indicator styles */
@@ -895,6 +843,7 @@ body {
 
 .position-relative {
     position: relative;
+    display: inline-block;
 }
 
 /* Style for Show Tasks button with indicator */
@@ -908,4 +857,48 @@ body {
     width: 12px;
     height: 12px;
     border: 2px solid #fff;
+}
+
+/* Specific styles for project tasks modal indicators */
+#projectTasksModal .message-indicator {
+    position: absolute !important;
+    top: -5px !important;
+    right: -5px !important;
+    width: 12px !important;
+    height: 12px !important;
+    background-color: #ff3b30 !important;
+    border: 2px solid #121212 !important;
+    border-radius: 50% !important;
+    z-index: 9999 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    pointer-events: none !important;
+}
+
+#projectTasksModal .message-indicator[style*="display: block"],
+#projectTasksModal .message-indicator[style*="display:block"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Specific styles for Show Tasks button indicators */
+.btn[data-bs-target="#projectTasksModal"] .message-indicator {
+    position: absolute !important;
+    top: -8px !important;
+    right: -8px !important;
+    width: 12px !important;
+    height: 12px !important;
+    background-color: #ff3b30 !important;
+    border: 2px solid #fff !important;
+    border-radius: 50% !important;
+    z-index: 10 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    pointer-events: none !important;
+}
+
+.btn[data-bs-target="#projectTasksModal"] .message-indicator[style*="display: block"],
+.btn[data-bs-target="#projectTasksModal"] .message-indicator[style*="display:block"] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
