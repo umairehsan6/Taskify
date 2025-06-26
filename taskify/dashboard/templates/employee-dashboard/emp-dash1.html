@@ -193,105 +193,108 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-semibold mb-0">Ongoing tasks</h5>
                 </div>
-                {% for task in tasks %}
-                    {% if task.status in "in_progress on_hold" %}
-                        <div class="ongoing-task-item card p-3 mb-3" data-priority="{{ task.priority }}">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h6 class="fw-semibold mb-0">Task: {{ task.task_name }}</h6>
-                                <span class="badge 
-                                    {% if task.priority == 'high' %}bg-danger
-                                    {% elif task.priority == 'medium' %}bg-warning
-                                    {% elif task.priority == 'low' %}bg-success
-                                    {% endif %}">
-                                    {{ task.get_priority_display }}
-                                </span>
-                            </div>
-                            <p class="mb-1">Project: <strong>{{ task.project.name }}</strong></p>
-                            <p class="text-secondary mb-1">Description: 
-                                <strong>{{ task.task_description|truncatewords:15 }}</strong>
-                            </p>
-                            <p class="mb-1">Time Spent: <strong>{{ task.get_total_time_spent }}</strong></p>
-                            <p class="mb-3">Due Date: <strong>{{ task.due_date|date:'F d, Y' }}</strong></p>
-                            <p class="task-meta">Status: <strong>{{ task.get_status_display }}</strong></p>
-                            <p class="task-meta">Expected Time: <strong>{{ task.get_expected_time_display }}</strong></p>
-                            <div class="task-card-buttons d-flex gap-2 mt-2">
-                                <form method="POST" action="{% url 'complete_task' task.id %}">
-                                    {% csrf_token %}
-                                    <button class="task-action-btn bg-primary text-white">
-                                        <i class="fa fa-check-circle"></i>
-                                        <span>Complete</span>
-                                    </button>
-                                </form>
-                                {% if task.status == 'on_hold' %}
-                                    <form method="POST" action="{% url 'start_working' task.id %}">
-                                        {% csrf_token %}
-                                        <button class="task-action-btn bg-success text-white">
-                                            <i class="fa fa-play-circle"></i>
-                                            <span>Start Working</span>
-                                        </button>
-                                    </form>
-                                {% elif task.status == 'in_progress' %}
-                                    <form method="POST" action="{% url 'stop_working' task.id %}">
-                                        {% csrf_token %}
-                                        <button class="task-action-btn bg-danger text-white">
-                                            <i class="fa fa-stop-circle"></i>
-                                            <span>Stop Working</span>
-                                        </button>
-                                    </form>
-                                {% endif %}
-                                <button class="task-action-btn bg-info text-white"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#viewFilesModal"
-                                        data-task-id="{{ task.id }}"
-                                        data-file-url="{% if task.task_file %}{{ task.task_file.url }}{% else %}#{% endif %}"
-                                        data-file-name="{% if task.task_file %}{{ task.task_file.name|slice:'11:' }}{% else %}No file uploaded{% endif %}"
-                                        data-report-text="{% if task.report %}{{ task.report }}{% else %}No report submitted{% endif %}">
-                                    <i class="fa fa-upload"></i>
-                                    <span>Files & Report</span>
-                                </button>
-                                <div class="position-relative">
-                                <button class="task-action-btn bg-dark text-white"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#commentsModal"
-                                        data-task-id="{{ task.id }}"
-                                        data-has-unread="{{ task.has_unread_messages|yesno:'true,false' }}">
-                                    <i class="fas fa-comment-dots"></i>
-                                    <span>Comments</span>
-                                </button>
-                                {% if task.has_unread_messages %}
-                                <span class="message-indicator" style="display: block;"></span>
-                                {% endif %}
+                {% comment %} <div id="ongoingTasksContainer">
+                    {% for task in tasks %}
+                        {% if task.status in "in_progress on_hold" %}
+                            <div class="ongoing-task-item card p-3 mb-3" data-priority="{{ task.priority }}">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-semibold mb-0">Task: {{ task.task_name }}</h6>
+                                    <span class="badge 
+                                        {% if task.priority == 'high' %}bg-danger
+                                        {% elif task.priority == 'medium' %}bg-warning
+                                        {% elif task.priority == 'low' %}bg-success
+                                        {% endif %}">
+                                        {{ task.get_priority_display }}
+                                    </span>
                                 </div>
-                                <button class="task-action-btn bg-dark text-white"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#taskDetailsModal"
-                                        data-task-name="{{ task.task_name }}"
-                                        data-task-project="{{ task.project.name }}"
-                                        data-task-priority="{{ task.get_priority_display }}"
-                                        data-task-status="{{ task.get_status_display }}"
-                                        data-task-due-date="{{ task.due_date|date:'F d, Y' }}"
-                                        data-task-time-spent="{{ task.get_total_time_spent }}"
-                                        data-task-description="{{ task.task_description }}">
-                                    <i class="fa fa-info-circle"></i>
-                                    <span>Read More</span>
-                                </button>
+                                <p class="mb-1">Project: <strong>{{ task.project.name }}</strong></p>
+                                <p class="text-secondary mb-1">Description: 
+                                    <strong>{{ task.task_description|truncatewords:15 }}</strong>
+                                </p>
+                                <p class="mb-1">Time Spent: <strong>{{ task.get_total_time_spent }}</strong></p>
+                                <p class="mb-3">Due Date: <strong>{{ task.due_date|date:'F d, Y' }}</strong></p>
+                                <p class="task-meta">Status: <strong>{{ task.get_status_display }}</strong></p>
+                                <p class="task-meta">Expected Time: <strong>{{ task.get_expected_time_display }}</strong></p>
+                                <div class="task-card-buttons d-flex gap-2 mt-2">
+                                    <form method="POST" action="{% url 'complete_task' task.id %}" class="complete-task-form">
+                                        {% csrf_token %}
+                                        <button class="task-action-btn bg-primary text-white">
+                                            <i class="fa fa-check-circle"></i>
+                                            <span>Complete</span>
+                                        </button>
+                                    </form>
+                                    {% if task.status == 'on_hold' %}
+                                        <form method="POST" action="{% url 'start_working' task.id %}" class="start-working-form">
+                                            {% csrf_token %}
+                                            <button class="task-action-btn bg-success text-white">
+                                                <i class="fa fa-play-circle"></i>
+                                                <span>Start Working</span>
+                                            </button>
+                                        </form>
+                                    {% elif task.status == 'in_progress' %}
+                                        <form method="POST" action="{% url 'stop_working' task.id %}" class="stop-working-form">
+                                            {% csrf_token %}
+                                            <button class="task-action-btn bg-danger text-white">
+                                                <i class="fa fa-stop-circle"></i>
+                                                <span>Stop Working</span>
+                                            </button>
+                                        </form>
+                                    {% endif %}
+                                    <button class="task-action-btn bg-info text-white"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#viewFilesModal"
+                                            data-task-id="{{ task.id }}"
+                                            data-file-url="{% if task.task_file %}{{ task.task_file.url }}{% else %}#{% endif %}"
+                                            data-file-name="{% if task.task_file %}{{ task.task_file.name|slice:'11:' }}{% else %}No file uploaded{% endif %}"
+                                            data-report-text="{% if task.report %}{{ task.report }}{% else %}No report submitted{% endif %}">
+                                        <i class="fa fa-upload"></i>
+                                        <span>Files & Report</span>
+                                    </button>
+                                    <div class="position-relative">
+                                    <button class="task-action-btn bg-dark text-white"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#commentsModal"
+                                            data-task-id="{{ task.id }}"
+                                            data-has-unread="{{ task.has_unread_messages|yesno:'true,false' }}">
+                                        <i class="fas fa-comment-dots"></i>
+                                        <span>Comments</span>
+                                    </button>
+                                    {% if task.has_unread_messages %}
+                                    <span class="message-indicator" style="display: block;"></span>
+                                    {% endif %}
+                                    </div>
+                                    <button class="task-action-btn bg-dark text-white"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#taskDetailsModal"
+                                            data-task-name="{{ task.task_name }}"
+                                            data-task-project="{{ task.project.name }}"
+                                            data-task-priority="{{ task.get_priority_display }}"
+                                            data-task-status="{{ task.get_status_display }}"
+                                            data-task-due-date="{{ task.due_date|date:'F d, Y' }}"
+                                            data-task-time-spent="{{ task.get_total_time_spent }}"
+                                            data-task-description="{{ task.task_description }}">
+                                        <i class="fa fa-info-circle"></i>
+                                        <span>Read More</span>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="ongoing-task-item card p-3 align-items-center" role="alert">
+                                <p class="text-center mb-0">No ongoing tasks available.</p>
                             </div>
                         </div>
-                    {% endif %}
-                {% empty %}
-                    <div class="col-12">
-                        <div class="ongoing-task-item card p-3 align-items-center" role="alert">
-                            <p class="text-center mb-0">No ongoing tasks available.</p>
-                        </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div> {% endcomment %}
+                <div id="ongoingTasksContainer"></div>
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="mt-4">
                 <h5 class="fw-semibold mb-3">Approval Pending</h5>
-                {% if user_role in "teamlead project_manager" %}
+                {% comment %} {% if user_role in "teamlead project_manager" %}
                     {% for task in department_tasks %}
                         {% if task.status == 'not_assigned' %}
                             <div class="task-card card p-3 mb-3" data-priority="high">
@@ -368,7 +371,13 @@
                     <div class="card p-3">
                         <p class="text-center mb-0">No Other Pending Task</p>
                     </div>
-                {% endif %}
+                {% endif %} {% endcomment %}
+                <div id="approvalPendingContainer">
+                    <!-- Tasks will be loaded here dynamically -->
+                    <div class="card p-3">
+                        <p class="text-center mb-0">Loading...</p>
+                    </div>
+                </div>
             </div>
 
             <div class="mt-4">
@@ -608,7 +617,7 @@
                             </div>
                         </div>
                         <div id="uploadFileSection">
-                            <form id="uploadFileForm" method="post" action="{% url 'upload_task_file' task_id=0 %}" enctype="multipart/form-data">
+                            <form class="uploadFileForm" method="post" action="{% url 'upload_task_file' task_id=0 %}" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <input type="hidden" name="task_id" id="fileTaskId">
                                 <input type="file" name="myfile" class="form-control bg-dark text-white border-secondary mb-2" required>
@@ -624,7 +633,7 @@
                             <div class="border p-3 mb-3 report-content bg-dark"></div>
                         </div>
                         <div id="uploadReportSection">
-                            <form id="uploadReportForm" method="POST" action="{% url 'upload_task_report' task_id=0 %}" class="mt-2">
+                            <form class="uploadReportForm" method="POST" action="{% url 'upload_task_report' task_id=0 %}" class="mt-2">
                                 {% csrf_token %}
                                 <input type="hidden" name="task_id" id="reportTaskId">
                                 <textarea name="report" class="form-control bg-dark text-white border-secondary mb-2" rows="3" required placeholder="Enter your task report here..."></textarea>
@@ -637,4 +646,7 @@
         </div>
     </div>
    
+    <script>
+      window.USER_ROLE = "{{ user_role }}";
+    </script>
 {% endblock %}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isotope Masonry Gallery</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    
+    <!-- GLightbox -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
+    
+    <style>
+        body {
+            background: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+        img{
+            border:none;
+        }
+        .filter-button-group {
+            margin-bottom: 20px;
+        }
+        .filter-button-group button {
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            background: transparent;
+            font-weight: bold;
+            color: #333;
+            transition: 0.3s;
+        }
+        .filter-button-group button.active {
+            background: #007bff;
+            color: #fff;
+            border-radius: 5px;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .gallery-item {
+            width: calc(33.33% - 10px); /* Three items per row */
+            padding: 15px;
+        }
+        .gallery-item img {
+            width: 100%;
+            cursor: pointer;
+            object-fit: cover;
+        }
+        @media (max-width: 768px) {
+            .gallery-item {
+                width: calc(50% - 10px); /* Two items per row on small screens */
+            }
+        }
+        @media (max-width: 480px) {
+            .gallery-item {
+                width: 100%; /* Single column layout on extra small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mb-4">Isotope Masonry Gallery</h2>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-button-group">
+            <button class="active" data-filter="*">All</button>
+            <button data-filter=".app">App</button>
+            <button data-filter=".card2">Card</button>
+            <button data-filter=".web">Web</button>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="gallery">
+            <div class="gallery-item app">
+                <a href="masonry-portfolio-1.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-1.jpg" alt="Image 1"></a>
+            </div>
+            <div class="gallery-item card2">
+                <a href="masonry-portfolio-2.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-2.jpg" alt="Image 2"></a>
+            </div>
+            <div class="gallery-item web">
+                <a href="masonry-portfolio-3.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-3.jpg" alt="Image 3"></a>
+            </div>
+            <div class="gallery-item app">
+                <a href="masonry-portfolio-4.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-4.jpg" alt="Image 4"></a>
+            </div>
+            <div class="gallery-item card2">
+                <a href="masonry-portfolio-5.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-5.jpg" alt="Image 5"></a>
+            </div>
+            <div class="gallery-item web">
+                <a href="masonry-portfolio-6.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-6.jpg" alt="Image 6"></a>
+            </div>
+            <div class="gallery-item web">
+                <a href="masonry-portfolio-7.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-7.jpg" alt="Image 7"></a>
+            </div>
+            <div class="gallery-item web">
+                <a href="masonry-portfolio-8.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-8.jpg" alt="Image 8"></a>
+            </div>
+            <div class="gallery-item web">
+                <a href="masonry-portfolio-9.jpg" class="glightbox" data-gallery="gallery"><img src="masonry-portfolio-9.jpg" alt="Image 8"></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize Isotope with Masonry layout
+            var $grid = $('.gallery').isotope({
+                itemSelector: '.gallery-item',
+                layoutMode: 'masonry'
+            });
+
+            // Re-layout Isotope when images are loaded
+            $grid.imagesLoaded().progress(function () {
+                $grid.isotope('layout');
+            });
+
+            // Filter items on button click
+            $('.filter-button-group button').on('click', function () {
+                $('.filter-button-group button').removeClass('active'); // Remove active class
+                $(this).addClass('active'); // Add active class to clicked button
+                var filterValue = $(this).attr('data-filter');
+                $grid.isotope({ filter: filterValue });
+            });
+
+            // Initialize GLightbox
+            const lightbox = GLightbox({ selector: '.glightbox' });
+        });
+    </script>
+
+    <!-- ImageLoaded Library for Isotope to work properly -->
+    <script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+</body>
+</html>

@@ -274,7 +274,6 @@ if (projectTasksModal) {
     projectTasksModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
         if (!button) return;
-
         const projectId = button.getAttribute('data-project-id');
         const projectName = button.getAttribute('data-project-name');
 
@@ -322,7 +321,7 @@ if (projectTasksModal) {
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div class="flex-grow-1">
                                         <h6 class="fw-semibold mb-2">${task.task_name}</h6>
-                                        <p class="text-secondary mb-2">${task.description}</p>
+                                        <p class="text-secondary mb-2">${task.task_description}</p>
                                         <div class="d-flex gap-2 mb-2">
                                             <span class="badge 
                                                 ${task.status === 'in_progress' ? 'bg-success' : 
@@ -633,6 +632,8 @@ function connectWebSocket(taskId) {
 
     return chatSocket;
 }
+window.connectWebSocket = connectWebSocket;
+console.log('connectWebSocket is now globally available:', typeof window.connectWebSocket);
 
 function sendMessage(taskId, message) {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
@@ -721,57 +722,85 @@ document.addEventListener('DOMContentLoaded', function() {
     if (viewFilesModal) {
         viewFilesModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
+            if (!button) return;
             const taskId = button.getAttribute('data-task-id');
-            const fileUrl = button.getAttribute('data-file-url');
-            const fileName = button.getAttribute('data-file-name');
-            const reportText = button.getAttribute('data-report-text');
-            const taskStatus = button.getAttribute('data-task-status');
-
-            // Update file display
-            const fileLink = viewFilesModal.querySelector('.file-link');
-            const fileNameSpan = viewFilesModal.querySelector('.file-name');
-            if (fileUrl && fileUrl !== '#') {
-                fileLink.href = `/dashboard/download_task_file/${taskId}/`;
-                fileNameSpan.textContent = fileName;
-                fileLink.style.display = 'inline-block';
+            console.log('Opening modal for taskId:', taskId);
+            
+            // Update the uploadFileForm action in the modal
+            const baseUrl = '/dashboard/upload_task_file/0/';
+            const fileForm = viewFilesModal.querySelector('.uploadFileForm');
+            if (fileForm) {
+                fileForm.action = baseUrl.replace('0', taskId);
+                console.log('Set fileForm.action to:', fileForm.action);
             } else {
-                fileLink.style.display = 'none';
+                console.log('No .uploadFileForm found in modal!');
+            }
+            
+            // Update the hidden input if needed
+            const fileTaskIdInput = viewFilesModal.querySelector('#fileTaskId');
+            if (fileTaskIdInput) {
+                fileTaskIdInput.value = taskId;
+                console.log('Set fileTaskIdInput.value to:', fileTaskIdInput.value);
+            }
+            
+            // Update report form
+            const reportForm = viewFilesModal.querySelector('.uploadReportForm');
+            if (reportForm) {
+                reportForm.action = `/dashboard/upload_task_report/${taskId}/`;
+                console.log('Set reportForm.action to:', reportForm.action);
+            } else {
+                console.log('No .uploadReportForm found in modal!');
+            }
+            
+            const reportTaskIdInput = viewFilesModal.querySelector('#reportTaskId');
+            if (reportTaskIdInput) {
+                reportTaskIdInput.value = taskId;
+                console.log('Set reportTaskIdInput.value to:', reportTaskIdInput.value);
             }
 
-            // Update report display
-            const reportContent = viewFilesModal.querySelector('.report-content');
-            if (reportText) {
-                reportContent.textContent = reportText;
-                reportContent.style.display = 'block';
-            } else {
-                reportContent.style.display = 'none';
+            const reportDisplay = viewFilesModal.querySelector('#reportDisplay');
+            if (reportDisplay) {
+                console.log('About to fetch report for taskId:', taskId);
+                reportDisplay.innerHTML = '<div class="border p-3 mb-3">Loading...</div>';
+                fetch(`/dashboard/get-task-report/${taskId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Fetched report for taskId:', taskId, 'Report:', data.report);
+                        if (data.success) {
+                            reportDisplay.innerHTML = `
+                                <div class="border p-3 mb-3">
+                                    ${data.report ? data.report : 'No report submitted'}
+                                </div>`;
+                        } else {
+                            reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                        }
+                    })
+                    .catch(() => {
+                        reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                    });
             }
 
-            // Show/hide upload sections based on task status
-            const uploadFileSection = document.getElementById('uploadFileSection');
-            const uploadReportSection = document.getElementById('uploadReportSection');
-            if (taskStatus === 'completed') {
-                uploadFileSection.style.display = 'none';
-                uploadReportSection.style.display = 'none';
-            } else {
-                uploadFileSection.style.display = 'block';
-                uploadReportSection.style.display = 'block';
+            const fileDisplay = viewFilesModal.querySelector('#fileDisplay');
+            if (fileDisplay) {
+                fileDisplay.innerHTML = '<div class="mb-2">Loading file...</div>';
+                fetch(`/dashboard/get-task-file/${taskId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.file_url) {
+                            fileDisplay.innerHTML = `
+                                <div class="mb-2">
+                                    <a href="${data.file_url}" class="btn btn-outline-primary btn-sm file-link" download>
+                                        <i class="fas fa-file"></i> <span class="file-name">${data.file_name}</span>
+                                    </a>
+                                </div>`;
+                        } else {
+                            fileDisplay.innerHTML = '<div class="mb-2">No file uploaded</div>';
+                        }
+                    })
+                    .catch(() => {
+                        fileDisplay.innerHTML = '<div class="mb-2 text-danger">Error loading file</div>';
+                    });
             }
-
-            // Update form action URLs and task IDs
-            const fileForm = document.getElementById('uploadFileForm');
-            const reportForm = document.getElementById('uploadReportForm');
-            
-            // Get the base URL pattern from Django
-            const baseUrl = "{% url 'upload_task_file' task_id=0 %}";
-            const reportBaseUrl = "{% url 'upload_task_report' task_id=0 %}";
-            
-            // Replace the '0' with the actual task ID
-            fileForm.action = baseUrl.replace('0', taskId);
-            reportForm.action = reportBaseUrl.replace('0', taskId);
-            
-            document.getElementById('fileTaskId').value = taskId;
-            document.getElementById('reportTaskId').value = taskId;
         });
     }
 });
@@ -1217,15 +1246,10 @@ function renderPendingTasks(tasks) {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(data => { throw data; });
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // Optionally show a message
                 pollPendingTasks(); // Refresh the list
+                updateOngoingTasks(); // Refresh ongoing tasks
             })
             .catch(error => {
                 alert('Error: ' + (error.error || 'Could not start task.'));
@@ -1249,3 +1273,532 @@ function pollPendingTasks() {
 setInterval(pollPendingTasks, 10000);
 // Initial load
 pollPendingTasks();
+
+// AJAX for ongoing tasks action buttons
+function setupOngoingTaskAjax() {
+    // Complete Task
+    document.querySelectorAll('.complete-task-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                pollPendingTasks();
+                updateOngoingTasks();
+            })
+            .catch(error => {
+                alert('Error: Could not complete task.');
+            });
+        });
+    });
+    // Start Working
+    document.querySelectorAll('.start-working-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                pollPendingTasks();
+                updateOngoingTasks();
+            })
+            .catch(error => {
+                alert('Error: Could not start working on task.');
+            });
+        });
+    });
+    // Stop Working
+    document.querySelectorAll('.stop-working-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                pollPendingTasks();
+                updateOngoingTasks();
+            })
+            .catch(error => {
+                alert('Error: Could not stop working on task.');
+            });
+        });
+    });
+}
+
+// Call setupOngoingTaskAjax after rendering ongoing tasks
+function updateOngoingTasks() {
+    fetch('/dashboard/ongoing-tasks/')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('ongoingTasksContainer');
+            container.innerHTML = '';
+            if (data.tasks.length === 0) {
+                container.innerHTML = '<div class="col-12"><div class="ongoing-task-item card p-3 align-items-center" role="alert"><p class="text-center mb-0">No ongoing tasks available.</p></div></div>';
+                return;
+            }
+            data.tasks.forEach(task => {
+                let priorityClass = 'bg-success';
+                if (task.priority === 'High') priorityClass = 'bg-danger';
+                else if (task.priority === 'Medium') priorityClass = 'bg-warning';
+                // console.log('Opening modal for taskId:', taskId);
+                let actionButtons = `
+                    <form method="POST" action="/dashboard/complete-task/${task.id}/" class="complete-task-form">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                        <button class="task-action-btn bg-primary text-white">
+                            <i class="fa fa-check-circle"></i>
+                            <span>Complete</span>
+                        </button>
+                    </form>
+                `;
+                if (task.status === 'On Hold') {
+                    actionButtons += `
+                        <form method="POST" action="/dashboard/start-working/${task.id}/" class="start-working-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                            <button class="task-action-btn bg-success text-white">
+                                <i class="fa fa-play-circle"></i>
+                                <span>Start Working</span>
+                            </button>
+                        </form>
+                    `;
+                } else if (task.status === 'In Progress') {
+                    actionButtons += `
+                        <form method="POST" action="/dashboard/stop-working/${task.id}/" class="stop-working-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                            <button class="task-action-btn bg-danger text-white">
+                                <i class="fa fa-stop-circle"></i>
+                                <span>Stop Working</span>
+                            </button>
+                        </form>
+                    `;
+                }
+                // Files & Report, Comments, Read More buttons
+                actionButtons += `
+                    <button class="task-action-btn bg-info text-white"
+                        data-bs-toggle="modal"
+                        data-bs-target="#viewFilesModal"
+                        data-task-id="${task.id}"
+                        data-file-url="${task.file_url || '#'}"
+                        data-file-name="${task.file_name || 'No file uploaded'}"
+                        data-report-text="${task.report || 'No report submitted'}">
+                        <i class="fa fa-upload"></i>
+                        <span>Files & Report</span>
+                    </button>
+                    <div class="position-relative">
+                        <button class="task-action-btn bg-dark text-white"
+                            data-bs-toggle="modal"
+                            data-bs-target="#commentsModal"
+                            data-task-id="${task.id}"
+                            data-has-unread="${task.has_unread_messages ? 'true' : 'false'}">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>Comments</span>
+                        </button>
+                        ${task.has_unread_messages ? '<span class="message-indicator" style="display: block;"></span>' : ''}
+                    </div>
+                    <button class="task-action-btn bg-dark text-white"
+                        data-bs-toggle="modal"
+                        data-bs-target="#taskDetailsModal"
+                        data-task-name="${task.task_name}"
+                        data-task-project="${task.project}"
+                        data-task-priority="${task.priority}"
+                        data-task-status="${task.status}"
+                        data-task-due-date="${task.due_date}"
+                        data-task-time-spent="${task.time_spent}"
+                        data-task-description="${task.description}">
+                        <i class="fa fa-info-circle"></i>
+                        <span>Read More</span>
+                    </button>
+                `;
+                // console.log('Rendering Files & Report button for task id:', task.id);
+                container.innerHTML += `
+                    <div class="ongoing-task-item card p-3 mb-3" data-priority="${task.priority.toLowerCase()}">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h6 class="fw-semibold mb-0">Task: ${task.task_name}</h6>
+                            <span class="badge ${priorityClass}">${task.priority}</span>
+                        </div>
+                        <p class="mb-1">Project: <strong>${task.project}</strong></p>
+                        <p class="text-secondary mb-1">Description: <strong>${task.description}</strong></p>
+                        <p class="mb-1">Time Spent: <strong>${task.time_spent}</strong></p>
+                        <p class="mb-3">Due Date: <strong>${task.due_date}</strong></p>
+                        <p class="task-meta">Status: <strong>${task.status}</strong></p>
+                        <div class="task-card-buttons d-flex gap-2 mt-2">
+                            ${actionButtons}
+                        </div>
+                    </div>
+                `;
+            });
+            setupOngoingTaskAjax();
+            setupFileUploadAjax();
+            // Re-attach event listeners for Comments buttons after AJAX update
+            container.querySelectorAll('[data-bs-target="#commentsModal"]').forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskId = this.dataset.taskId;
+                    const commentsList = document.getElementById('commentsList');
+                    const modalTaskIdInput = document.getElementById('taskId');
+                    modalTaskIdInput.value = taskId;
+                    commentsList.innerHTML = '';
+                    window.connectWebSocket(taskId);
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching ongoing tasks:', error);
+        });
+}
+
+function setupFileUploadAjax() {
+    document.querySelectorAll('.uploadFileForm').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('File upload AJAX response:', data);
+                if (data.success) {
+                    alert('File uploaded successfully!');
+                    // Fetch and display the uploaded file
+                    const modal = form.closest('.modal');
+                    if (modal) {
+                        const fileDisplay = modal.querySelector('#fileDisplay');
+                        if (fileDisplay) {
+                            fileDisplay.innerHTML = '<div class="mb-2">Loading file...</div>';
+                            fetch(`/dashboard/get-task-file/${formData.get('task_id')}/`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success && data.file_url) {
+                                        fileDisplay.innerHTML = `
+                                            <div class="mb-2">
+                                                <a href="${data.file_url}" class="btn btn-outline-primary btn-sm file-link" download>
+                                                    <i class="fas fa-file"></i> <span class="file-name">${data.file_name}</span>
+                                                </a>
+                                            </div>`;
+                                    } else {
+                                        fileDisplay.innerHTML = '<div class="mb-2">No file uploaded</div>';
+                                    }
+                                })
+                                .catch(() => {
+                                    fileDisplay.innerHTML = '<div class="mb-2 text-danger">Error loading file</div>';
+                                });
+                        }
+                    }
+                    // Clear the file input after upload
+                    form.reset();
+                } else if (data.error) {
+                    alert('Error uploading file: ' + data.error);
+                } else {
+                    alert('Unknown error uploading file.');
+                }
+            })
+            .catch(error => {
+                alert('Error uploading file.');
+            });
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateOngoingTasks();
+});
+
+document.addEventListener('submit', function(e) {
+    if (e.target.classList.contains('uploadReportForm')) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        console.log('Submitting report for taskId:', form.action, 'Hidden input:', formData.get('task_id'));
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Report submitted successfully!');
+                // After successful submission, fetch the latest report from the server
+                const modal = form.closest('.modal');
+                if (modal) {
+                    const reportDisplay = modal.querySelector('#reportDisplay');
+                    if (reportDisplay) {
+                        reportDisplay.innerHTML = '<div class="border p-3 mb-3">Loading...</div>';
+                        const match = form.action.match(/upload_task_report\/(\d+)\//);
+                        const taskId = match ? match[1] : null;
+                        if (taskId) {
+                            fetch(`/dashboard/get-task-report/${taskId}/`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log('Fetched report after submit for taskId:', taskId, 'Report:', data.report);
+                                    if (data.success) {
+                                        reportDisplay.innerHTML = `
+                                            <div class="border p-3 mb-3">
+                                                ${data.report ? data.report : 'No report submitted'}
+                                            </div>`;
+                                    } else {
+                                        reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                                    }
+                                })
+                                .catch(() => {
+                                    reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                                });
+                        }
+                    }
+                }
+                form.reset();
+            } else {
+                alert('Error submitting report: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            alert('AJAX error: ' + error);
+        });
+    }
+});
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-bs-target="#viewFilesModal"]');
+    if (btn) {
+        const taskId = btn.getAttribute('data-task-id');
+        const viewFilesModal = document.getElementById('viewFilesModal');
+        if (viewFilesModal) {
+            // Set file upload form action and hidden input
+            const fileForm = viewFilesModal.querySelector('.uploadFileForm');
+            if (fileForm) {
+                fileForm.action = `/dashboard/upload_task_file/${taskId}/`;
+                console.log('[CLICK] Set fileForm.action to:', fileForm.action);
+            }
+            const fileTaskIdInput = viewFilesModal.querySelector('#fileTaskId');
+            if (fileTaskIdInput) {
+                fileTaskIdInput.value = taskId;
+                console.log('[CLICK] Set fileTaskIdInput.value to:', fileTaskIdInput.value);
+            }
+            // Update report form
+            const reportForm = viewFilesModal.querySelector('.uploadReportForm');
+            if (reportForm) {
+                reportForm.action = `/dashboard/upload_task_report/${taskId}/`;
+                console.log('Set reportForm.action to:', reportForm.action);
+            } else {
+                console.log('No .uploadReportForm found in modal!');
+            }
+            // Fetch and display the report for this task
+            const reportDisplay = viewFilesModal.querySelector('#reportDisplay');
+            if (reportDisplay) {
+                console.log('[CLICK] About to fetch report for taskId:', taskId);
+                reportDisplay.innerHTML = '<div class="border p-3 mb-3">Loading...</div>';
+                fetch(`/dashboard/get-task-report/${taskId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('[CLICK] Fetched report for taskId:', taskId, 'Report:', data.report);
+                        if (data.success) {
+                            reportDisplay.innerHTML = `
+                                <div class="border p-3 mb-3">
+                                    ${data.report ? data.report : 'No report submitted'}
+                                </div>`;
+                        } else {
+                            reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                        }
+                    })
+                    .catch(() => {
+                        reportDisplay.innerHTML = `<div class="border p-3 mb-3 text-danger">Error loading report</div>`;
+                    });
+            }
+
+            const fileDisplay = viewFilesModal.querySelector('#fileDisplay');
+            if (fileDisplay) {
+                fileDisplay.innerHTML = '<div class="mb-2">Loading file...</div>';
+                fetch(`/dashboard/get-task-file/${taskId}/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.file_url) {
+                            fileDisplay.innerHTML = `
+                                <div class="mb-2">
+                                    <a href="${data.file_url}" class="btn btn-outline-primary btn-sm file-link" download>
+                                        <i class="fas fa-file"></i> <span class="file-name">${data.file_name}</span>
+                                    </a>
+                                </div>`;
+                        } else {
+                            fileDisplay.innerHTML = '<div class="mb-2">No file uploaded</div>';
+                        }
+                    })
+                    .catch(() => {
+                        fileDisplay.innerHTML = '<div class="mb-2 text-danger">Error loading file</div>';
+                    });
+            }
+        }
+    }
+});
+
+// Also clear the file input when the modal is closed
+const viewFilesModal = document.getElementById('viewFilesModal');
+if (viewFilesModal) {
+    viewFilesModal.addEventListener('hidden.bs.modal', function() {
+        const fileForm = viewFilesModal.querySelector('.uploadFileForm');
+        if (fileForm) {
+            fileForm.reset();
+        }
+    });
+}
+
+// Approval Pending Tasks Functions
+let approvalPendingInterval;
+
+function renderApprovalPendingTasks(tasks) {
+    const container = document.getElementById('approvalPendingContainer');
+    if (!container) return;
+
+    if (!tasks || tasks.length === 0) {
+        container.innerHTML = `
+            <div class="card p-3">
+                <p class="text-center mb-0">No Other Pending Approval</p>
+            </div>`;
+        return;
+    }
+
+    let html = '';
+    tasks.forEach(task => {
+        html += `
+            <div class="task-card card p-3 mb-3" data-priority="high">
+                <div class="priority-light"></div>
+                <h6 class="fw-semibold">Name: ${task.task_name}</h6>
+                <p class="text-secondary">Description: ${task.task_description}</p>
+                <p>Due Date: ${task.due_date}</p>
+                <p>Status: ${task.status_display}</p>
+                <p>Project: ${task.project_name}</p>
+                ${task.project_department ? `<p>Department: ${task.project_department}</p>` : ''}
+                <div class="task-card-buttons2 d-flex gap-2 mt-2">
+                    ${
+                      (window.USER_ROLE === 'teamlead' || window.USER_ROLE === 'project_manager')
+                      ? `
+                        <form method="POST" action="/dashboard/approve-task/${task.id}/" class="approve-task-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                            <button type="submit" class="task-action-btn">
+                                <i class="fa fa-check-circle"></i>
+                                <span>Approve</span>
+                            </button>
+                        </form>
+                        <form method="POST" action="#" class="reject-task-form">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
+                            <button type="submit" class="task-action-btn">
+                                <i class="fa fa-times-circle"></i>
+                                <span>Reject</span>
+                            </button>
+                        </form>
+                      ` : ''
+                    }
+                    <button class="task-action-btn"
+                            data-bs-toggle="modal"
+                            data-bs-target="#taskDetailsModal"
+                            data-task-name="${task.task_name}"
+                            data-task-project="${task.project_name}"
+                            data-task-priority="${task.priority}"
+                            data-task-status="${task.status_display}"
+                            data-task-due-date="${task.due_date}"
+                            data-task-time-spent="${task.time_spent}"
+                            data-task-description="${task.task_description}">
+                        <i class="fa fa-info-circle"></i>
+                        <span>Read More</span>
+                    </button>
+                </div>
+            </div>`;
+    });
+    
+    container.innerHTML = html;
+
+    // Add event listeners to the approve forms
+    container.querySelectorAll('.approve-task-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    pollApprovalPendingTasks(); // Refresh the list immediately
+                } else {
+                    alert('Error: ' + (data.error || 'Could not approve task.'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error approving task.');
+            });
+        });
+    });
+}
+
+function pollApprovalPendingTasks() {
+    fetch('/dashboard/approval-pending-tasks-json/', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        renderApprovalPendingTasks(data.tasks);
+    })
+    .catch(error => {
+        console.error('Error fetching approval pending tasks:', error);
+    });
+}
+
+function setupApprovalPendingTasksPolling() {
+    // Initial load
+    pollApprovalPendingTasks();
+    
+    // Clear existing interval if any
+    if (approvalPendingInterval) {
+        clearInterval(approvalPendingInterval);
+    }
+    
+    // Set up new polling interval
+    approvalPendingInterval = setInterval(pollApprovalPendingTasks, 10000); // 10 seconds
+}
+
+// Initialize polling when document is ready
+document.addEventListener('DOMContentLoaded', function() {
+    setupApprovalPendingTasksPolling();
+    
+    // Listen for task submission events to trigger immediate refresh
+    document.addEventListener('taskSubmitted', function() {
+        pollApprovalPendingTasks();
+    });
+});

@@ -8663,3 +8663,248 @@ INFO 2025-06-20 10:34:37,549 consumers Successfully marked task 32 as read for u
 INFO 2025-06-20 10:34:40,915 consumers User 5 stopped viewing task 32
 INFO 2025-06-20 10:41:01,859 consumers No messages found for task 44, skipping read status update
 INFO 2025-06-20 10:41:03,608 consumers User 5 stopped viewing task 44
+INFO 2025-06-20 12:26:12,197 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-20 12:26:12,233 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-20 12:29:13,680 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-20 12:29:13,737 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-20 12:51:09,364 consumers No messages found for task 55, skipping read status update
+INFO 2025-06-20 12:51:10,840 consumers User 5 stopped viewing task 55
+INFO 2025-06-20 22:54:30,003 consumers Marking task 32 as read for user 5 with latest message timestamp 2025-06-19 06:34:43.708280+00:00
+INFO 2025-06-20 22:54:30,023 consumers Successfully marked task 32 as read for user 5
+INFO 2025-06-20 22:54:51,243 consumers User 5 stopped viewing task 32
+INFO 2025-06-23 10:52:27,087 consumers No messages found for task 5, skipping read status update
+INFO 2025-06-23 10:52:28,866 consumers User 5 stopped viewing task 5
+INFO 2025-06-23 10:52:43,185 consumers Marking task 33 as read for user 5 with latest message timestamp 2025-06-18 13:05:34.476709+00:00
+INFO 2025-06-23 10:52:43,197 consumers Successfully marked task 33 as read for user 5
+INFO 2025-06-23 10:52:46,191 consumers Starting send_unread_notification for task 33, sender 5
+INFO 2025-06-23 10:52:46,200 consumers Users to notify: [4]
+INFO 2025-06-23 10:52:46,201 consumers Sending notifications to user 4
+INFO 2025-06-23 10:52:46,201 consumers Sent task unread notification to user 4
+INFO 2025-06-23 10:52:46,207 consumers Got project_id 3 for task 33
+INFO 2025-06-23 10:52:46,208 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-06-23 10:52:46,208 consumers Sent project unread notification to user 4
+INFO 2025-06-23 10:52:50,304 consumers Starting send_unread_notification for task 33, sender 5
+INFO 2025-06-23 10:52:50,314 consumers Users to notify: [4]
+INFO 2025-06-23 10:52:50,314 consumers Sending notifications to user 4
+INFO 2025-06-23 10:52:50,315 consumers Sent task unread notification to user 4
+INFO 2025-06-23 10:52:50,321 consumers Got project_id 3 for task 33
+INFO 2025-06-23 10:52:50,322 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-06-23 10:52:50,322 consumers Sent project unread notification to user 4
+INFO 2025-06-23 10:53:10,752 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:53:10,778 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:53:10,796 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 10:53:32,633 consumers User 5 stopped viewing task 33
+INFO 2025-06-23 10:55:32,926 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:55:32,968 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:55:32,985 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 10:55:43,014 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:55:43,057 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:55:43,081 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 10:56:47,949 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:56:47,991 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:56:48,013 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 10:58:24,091 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:58:24,131 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:58:24,148 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 10:59:13,296 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 10:59:13,359 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 10:59:13,389 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:02:25,256 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:02:25,299 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:02:25,317 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:02:41,071 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:02:41,112 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:02:41,136 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:03:20,822 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:03:20,861 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:03:20,878 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:04:31,597 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:04:31,640 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:04:31,658 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:17:07,695 consumers Marking task 33 as read for user 5 with latest message timestamp 2025-06-23 05:52:50.298559+00:00
+INFO 2025-06-23 11:17:07,707 consumers Successfully marked task 33 as read for user 5
+INFO 2025-06-23 11:17:11,260 consumers Starting send_unread_notification for task 33, sender 5
+INFO 2025-06-23 11:17:11,268 consumers Users to notify: [4]
+INFO 2025-06-23 11:17:11,268 consumers Sending notifications to user 4
+INFO 2025-06-23 11:17:11,268 consumers Sent task unread notification to user 4
+INFO 2025-06-23 11:17:11,274 consumers Got project_id 3 for task 33
+INFO 2025-06-23 11:17:11,274 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-06-23 11:17:11,275 consumers Sent project unread notification to user 4
+INFO 2025-06-23 11:17:11,276 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': True}
+INFO 2025-06-23 11:17:11,278 consumers Sent project notification to client: project_id=3, has_unread=True
+INFO 2025-06-23 11:17:14,215 consumers User 5 stopped viewing task 33
+INFO 2025-06-23 11:38:54,932 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:38:55,002 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:38:55,025 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:42:35,585 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:42:35,728 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:42:35,793 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:42:47,213 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:42:47,329 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:42:47,377 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:43:08,819 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:43:08,930 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:43:08,987 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:47:42,047 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:47:42,101 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:47:42,124 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 11:47:56,340 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 11:47:56,446 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 11:47:56,506 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 12:27:34,847 consumers No messages found for task 54, skipping read status update
+INFO 2025-06-23 12:27:42,272 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 12:27:42,302 consumers Users to notify: []
+INFO 2025-06-23 12:27:56,044 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 07:27:42.231930+00:00
+INFO 2025-06-23 12:27:56,095 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 12:27:59,686 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 12:27:59,719 consumers Users to notify: []
+INFO 2025-06-23 12:28:01,275 consumers User 5 stopped viewing task 54
+INFO 2025-06-23 12:28:35,715 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 07:27:59.652344+00:00
+INFO 2025-06-23 12:28:35,740 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 12:28:42,007 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 12:28:42,022 consumers Users to notify: []
+INFO 2025-06-23 12:28:45,360 consumers User 5 stopped viewing task 54
+INFO 2025-06-23 12:28:56,610 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 12:28:56,676 views Task 33 (Chat check) has unread messages for user 4
+INFO 2025-06-23 12:28:56,705 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 12:29:04,841 consumers Marking task 33 as read for user 4 with latest message timestamp 2025-06-23 06:17:11.254813+00:00
+INFO 2025-06-23 12:29:04,885 consumers Successfully marked task 33 as read for user 4
+INFO 2025-06-23 12:29:08,399 consumers Starting send_unread_notification for task 33, sender 4
+INFO 2025-06-23 12:29:08,412 consumers Users to notify: [5]
+INFO 2025-06-23 12:29:08,413 consumers Sending notifications to user 5
+INFO 2025-06-23 12:29:08,415 consumers Sent task unread notification to user 5
+INFO 2025-06-23 12:29:08,424 consumers Got project_id 3 for task 33
+INFO 2025-06-23 12:29:08,425 consumers Sending project unread notification for project 3 to user 5
+INFO 2025-06-23 12:29:08,428 consumers Sent project unread notification to user 5
+INFO 2025-06-23 12:29:08,434 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': True}
+INFO 2025-06-23 12:29:08,435 consumers Sent project notification to client: project_id=3, has_unread=True
+INFO 2025-06-23 12:29:08,436 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': True}
+INFO 2025-06-23 12:29:08,437 consumers Sent project notification to client: project_id=3, has_unread=True
+INFO 2025-06-23 12:29:24,155 views Task 33 (Chat check) has unread messages for user 5
+INFO 2025-06-23 12:29:30,943 consumers Marking task 33 as read for user 5 with latest message timestamp 2025-06-23 07:29:08.389017+00:00
+INFO 2025-06-23 12:29:30,981 consumers Successfully marked task 33 as read for user 5
+INFO 2025-06-23 12:29:35,255 consumers Starting send_unread_notification for task 33, sender 5
+INFO 2025-06-23 12:29:35,268 consumers Users to notify: [4]
+INFO 2025-06-23 12:29:35,270 consumers Sending notifications to user 4
+INFO 2025-06-23 12:29:35,272 consumers Sent task unread notification to user 4
+INFO 2025-06-23 12:29:35,291 consumers Got project_id 3 for task 33
+INFO 2025-06-23 12:29:35,294 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-06-23 12:29:35,296 consumers Sent project unread notification to user 4
+INFO 2025-06-23 12:29:35,308 consumers Marking task 33 as read for user 4 with latest message timestamp 2025-06-23 07:29:35.229952+00:00
+INFO 2025-06-23 12:29:35,319 consumers Successfully marked task 33 as read for user 4
+INFO 2025-06-23 12:29:35,322 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': True}
+INFO 2025-06-23 12:29:35,325 consumers Sent project notification to client: project_id=3, has_unread=True
+INFO 2025-06-23 12:29:37,214 consumers User 5 stopped viewing task 33
+INFO 2025-06-23 12:29:41,179 consumers User 4 stopped viewing task 33
+INFO 2025-06-23 12:37:33,022 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 12:37:33,080 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 12:40:37,287 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 12:40:37,407 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 12:42:04,138 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-23 12:42:04,300 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-23 13:11:19,347 consumers No messages found for task 5, skipping read status update
+INFO 2025-06-23 13:11:22,841 consumers Starting send_unread_notification for task 5, sender 5
+INFO 2025-06-23 13:11:22,883 consumers Users to notify: [4]
+INFO 2025-06-23 13:11:22,887 consumers Sending notifications to user 4
+INFO 2025-06-23 13:11:22,889 consumers Sent task unread notification to user 4
+INFO 2025-06-23 13:11:22,913 consumers Got project_id 3 for task 5
+INFO 2025-06-23 13:11:22,915 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-06-23 13:11:22,917 consumers Sent project unread notification to user 4
+INFO 2025-06-23 13:11:26,177 consumers User 5 stopped viewing task 5
+INFO 2025-06-23 13:15:29,891 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 07:28:41.997900+00:00
+INFO 2025-06-23 13:15:29,936 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 13:15:36,454 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 13:15:36,469 consumers Users to notify: []
+INFO 2025-06-23 13:15:40,621 consumers User 5 stopped viewing task 54
+INFO 2025-06-23 13:15:44,094 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 08:15:36.427631+00:00
+INFO 2025-06-23 13:15:44,116 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 13:16:13,759 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 13:16:13,782 consumers Users to notify: []
+INFO 2025-06-23 13:16:16,055 consumers User 5 stopped viewing task 54
+INFO 2025-06-23 13:16:31,322 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 08:16:13.731789+00:00
+INFO 2025-06-23 13:16:31,343 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 13:16:32,996 consumers User 5 stopped viewing task 54
+INFO 2025-06-23 13:48:36,707 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 08:16:13.731789+00:00
+INFO 2025-06-23 13:48:36,722 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-23 13:48:39,705 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-23 13:48:39,718 consumers Users to notify: []
+INFO 2025-06-23 13:48:41,126 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 10:38:11,627 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-23 08:48:39.679345+00:00
+INFO 2025-06-26 10:38:11,635 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 10:38:16,119 consumers Starting send_unread_notification for task 54, sender 5
+INFO 2025-06-26 10:38:16,126 consumers Users to notify: []
+INFO 2025-06-26 10:38:17,752 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 10:39:12,740 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-06-26 10:39:12,749 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 10:39:15,844 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 10:39:18,665 consumers No messages found for task 52, skipping read status update
+INFO 2025-06-26 10:39:20,592 consumers User 5 stopped viewing task 52
+INFO 2025-06-26 10:40:47,865 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-06-26 10:40:47,869 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 10:40:49,968 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 11:46:39,624 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-06-26 11:46:39,628 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 11:46:41,125 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 11:46:58,698 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-06-26 11:46:58,704 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 11:46:59,655 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 12:09:23,989 consumers Marking task 54 as read for user 5 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-06-26 12:09:24,004 consumers Successfully marked task 54 as read for user 5
+INFO 2025-06-26 12:09:24,963 consumers User 5 stopped viewing task 54
+INFO 2025-06-26 13:26:19,808 views Project 3 (AI Virtual Stylist) has unread messages for user 6
+INFO 2025-06-26 13:26:43,700 views Project 3 (AI Virtual Stylist) has unread messages for user 6
+INFO 2025-06-26 13:28:01,557 views Project 3 (AI Virtual Stylist) has unread messages for user 6
+INFO 2025-06-26 13:38:34,122 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 13:38:34,131 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 13:38:34,198 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 13:38:42,605 consumers Marking task 33 as read for user 4 with latest message timestamp 2025-06-23 07:29:35.229952+00:00
+INFO 2025-06-26 13:38:42,619 consumers Successfully marked task 33 as read for user 4
+INFO 2025-06-26 13:38:46,488 consumers Starting send_unread_notification for task 33, sender 4
+INFO 2025-06-26 13:38:46,500 consumers Users to notify: [5]
+INFO 2025-06-26 13:38:46,501 consumers Sending notifications to user 5
+INFO 2025-06-26 13:38:46,502 consumers Sent task unread notification to user 5
+INFO 2025-06-26 13:38:46,514 consumers Got project_id 3 for task 33
+INFO 2025-06-26 13:38:46,514 consumers Sending project unread notification for project 3 to user 5
+INFO 2025-06-26 13:38:46,515 consumers Sent project unread notification to user 5
+INFO 2025-06-26 13:38:51,139 consumers User 4 stopped viewing task 33
+INFO 2025-06-26 13:40:58,997 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 13:40:59,012 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 13:40:59,173 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 13:55:56,884 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 13:55:56,900 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 13:55:57,068 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 13:56:55,719 views Task 33 (Chat check) has unread messages for user 5
+INFO 2025-06-26 13:56:56,054 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-06-26 15:04:37,131 views Task 33 (Chat check) has unread messages for user 5
+INFO 2025-06-26 15:04:37,567 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-06-26 15:05:06,859 views Task 33 (Chat check) has unread messages for user 5
+INFO 2025-06-26 15:05:16,305 consumers Marking task 33 as read for user 5 with latest message timestamp 2025-06-26 08:38:46.476422+00:00
+INFO 2025-06-26 15:05:16,344 consumers Successfully marked task 33 as read for user 5
+INFO 2025-06-26 15:05:18,278 consumers User 5 stopped viewing task 33
+INFO 2025-06-26 15:05:50,847 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:05:50,862 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:05:51,015 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:06:08,460 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:06:08,473 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:06:08,608 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:09:32,675 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:09:32,687 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:09:32,802 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:09:50,504 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:09:50,519 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:09:50,682 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:09:53,153 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:09:53,168 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:09:53,337 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:11:51,970 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:11:51,985 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:11:52,153 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:12:29,125 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:12:29,140 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:12:29,302 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:12:48,642 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:12:48,659 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:12:48,834 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-06-26 15:15:20,151 views Task 5 (Bugs2) has unread messages for user 4
+INFO 2025-06-26 15:15:20,171 views Task 6 (Bugs) has unread messages for user 4
+INFO 2025-06-26 15:15:20,345 views Project 3 (AI Virtual Stylist) has unread messages for user 4

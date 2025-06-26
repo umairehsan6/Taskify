@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tâskify. Dashboard Clone</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: rgb(255, 255, 255);
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Wrapper - controls visibility of the entire sidebar */
+        .sidebar-wrapper {
+            height: 100vh;
+            padding: 24px;
+            background-color: #fff;
+            border-radius: 30px;
+            box-sizing: border-box;
+            position: sticky;
+            top: 0;
+            flex-shrink: 0;
+        }
+
+        /* Actual Sidebar styling */
+        .sidebar {
+            height: 100%;
+            width: 100%;
+            background: #121212;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .sidebar nav a,
+        .sidebar .logout {
+            width: 100%;
+            text-align: left;
+            padding: 12px 0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fff;
+            text-decoration: none;
+            transition: transform 0.3s ease; /* Added transform transition */
+        }
+
+        .sidebar nav a:hover,
+        .sidebar .logout:hover {
+            background: none; /* Removed background change on hover */
+            transform: scale(1.1); /* Grow 10% on hover */
+        }
+
+        .sidebar .logout {
+            margin-top: auto;
+        }
+
+        /* Header & Greeting */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .greeting-card {
+            flex: 1;
+            padding-top: 25px; /* Keep top padding */
+            padding-bottom: 25px; /* Keep bottom padding */
+            padding-left: 25px; /* Keep left padding */
+            padding-right: 0; /* Remove right padding from the card itself */
+            border-radius: 24px;
+            background-color: rgba(141, 141, 141, 0.15);
+            height: auto;
+            min-height: 150px;
+            position: relative; /* Needed for image positioning */
+            overflow: hidden; /* Crucial for rounded corners on image */
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .greeting-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/memphis-mini.png');
+            opacity: 0.05;
+        }
+
+        .greeting-card h2 {
+            font-weight: 600;
+            margin-bottom: 0; /* Removed default margin */
+        }
+
+        /* Greeting Text */
+        .greeting-text {
+            flex-shrink: 0;
+            width: 50%; /* Allocate space for text */
+            padding-right: 24px; /* Space between text and image */
+            box-sizing: border-box;
+        }
+
+        /* Greeting Image and Overlay */
+        .greeting-image {
+            position: absolute; /* Position absolutely to cover the right side */
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 50%; /* Take up the right half of the card */
+            border-radius: 0 24px 24px 0; /* Apply border-radius only to the right side */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .greeting-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0; /* No internal border-radius, rely on parent */
+        }
+        .greeting-image .image-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 0 24px 24px 0; /* Apply border-radius to overlay */
+            z-index: 1;
+        }
+
+        /* Create Task Button */
+        .create-task-btn {
+            display: flex;
+            justify-content: center; /* Changed to center horizontally */
+            align-items: center;
+            padding: 12px 20px;
+            max-width: 260px;
+            border: none;
+            border-radius: 16px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('cardimg.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: background 0.3s ease;
+            gap: 20px; /* Added gap between text and icon */
+            margin-bottom: 0; /* Ensure no extra margin below */
+        }
+
+        .icons{
+            display: flex;
+            gap: 16px;
+            color: black;
+            padding:24px ;
+            font-size: 1.8rem;
+            justify-content: flex-end;
+        }
+
+        .create-task-btn .text-block {
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+            text-align: center; /* Center text within its block */
+            flex-grow: 1; /* Allow text block to take available space */
+            justify-content: center; /* Vertically center text */
+        }
+
+        .create-task-btn .text-block .title {
+            font-weight: 500;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .create-task-btn .text-block .subtitle {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .create-task-btn .plus-icon {
+            width: 36px;
+            height: 36px;
+            background-color: transparent; /* Changed to transparent */
+            border: 1px solid white; /* Added white border */
+            border-radius: 25px; /* Changed to match project buttons */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #fff; /* Changed icon color to white */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .create-task-btn .plus-icon:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* Default Card Style */
+        .card {
+            border: none;
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            background-color: rgba(141, 141, 141, 0.15);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/black-linen.png');
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        /* Custom Card Overrides */
+        .stats-card {
+            background-color: #fff !important; /* Pure white */
+            box-shadow: 0 44px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .calendar-card {
+            background-color: #fff !important;
+            box-shadow: 0 44px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Task Items & Project Summary Cards */
+        .task-card,
+        .project-summary-card {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('cardimg.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            position: relative;
+            color: white; /* Keep white for project cards */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .ongoing-task-item { /* Specific styling for ongoing task items */
+            background-color: rgba(141, 141, 141, 0.15); /* Grey background */
+            border-radius: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Added shadow */
+            border: none;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            height: auto; /* Allow height to adjust */
+        }
+
+        .task-card h6,
+        .task-card p,
+        .project-summary-card h6,
+        .project-summary-card p {
+            color: white !important; /* Keep white for dark cards */
+        }
+
+        .ongoing-task-item h6,
+        .ongoing-task-item p {
+            color: #333 !important; /* Darker text for readability on light grey */
+        }
+
+        /* Set consistent margin-bottom for paragraph */
+        .project-summary-card p,
+        .task-card p,
+        .ongoing-task-item p {
+            margin-bottom: 1rem;
+        }
+
+
+        /* Project card buttons styling */
+        .project-card-buttons { /* These are for the dark cards */
+            margin-top: auto;
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 0 10px;
+            flex-wrap: wrap;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .project-card-buttons .btn,
+        .modal-footer .btn { /* These are for the dark cards and modal */
+            border-radius: 25px;
+            border: 1px solid white;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            transition: background-color 0.3s, color 0.3s;
+            background-color: transparent;
+        }
+
+        .project-card-buttons .btn:hover,
+        .modal-footer .btn:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* New button style for task actions with icons and text on hover */
+        .task-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; /* Initial width for icon only */
+            height: 40px; /* Keep height fixed */
+            border-radius: 25px;
+            border: 1px solid #333;
+            color: #333;
+            background-color: transparent;
+            padding: 0; /* Remove padding initially */
+            overflow: hidden; /* Hide overflowing text */
+            transition: width 0.3s ease, background-color 0.3s, color 0.3s;
+            white-space: nowrap; /* Prevent text from wrapping */
+            font-size: 0.85rem; /* Smaller font size for text */
+            text-decoration: none; /* Remove underline */
+            cursor: pointer;
+        }
+
+        .task-action-btn i {
+            margin: 0; /* Remove default margin from icon */
+            font-size: 1rem; /* Icon size */
+            transition: margin-right 0.3s ease; /* Transition for icon margin */
+        }
+
+        .task-action-btn span {
+            display: inline-block; /* Make span behave like block for width transition */
+            max-width: 0; /* Hide text initially */
+            opacity: 0; /* Hide text initially */
+            transition: max-width 0.3s ease, opacity 0.3s ease;
+            vertical-align: middle; /* Align text with icon */
+        }
+
+        .task-action-btn:hover {
+            width: auto; /* Allow width to expand */
+            padding: 0 15px; /* Add padding on hover */
+            background-color: #333;
+            color: white;
+        }
+
+        .task-action-btn:hover i {
+            margin-right: 8px; /* Add margin to icon on hover */
+        }
+
+        .task-action-btn:hover span {
+            max-width: 150px; /* Show text on hover, adjust as needed */
+            opacity: 1; /* Make text visible */
+        }
+
+        /* Buttons for ongoing-task-item (light grey background) */
+        .ongoing-task-item .task-card-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 0; /* Remove padding from container, handled by buttons */
+            flex-wrap: wrap;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Priority Light Styling */
+        .priority-light {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.2); /* Small border for definition */
+        }
+
+        .task-card[data-priority="high"] .priority-light,
+        .ongoing-task-item[data-priority="high"] .priority-light {
+            background-color: #dc3545; /* Red */
+        }
+
+        .task-card[data-priority="medium"] .priority-light,
+        .ongoing-task-item[data-priority="medium"] .priority-light {
+            background-color: #ffc107; /* Yellow */
+        }
+
+        .task-card[data-priority="low"] .priority-light,
+        .ongoing-task-item[data-priority="low"] .priority-light {
+            background-color: #28a745; /* Green */
+        }
+
+
+        .calendar-day,
+        .calendar-date {
+            padding: 8px 0;
+            font-weight: 500;
+        }
+
+        .calendar-highlight {
+            background-color: #000;
+            color: #fff;
+            border-radius: 999px;
+            padding: 4px 12px;
+            display: inline-block;
+        }
+
+        /* Custom button style for black background */
+        .btn-black {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+        .btn-black:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Blur effect for modal */
+        .main-dashboard-content.blurred {
+            filter: blur(5px);
+            transition: filter 0.3s ease-out;
+        }
+
+        /* Adjust select background if it's not visible on the new grey background */
+        .stats-card .form-select {
+            background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent black for contrast on white */
+            color: #333; /* Text color for select */
+            border: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        .stats-card .form-select option {
+            background-color: #fff; /* White background for options in dropdown */
+            color: #333; /* Dark text for options */
+        }
+
+        /* Task meta info (time spent, due date) */
+        .task-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem; /* Space before buttons */
+        }
+        .ongoing-task-item .task-meta {
+            color: #555; /* Darker for light background */
+        }
+
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 991px) {
+            /* Hide the desktop sidebar */
+            .sidebar-wrapper {
+                display: none;
+            }
+
+            /* Greeting Card Padding and Width */
+            .greeting-card {
+                padding: 24px !important; /* Added 24px padding on all sides */
+                margin-right: 0; /* Remove margin when image is hidden */
+                width: 100%; /* Ensure it takes 100% width */
+                flex-direction: column; /* Stack items vertically */
+                align-items: flex-start; /* Align items to the left */
+                height: auto; /* Allow height to be determined by content */
+                min-height: unset; /* Remove min-height on mobile */
+            }
+
+            /* Hide the greeting image and its contents on mobile/tablet */
+            .greeting-image {
+                display: none;
+            }
+
+            /* Make greeting text take full width */
+            .greeting-card .greeting-text {
+                width: 100% !important;
+                padding-right: 0;
+                margin-bottom: 1rem; /* Add space below text */
+            }
+
+            /* Adjust header row for mobile */
+            .header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 20px; /* Space below the new navbar */
+            }
+
+            /* Toolbar adjustments for mobile */
+            .toolbar {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end; /* Align items to the right */
+                margin-top: 20px; /* Space between greeting card and toolbar */
+            }
+            .toolbar .icons {
+                display: none; /* Hide icons next to Create Task button on mobile */
+                padding: 0;
+                margin-bottom: 0;
+            }
+            .create-task-btn {
+                width: 100%; /* Make button full width */
+                max-width: none; /* Remove max-width constraint */
+            }
+
+            /* Statistic Summary Cards - Remove bottom margin */
+            .row.text-center.mb-4 .col-md-4 {
+                margin-bottom: 0 !important; /* Remove bottom margin from columns */
+            }
+            .row.text-center.mb-4 .col-md-4 .card {
+                margin-bottom: 1rem; /* Add some margin between cards if needed */
+            }
+
+            /* Responsive adjustments for project card buttons on small screens */
+            .project-card-buttons,
+            .task-card-buttons,
+            .ongoing-task-item .task-card-buttons { /* Added ongoing-task-item here */
+                justify-content: center; /* Center buttons on small screens */
+                padding: 0 5px; /* Reduce padding for smaller screens */
+            }
+            .project-card-buttons .btn,
+            .task-card-buttons .btn,
+            .ongoing-task-item .task-card-buttons .btn { /* Added ongoing-task-item here */
+                flex-grow: 1; /* Allow buttons to grow and fill space, but not too much */
+                max-width: 100%; /* Ensure they don't overflow */
+                margin-bottom: 5px; /* Add vertical spacing when wrapped */
+            }
+        }
+
+        /* Responsive adjustments for project card buttons on tablet screens */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .project-card-buttons,
+            .task-card-buttons,
+            .ongoing-task-item .task-card-buttons { /* Added ongoing-task-item here */
+                justify-content: center; /* Center buttons on tablets too */
+                padding: 0 8px;
+            }
+            .project-card-buttons .btn,
+            .task-card-buttons .btn,
+            .ongoing-task-item .task-card-buttons .btn { /* Added ongoing-task-item here */
+                flex-grow: 0; /* Don't force them to grow, maintain natural width */
+            }
+        }
+
+
+        /* Show mobile navbar only on small screens */
+        .navbar.d-lg-none {
+            display: none; /* Hidden by default, shown by media query */
+        }
+        @media (max-width: 991px) {
+            .navbar.d-lg-none {
+                display: flex !important; /* Override Bootstrap's d-lg-none */
+            }
+        }
+
+        /* Offcanvas sidebar styling */
+        .offcanvas-header {
+            background-color: #121212;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .offcanvas-header .btn-close {
+            filter: invert(1); /* Make close button white */
+        }
+        .offcanvas-body .nav-link {
+            color: #fff;
+        }
+        .offcanvas-body .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Buttons specifically within task-card-buttons2 */
+        .task-card-buttons2 .task-action-btn {
+            border: 1px solid white;
+            color: white; /* Keep text white by default as per the dark card style */
+        }
+
+        .task-card-buttons2 .task-action-btn:hover {
+            background-color: white;
+            color: black; /* Change text to black on hover */
+            border-color: white; /* Ensure border stays white on hover */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-lg-none sticky-top p-3 shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">Tâskify.</a>
+            <div class="d-flex align-items-center order-lg-3">
+                <div class="icons me-3" style="padding:0; font-size:1.5rem; color: #333;">
+                    <i class="fa fa-bell"></i>
+                </div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSidebar" aria-controls="offcanvasSidebar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="offcanvasSidebar" aria-labelledby="offcanvasSidebarLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title fw-bold" id="offcanvasSidebarLabel">Tâskify.</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <nav class="w-100">
+                <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2"><i class="fa fa-chart-line"></i> Dashboard</a>
+                <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2"><i class="fa fa-chart-pie"></i> Statistics</a>
+                <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2"><i class="fa fa-users"></i> Team</a>
+                <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2"><i class="fa fa-inbox"></i> Inbox</a>
+                <a href="#" class="d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none mb-2"><i class="fa fa-cog"></i> Settings</a>
+            </nav>
+            <a href="#" class="logout mt-auto d-flex align-items-center gap-2 py-2 px-3 rounded text-white text-decoration-none"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="d-flex">
+        <div class="sidebar-wrapper d-none d-lg-block">
+            <aside class="sidebar">
+                <div class="logo">Tâskify.</div>
+                <nav class="w-100">
+                    <a href="#"><i class="fa fa-chart-line"></i> Dashboard</a>
+                    <a href="#"><i class="fa fa-chart-pie"></i> Statistics</a>
+                    <a href="#"><i class="fa fa-users"></i> Team</a>
+                    <a href="#"><i class="fa fa-inbox"></i> Inbox</a>
+                    <a href="#"><i class="fa fa-cog"></i> Settings</a>
+                </nav>
+                <a href="#" class="logout"><i class="fa fa-sign-out-alt"></i> Logout</a>
+            </aside>
+        </div>
+
+        <div class="container-fluid p-4 main-dashboard-content">
+            <div class="header-row">
+                <div class="greeting-card d-flex align-items-center">
+                    <div class="greeting-text">
+                        <h2 class="mb-0">Hello Mark!</h2>
+                        <p class="text-muted">It's good to see you again.</p>
+                    </div>
+                    <div class="greeting-image d-none d-lg-flex">
+                        <img src="welcome.jpg" alt="Welcome Graphic" class="img-fluid" />
+                        <div class="image-overlay"></div>
+                    </div>
+                </div>
+
+                <div class="toolbar">
+                    <div class="icons">
+                        <i class="fa fa-cog"></i>
+                        <i class="fa fa-bell"></i>
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <button class="create-task-btn">
+                        <div class="text-block">
+                            <h4 class="title">Create Task</h4>
+                        </div>
+                        <div class="plus-icon">
+                            <i class="fa fa-plus"></i>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <h5 class="fw-semibold mb-3">Today</h5>
+            <div class="row text-center mb-4">
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3">
+                        <h3 class="fw-bold">11h</h3>
+                        <p class="text-secondary">Hours Worked</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3">
+                        <h3 class="fw-bold">2</h3>
+                        <p class="text-secondary">Tasks Expiring Today</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3 mb-3">
+                        <h3 class="fw-bold">36</h3>
+                        <p class="text-secondary">Tasks Done</p>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="fw-semibold mb-3">Ongoing Projects</h5>
+            <div class="row mb-4 align-items-stretch">
+                <div class="col-md-6 mb-3">
+                    <div class="project-summary-card card p-3">
+                        <h6 class="fw-semibold text-center">Uber</h6>
+                        <p class="text-center text-secondary">A ride-sharing application development.</p>
+                        <div class="project-card-buttons">
+                            <button class="btn">Start Project</button>
+                            <button class="btn">Assign Task</button>
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#projectDetailsModal" data-project-id="1">See More</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="project-summary-card card p-3">
+                        <h6 class="fw-semibold text-center">Test Project</h6>
+                        <p class="text-center text-secondary">Internal testing and quality assurance project.</p>
+                        <div class="project-card-buttons">
+                            <button class="btn">Start Project</button>
+                            <button class="btn">Assign Task</button>
+                            <button class="btn" data-bs-toggle="modal" data-bs-target="#projectDetailsModal" data-project-id="2">See More</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="card stats-card p-3">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-semibold mb-0">Ongoing tasks</h5>
+                        </div>
+                        <div class="ongoing-task-item card p-3 mb-3" data-priority="high">
+                            <div class="priority-light"></div>
+                            <h6 class="fw-semibold">Task 1: Design Mockups</h6>
+                            <p class="text-secondary">Create initial wireframes and mockups for the new feature.</p>
+                            <p>Time Spent: <strong>2h 00m</strong></p>
+                            <p>Due Date: <strong>June 10, 2025</strong></p>
+                            <div class="task-card-buttons">
+                                <button class="task-action-btn">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Start Working</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-comment-dots"></i>
+                                    <span>Upload Comments</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-eye"></i>
+                                    <span>View</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Complete</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span>Read More</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ongoing-task-item card p-3 mb-3" data-priority="medium">
+                            <div class="priority-light"></div>
+                            <h6 class="fw-semibold">Task 2: Backend API Integration</h6>
+                            <p class="text-secondary">Integrate the frontend with the new user authentication API.</p>
+                            <p>Time Spent: <strong>2h 00m</strong></p>
+                            <p>Due Date: <strong>June 10, 2025</strong></p>
+                            <div class="task-card-buttons">
+                                <button class="task-action-btn">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Start Working</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-comment-dots"></i>
+                                    <span>Upload Comments</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-eye"></i>
+                                    <span>View</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Complete</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span>Read More</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="ongoing-task-item card p-3 mb-3" data-priority="low">
+                            <div class="priority-light"></div>
+                            <h6 class="fw-semibold">Task 3: Database Optimization</h6>
+                            <p class="text-secondary">Optimize database queries for improved performance and scalability.</p>
+                            <p>Time Spent: <strong>2h 00m</strong></p>
+                            <p>Due Date: <strong>June 10, 2025</strong></p>
+                            <div class="task-card-buttons">
+                                <button class="task-action-btn">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Start Working</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-comment-dots"></i>
+                                    <span>Upload Comments</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-eye"></i>
+                                    <span>View</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-check-circle"></i>
+                                    <span>Complete</span>
+                                </button>
+                                <button class="task-action-btn">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span>Read More</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card calendar-card mb-4 p-3">
+                        <h6 id="today-date" class="fw-semibold"></h6>
+                        <div class="row text-center mt-3 calendar-day">
+                            <div class="col">Sun</div><div class="col">Mon</div><div class="col">Tue</div>
+                            <div class="col">Wed</div><div class="col">Thu</div><div class="col">Fri</div><div class="col">Sat</div>
+                        </div>
+                        <div class="row text-center mt-2 calendar-date" id="calendar-dates"></div>
+                    </div>
+                    <div class="mt-4">
+                        <h5 class="fw-semibold mb-3">Pending Tasks</h5>
+                        <div class="task-card card p-3" data-priority="high">
+                            <div class="priority-light"></div>
+                            <h6 class="fw-semibold">Daily Standup Call</h6>
+                            <p class="text-secondary">Discuss team tasks for the day.</p>
+                            <p>Time Spent: <strong>2h 00m</strong></p>
+                            <p>Due Date: <strong>June 10, 2025</strong></p>
+                            <div class="task-card-buttons2">
+                                <button class="task-action-btn">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Start Task</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="task-card card p-3" data-priority="medium">
+                            <div class="priority-light"></div>
+                            <h6 class="fw-semibold">Brand Identity Meeting</h6>
+                            <p class="text-secondary">Discuss brand identity guidelines for the print media.</p>
+                            <p>Time Spent: <strong>2h 00m</strong></p>
+                            <p>Due Date: <strong>June 10, 2025</strong></p>
+                            <div class="task-card-buttons2">
+                                <button class="task-action-btn ">
+                                    <i class="fa fa-play-circle"></i>
+                                    <span>Start Task</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="projectDetailsModal" tabindex="-1" aria-labelledby="projectDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white" style="background-color: #121212; border-radius: 24px;">
+                <div class="modal-header border-bottom border-secondary">
+                    <h5 class="modal-title fw-bold" id="projectDetailsModalLabel">Project Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Project Name:</strong> <span id="modalProjectName"></span></p>
+                    <p><strong>Department:</strong> <span id="modalDepartment"></span></p>
+                    <p><strong>Due Date:</strong> <span id="modalDueDate"></span></p>
+                    <p><strong>Status:</strong> <span id="modalStatus"></span></p>
+                    <p><strong>Description:</strong> <span id="modalDescription"></span></p>
+                </div>
+                <div class="modal-footer border-top border-secondary d-flex justify-content-start">
+                    <button type="button" class="btn">Mark as Completed</button>
+                    <button type="button" class="btn">Create Your Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Get elements for calendar display
+        const dateElem = document.getElementById('today-date');
+        const calendarDatesElem = document.getElementById('calendar-dates');
+
+        // Get today's date
+        const today = new Date();
+
+        // Display today's date in the header
+        dateElem.innerHTML = `${today.toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })}<br><strong>Today</strong>`;
+
+        // Calculate the start of the current week (Sunday)
+        const weekStart = new Date(today);
+        weekStart.setDate(today.getDate() - today.getDay()); // Subtract days to get to Sunday
+
+        // Populate the calendar dates for the current week
+        for (let i = 0; i < 7; i++) {
+            const d = new Date(weekStart);
+            d.setDate(weekStart.getDate() + i); // Increment date for each day of the week
+
+            const col = document.createElement('div');
+            col.className = 'col';
+
+            // Highlight today's date
+            col.innerHTML = d.toDateString() === today.toDateString()
+                ? `<span class="calendar-highlight">${d.getDate()}</span>`
+                : d.getDate();
+            calendarDatesElem.appendChild(col);
+        }
+
+        // Project Details Modal Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample project data
+            const projectsData = [
+                {
+                    id: 1,
+                    name: "Uber",
+                    department: "Artificial intelligence",
+                    dueDate: "May 22, 2025",
+                    status: "Ongoing",
+                    description: "A ride-sharing application development focusing on user experience and backend scalability."
+                },
+                {
+                    id: 2,
+                    name: "Test Project",
+                    department: "Artificial intelligence",
+                    dueDate: "Oct. 14, 2025",
+                    status: "Ongoing",
+                    description: "Internal testing and quality assurance project for new AI model integration."
+                }
+            ];
+
+            const projectDetailsModal = document.getElementById('projectDetailsModal');
+
+            // Event listener for when the modal is about to be shown
+            projectDetailsModal.addEventListener('show.bs.modal', function (event) {
+                // Add blur to the main content to emphasize the modal
+                document.querySelector('.main-dashboard-content').classList.add('blurred');
+
+                // Button that triggered the modal
+                const button = event.relatedTarget;
+                // Extract project ID from the data-project-id attribute
+                const projectId = button.getAttribute('data-project-id');
+                // Find the corresponding project data
+                const project = projectsData.find(p => p.id == projectId);
+
+                if (project) {
+                    // Get modal elements
+                    const modalTitle = projectDetailsModal.querySelector('#projectDetailsModalLabel');
+                    const modalProjectName = projectDetailsModal.querySelector('#modalProjectName');
+                    const modalDepartment = projectDetailsModal.querySelector('#modalDepartment');
+                    const modalDueDate = projectDetailsModal.querySelector('#modalDueDate');
+                    const modalStatus = projectDetailsModal.querySelector('#modalStatus');
+                    const modalDescription = projectDetailsModal.querySelector('#modalDescription');
+
+                    // Populate modal with project data
+                    modalTitle.textContent = `Project Details: ${project.name}`;
+                    modalProjectName.textContent = project.name;
+                    modalDepartment.textContent = project.department;
+                    modalDueDate.textContent = project.dueDate;
+                    modalStatus.textContent = project.status;
+                    modalDescription.textContent = project.description;
+                }
+            });
+
+            // Event listener for when the modal is hidden
+            projectDetailsModal.addEventListener('hidden.bs.modal', function (event) {
+                // Remove blur from the main content
+                document.querySelector('.main-dashboard-content').classList.remove('blurred');
+            });
+        });
+    </script>
+</body>
+</html>

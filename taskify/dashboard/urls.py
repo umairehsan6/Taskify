@@ -50,5 +50,11 @@ urlpatterns = [
     # path('add-task-comment/', views.add_task_comment, name='add-task-comment'),
     # path('check-unread-messages/<int:task_id>/', views.check_unread_messages, name='check-unread-messages'),
 
-    path('pending-tasks/' , views.pending_tasks_json , name ='pending-tasks')
+    path('pending-tasks/' , views.pending_tasks_json , name ='pending-tasks'),
+    path('pending-tasks-json/', views.pending_tasks_json, name='pending-tasks-json'),
+    path('approval-pending-tasks-json/', views.approval_pending_tasks_json, name='approval-pending-tasks-json'),
+    path('ongoing-tasks/', views.ongoing_tasks_json, name='ongoing_tasks_json'),
+    path('ongoing-tasks-json/', views.ongoing_tasks_json, name='ongoing-tasks-json'),
+    path('get-task-report/<int:task_id>/', views.get_task_report, name='get_task_report'),
+    path('get-task-file/<int:task_id>/', views.get_task_file, name='get_task_file'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

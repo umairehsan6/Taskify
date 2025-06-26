@@ -302,21 +302,17 @@ def UpdateTaskStatus(request, task_id):
     if request.method == 'POST':
         try:
             task = Tasks.objects.get(id=task_id)
-
-            # This view now only handles marking as completed
-            if task.status == 'in_progress' or task.status == 'on_hold': # Allow completing from on_hold too if needed
-                 task.status = 'completed'
-                 task.submitted_on = timezone.now()
-                 task.save()
-                 messages.success(request, f"Task status updated to {task.get_status_display()}.")
-            else:
-                 messages.error(request, f"Task cannot be marked as completed from status: {task.get_status_display()}.")
-
+            new_status = request.POST.get('status') or 'completed'
+            task.status = new_status
+            task.save()
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'success': True})
+            messages.success(request, f"Task status updated to {task.get_status_display()}.")
         except Tasks.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
-        # Removed UserDepartment.DoesNotExist check as it's not needed for just completion
-
-    return redirect('new_employee_dashboard') # Redirect to the employee dashboard
+    return redirect('new_employee_dashboard')
 
 def hold_task(request, task_id):
     if request.method == 'POST':
@@ -371,21 +367,26 @@ def start_working(request, task_id):
                 # Set the current task to in_progress
                 task.status = 'in_progress'
                 task.save()
-                
                 # Start new time tracking session using the start_work method
                 session = TaskActivityLog.start_work(task)
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True})
                 if session:
                     messages.success(request, f"Task status updated to {task.get_status_display()} (started working).")
                 else:
                     messages.warning(request, f"Task marked as in progress, but time tracking will start when office hours begin.")
             else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': f'Task cannot be started from status: {task.get_status_display()}.'}, status=400)
                 messages.error(request, f"Task cannot be started from status: {task.get_status_display()}.")
-            
         except Tasks.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
         except UserDepartment.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'User department not found.'}, status=404)
             messages.error(request, "User department not found.")
-
     return redirect('new_employee_dashboard')
 
 def stop_working(request, task_id):
@@ -397,28 +398,30 @@ def stop_working(request, task_id):
             if task.status == 'in_progress':
                 task.status = 'on_hold'
                 task.save()
-                
                 # End time tracking session
                 current_session = TaskActivityLog.objects.filter(
                     task=task,
                     end_time__isnull=True
                 ).first()
-                
                 if current_session:
                     current_session.end_time = timezone.now()
                     current_session.duration = current_session.end_time - current_session.start_time
                     current_session.save()
-                    messages.success(request, f"Task status updated to {task.get_status_display()} (stopped working). Time spent: {current_session.duration}")
-                else:
-                    messages.success(request, f"Task status updated to {task.get_status_display()} (stopped working).")
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True})
+                messages.success(request, f"Task status updated to {task.get_status_display()} (stopped working). Time spent: {current_session.duration if current_session else ''}")
             else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': f'Task cannot be stopped from status: {task.get_status_display()}.'}, status=400)
                 messages.error(request, f"Task cannot be stopped from status: {task.get_status_display()}.")
-
         except Tasks.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
         except UserDepartment.DoesNotExist:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': 'User department not found.'}, status=404)
             messages.error(request, "User department not found.")
-
     return redirect('new_employee_dashboard')
 
 def DeleteTask(request, project_id):
@@ -485,10 +488,20 @@ def upload_task_file(request, task_id):
             if uploaded_file:
                 task.task_file = uploaded_file
                 task.save()
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': True,
+                        'file_url': task.task_file.url,
+                        'file_name': task.task_file.name.split('/')[-1]
+                    })
                 messages.success(request, "File uploaded successfully.")
             else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({'error': 'No file selected.'}, status=400)
                 messages.error(request, "No file selected.")
         except Exception as e:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({'error': str(e)}, status=500)
             messages.error(request, f"Error uploading file: {str(e)}")
     return redirect('new_employee_dashboard')
 
@@ -500,12 +513,27 @@ def upload_task_report(request, task_id):
             if report_text:
                 task.report = report_text
                 task.save()
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Report submitted successfully.'
+                    })
                 messages.success(request, "Report submitted successfully.")
             else:
+                if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Report text is required.'
+                    }, status=400)
                 messages.error(request, "Report text is required.")
         except Exception as e:
+            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+                return JsonResponse({
+                    'success': False,
+                    'error': str(e)
+                }, status=500)
             messages.error(request, f"Error submitting report: {str(e)}")
-    return redirect('employee_dashboard')
+    return redirect('new_employee_dashboard')
 
 def download_task_file(request, task_id):
     try:
@@ -524,16 +552,25 @@ def download_task_file(request, task_id):
 
 def approve_task(request, task_id):
     if request.method == 'POST':
+        is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
         try:
             task = Tasks.objects.get(id=task_id)
             if task.status == 'not_assigned':
                 task.status = 'pending'
                 task.save()
+                if is_ajax:
+                    return JsonResponse({'success': True})
                 messages.success(request, "Task has been approved and is now pending.")
             else:
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': 'This task cannot be approved.'}, status=400)
                 messages.error(request, "This task cannot be approved.")
         except Tasks.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': 'Unknown error.'}, status=500)
     if request.session['user_role'] == 'admin':
         return redirect('assigned_tasks')
     elif request.session['user_role'] in ['project_manager', 'teamlead']:
@@ -1653,3 +1690,84 @@ def start_task(request, task_id):
         except Tasks.DoesNotExist:
             return JsonResponse({'error': 'Task not found.'}, status=404)
     return JsonResponse({'error': 'Invalid request.'}, status=400)
+
+def ongoing_tasks_json(request):
+    if 'user_id' not in request.session:
+        return JsonResponse({'tasks': []})
+    try:
+        user_department = UserDepartment.objects.get(user_id=request.session['user_id'])
+    except UserDepartment.DoesNotExist:
+        return JsonResponse({'tasks': []})
+
+    ongoing_tasks = Tasks.objects.filter(
+        assigned_to=user_department,
+        status__in=['in_progress', 'on_hold']
+    ).order_by('-id')
+    tasks_data = []
+    for task in ongoing_tasks:
+        tasks_data.append({
+            'id': task.id,
+            'task_name': task.task_name,
+            'project': task.project.name if task.project else '',
+            'priority': task.get_priority_display(),
+            'status': task.get_status_display(),
+            'due_date': task.due_date.strftime('%B %d, %Y') if task.due_date else '',
+            'time_spent': task.get_total_time_spent() if hasattr(task, 'get_total_time_spent') else '0h 0m',
+            'description': task.task_description or '',
+        })
+    return JsonResponse({'tasks': tasks_data})
+def get_task_report(request, task_id):
+    try:
+        task = Tasks.objects.get(id=task_id)
+        return JsonResponse({'success': True, 'report': task.report or ''})
+    except Tasks.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Task not found'}, status=404)
+def get_task_file(request, task_id):
+    try:
+        task = Tasks.objects.get(id=task_id)
+        file_url = task.task_file.url if task.task_file else ''
+        file_name = task.task_file.name.split('/')[-1] if task.task_file else ''
+        return JsonResponse({'success': True, 'file_url': file_url, 'file_name': file_name})
+    except Tasks.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Task not found'}, status=404)
+
+def approval_pending_tasks_json(request):
+    if 'user_id' not in request.session:
+        return JsonResponse({'tasks': []})
+    
+    user_role = request.session.get('user_role', 'employee')
+    signup_user = SignupUser.objects.get(id=request.session['user_id'])
+    
+    try:
+        if user_role in ['teamlead', 'project_manager']:
+            # For team leads/project managers, get their departments
+            user_departments = Department.objects.filter(userdepartment__user=signup_user)
+            tasks = Tasks.objects.filter(
+                project__department__in=user_departments,
+                status='not_assigned'
+            ).select_related('project', 'assigned_to__user')
+        else:
+            # For regular employees, get only their tasks
+            tasks = Tasks.objects.filter(
+                assigned_to__user=signup_user,
+                status='not_assigned'
+            ).select_related('project')
+
+        tasks_data = []
+        for task in tasks:
+            tasks_data.append({
+                'id': task.id,
+                'task_name': task.task_name,
+                'task_description': task.task_description,
+                'project_name': task.project.name if task.project else '',
+                'project_department': task.project.department.name if task.project and task.project.department else '',
+                'due_date': task.due_date.strftime('%Y-%m-%d') if task.due_date else '',
+                'status': task.status,
+                'status_display': task.get_status_display(),
+                'priority': task.get_priority_display(),
+                'time_spent': task.get_total_time_spent()
+            })
+        
+        return JsonResponse({'tasks': tasks_data})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
