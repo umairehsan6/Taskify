@@ -1,0 +1,11 @@
+{% load static %}
+<div class="d-flex align-items-center py-2 bg-dark position-relative" style="z-index: 1000">
+        <div class="flex-grow-1 text-center">
+            {% if user_role == 'admin' %}
+            <div class="topbar text-light">Admin Panel</div>
+            {% else %}
+            <div class="topbar text-light">Manager Panel</div>
+            {% endif %}
+        </div>
+</div>
+<div style="height: 60px"></div>

@@ -1,5 +1,5 @@
-{% include "header.html" %}
-
+{% extends "admin-dashboard/base.html" %}
+{% block content %}
   <div id="assignTasksSection" class="glass-card">
         <h3 class="text-center mb-4">New Project</h3>
         <form method="POST" action="{%url 'add-projects'%}">
@@ -32,4 +32,4 @@
         </form>
    </div>
 
-{%include "footer.html"%}
+{% endblock %}

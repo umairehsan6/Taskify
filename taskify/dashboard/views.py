@@ -41,7 +41,7 @@ def AddDepartments(request):
         
         departments = Department.objects.all()
 
-        return render(request, 'dashboard/dashboard-departments.html', {
+        return render(request, 'admin-dashboard/dashboard-departments.html', {
             'departments': departments, 
             'user_role': user_role,
             'active_page': 'departments',
@@ -114,7 +114,7 @@ def AddProjects(request):
             return redirect('add-projects')
         else:
             departments = Department.objects.all()
-            return render(request, 'dashboard/dashboard-addprojects.html', {
+            return render(request, 'admin-dashboard/dashboard-addprojects.html', {
                 'departments': departments,
                 'user_role': user_role,
                 'active_page': 'new_project'
@@ -141,7 +141,7 @@ def AllProjects(request):
                 selected_project = None
                 filtered_employees = None
 
-        return render(request, 'dashboard/dashboard-allprojects.html', {
+        return render(request, 'admin-dashboard/dashboard-allprojects.html', {
             'projects': projects,
             'active_page': 'all_projects',
             'task_priorities': task_priorities,
@@ -254,7 +254,7 @@ def AssignedTasks(request):
         )
         
         if request.session['user_role'] == 'admin':
-            return render(request, 'dashboard/dashboard-tasks.html', {
+            return render(request, 'admin-dashboard/dashboard-tasks.html', {
                 'projects': projects,
                 'tasks': tasks,  # Add tasks to context
                 'user_role': user_role,
@@ -591,7 +591,7 @@ def dashboard_settings(request):
             'active_page': 'settings',
             'user_role': user_role,
         }
-        return render(request, 'dashboard/dashboard-settings.html', context)
+        return render(request, 'admin-dashboard/dashboard-settings.html', context)
     else:
         messages.error(request, "You don't have permission to perform this action.")
         return redirect('login')
@@ -741,7 +741,7 @@ def dashboard(request):
         user_role = request.session.get('user_role', 'employee')
         roles_with_access = ['admin', 'manager']
         if 'user_role' in request.session and request.session['user_role'] in roles_with_access:
-            return render(request, 'dashboard/dashboard.html', 
+            return render(request, 'admin-dashboard/dashboard.html', 
                           {
                             'users': users,
                             'departments': departments,
@@ -1384,7 +1384,7 @@ def admindashboard_stats(request):
         'tasks_done': tasks_done,
         'employee_stats': employee_stats
     }
-    return render(request, 'dashboard/admindashboard-stats.html', context)
+    return render(request, 'admin-dashboard/admindashboard-stats.html', context)
 
 def get_project_tasks(request, project_id):
     print(f"DEBUG: get_project_tasks view reached for project_id: {project_id}")
@@ -1498,7 +1498,7 @@ def about_company(request):
         'user_role': user_role,
         'active_page': 'about_company',
     }
-    return render(request, 'dashboard/about-company.html', context)
+    return render(request, 'admin-dashboard/about-company.html', context)
 
 def employee_company_profile(request):
     company = companyDetails.get_instance()

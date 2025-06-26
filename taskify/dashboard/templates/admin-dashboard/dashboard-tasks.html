@@ -1,6 +1,5 @@
-<!-- Assigned Tasks Section -->
-{%include 'header.html'%}
-
+{% extends "admin-dashboard/base.html" %}
+{% block content %}
     <div id="assignedTasksSection" class="glass-card">
         <h3 class="text-center mb-4">Assigned Tasks</h3>
         <div class="mb-3">
@@ -190,5 +189,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
-{%include 'footer.html'%}
+{% endblock %}

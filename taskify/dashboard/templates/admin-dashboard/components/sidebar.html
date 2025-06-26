@@ -1,0 +1,74 @@
+{% load static %}
+<div class="sidebar" style="z-index: 999">
+    <ul>
+      {% if user_role == 'admin' or user_role == 'manager' %}
+      <!-- Admin and Manager menu -->
+      <li>
+        <a
+          href="{% url 'admin_statistics' %}"
+          id="usersLink"
+          class="nav-link {% if active_page == 'admin_statistics' %}active{% endif %}"
+          >Dashboard</a
+        >
+      </li>
+      <li>
+        <a
+          href="{% url 'all-projects' %}"
+          id="allProjectsLink"
+          class="nav-link {% if active_page == 'all_projects' %}active{% endif %}"
+          >All Projects</a
+        >
+      </li>
+      <li>
+        <a
+          href="{% url 'add-projects' %}"
+          class="nav-link {% if active_page == 'new_project' %}active{% endif %}"
+          >New Project</a
+        >
+      </li>
+      {% if user_role == 'admin' %}
+      <li>
+        <a
+          href="{% url 'assigned_tasks' %}"
+          class="nav-link {% if active_page == 'assigned_tasks' %}active{% endif %}"
+          >Assigned Tasks</a
+        >
+      </li>
+      {% endif %}
+      <li>
+        <a
+          href="{% url 'dashboard' %}"
+          id="usersLink"
+          class="nav-link {% if active_page == 'dashboard' %}active{% endif %}"
+          >Users</a
+        >
+      </li>
+      <li>
+        <a
+          href="{% url 'dashboard_settings' %}"
+          class="nav-link {% if active_page == 'settings' %}active{% endif %}"
+          >Time Schedule</a
+        >
+      </li>
+      <li>
+        <a
+          href="{% url 'add_department' %}"
+          id="departmentsLink"
+          class="nav-link {% if active_page == 'departments' %}active{% endif %}"
+          >Manage Departments</a
+        >
+      </li>
+      <li>
+        <a
+          href="{% url 'about_company' %}"
+          class="nav-link {% if active_page == 'about_company' %}active{% endif %}"
+          >About Company</a
+        >
+      </li>
+      {% endif %}
+
+      <li>
+        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+      </li>
+    </ul>
+  </div>
