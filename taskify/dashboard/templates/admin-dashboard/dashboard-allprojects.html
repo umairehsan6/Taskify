@@ -31,7 +31,7 @@
                                 {% elif project.status == 'completed' %}bg-success 
                                 {% elif project.status == 'on_hold' %}bg-warning 
                                 {% elif project.status == 'cancelled' %}bg-danger
-                                {% endif %} rounded-pill">
+                                {% endif %} rounded-pill" id="status-badge-{{ project.id }}">
                                 {{ project.get_status_display }}
                             </span>
                         </td>
@@ -43,26 +43,16 @@
                                         Change Status
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'update-project-status' project.id 'ongoing' %}">Ongoing</a>
-                                        </li>
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'update-project-status' project.id 'completed' %}">Completed</a>
-                                        </li>
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'update-project-status' project.id 'on_hold' %}">Hold</a>
-                                        </li>
-                                        <li><a class="dropdown-item"
-                                                href="{% url 'update-project-status' project.id 'cancelled' %}">Cancel</a>
-                                        </li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="ongoing">Ongoing</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="completed">Completed</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="on_hold">Hold</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="cancelled">Cancel</button></li>
                                     </ul>
                                 </div>
                                 {% if project.status == 'ongoing' %}
                                 {% if user_role == 'admin' %}
-                                <a href="{% url 'all-projects' %}?assign={{ project.id }}"
-                                    class="btn btn-sm border border-primary text-primary"
-                                    style="background: transparent;">
-                                        Assign Task
+                                <a href="#" class="btn btn-sm border border-primary text-primary assign-task-link" data-project-id="{{ project.id }}">
+                                    Assign Task
                                 </a>
                                 {% endif %}
                                 {% else %}
@@ -180,4 +170,6 @@
         </div>
     </div>
 
+    <!-- CSRF token for AJAX requests -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" id="csrf-token-for-ajax" />
 {% endblock %}

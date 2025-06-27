@@ -1,5 +1,6 @@
 {% extends "admin-dashboard/base.html" %}
 {% block content %}
+    {% csrf_token %}
     <!-- Users Section -->
     <div id="userSection" class="glass-card">
       <h3 class="text-center mb-4">User Management</h3>
@@ -47,7 +48,7 @@
                       <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Promote</button>
                       <ul class="dropdown-menu">
                         {% for role_value, role_label in roles %}
-                        <li><a class="dropdown-item" href="{% url 'promote_user' user.id role_value %}">{{ role_label }}</a></li>
+                        <li><a class="dropdown-item promote-user-btn" href="#" data-user-id="{{ user.id }}" data-role-value="{{ role_value }}">{{ role_label }}</a></li>
                         {% endfor %}
                       </ul>
                     </div>
@@ -58,14 +59,14 @@
                       <ul class="dropdown-menu">
                           {% for dept in departments %}
                           <li>
-                              <a class="dropdown-item" href="{% url 'assign_department' user.id dept.id %}">
+                              <a class="dropdown-item assign-department-btn" href="#" data-user-id="{{ user.id }}" data-dept-id="{{ dept.id }}">
                                   {{ dept.name }}
                               </a>
                           </li>
                           {% endfor %}
                       </ul>
                     </div>
-                    <a href="{% url 'toggle_status' user.id %}" class="btn {% if user.status %}btn-danger{% else %}btn-success{% endif %} rounded-pill">{% if user.status %}Disable{% else %}Activate{% endif %}</a>
+                    <a href="#" class="btn {% if user.status %}btn-danger{% else %}btn-success{% endif %} rounded-pill toggle-status-btn" data-user-id="{{ user.id }}">{% if user.status %}Disable{% else %}Activate{% endif %}</a>
                   </div>
               </td>
               </tr>

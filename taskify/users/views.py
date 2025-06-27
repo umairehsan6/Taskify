@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import JsonResponse
 
 # Create your views here.
 from django.shortcuts import render
@@ -232,35 +233,67 @@ def Logout(request):
     return redirect('login')
 
 def ToggleUserStatus(request, user_id):
-    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:  # Use 'user_role'
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:
         try:
             user = SignupUser.objects.get(id=user_id)
-            if user.role == 'admin':  # Prevent disabling admins
-                messages.error(request, "You cannot disable an admin.")
+            if user.role == 'admin':
+                msg = "You cannot disable an admin."
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': msg}, status=400)
+                messages.error(request, msg)
             else:
-                user.status = not user.status  # Toggle the status
+                user.status = not user.status
                 user.save()
+                if is_ajax:
+                    return JsonResponse({
+                        'success': True,
+                        'is_active': user.status,
+                        'new_status_display': 'Active' if user.status else 'Disabled'
+                    })
                 messages.success(request, f"{user.username}'s status has been updated.")
         except SignupUser.DoesNotExist:
-            messages.error(request, "User does not exist.")
+            msg = "User does not exist."
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': msg}, status=404)
+            messages.error(request, msg)
     else:
-        messages.error(request, "You do not have permission to perform this action.")
+        msg = "You do not have permission to perform this action."
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': msg}, status=403)
+        messages.error(request, msg)
     return redirect('dashboard')
 
 def PromoteUser(request, user_id, new_role):
-    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:  # Use 'user_role'
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:
         try:
             user = SignupUser.objects.get(id=user_id)
-            if user.role == 'admin':  # Prevent demoting an admin
-                messages.error(request, "You cannot demote an admin.")
-            elif new_role in dict(SignupUser.ROLE_CHOICES):  # Validate the role
-                user.role = new_role  # Update the user's role
+            if user.role == 'admin':
+                msg = "You cannot demote an admin."
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': msg}, status=400)
+                messages.error(request, msg)
+            elif new_role in dict(SignupUser.ROLE_CHOICES):
+                user.role = new_role
                 user.save()
-                messages.success(request, f"{user.username} has been promoted to {new_role.replace('_', ' ').capitalize()}.")
+                msg = f"{user.username} has been promoted to {new_role.replace('_', ' ').capitalize()}."
+                if is_ajax:
+                    return JsonResponse({'success': True, 'new_role': user.get_role_display()})
+                messages.success(request, msg)
             else:
-                messages.error(request, "Invalid role.")
+                msg = "Invalid role."
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': msg}, status=400)
+                messages.error(request, msg)
         except SignupUser.DoesNotExist:
-            messages.error(request, "User does not exist.")
+            msg = "User does not exist."
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': msg}, status=404)
+            messages.error(request, msg)
     else:
-        messages.error(request, "You do not have permission to perform this action.")
+        msg = "You do not have permission to perform this action."
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': msg}, status=403)
+        messages.error(request, msg)
     return redirect('dashboard')

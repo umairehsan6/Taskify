@@ -21,6 +21,7 @@ urlpatterns = [
     path('get-project-tasks/<int:project_id>/', views.get_project_tasks, name='get-project-tasks'),
     path('check-project-unread/<int:project_id>/', views.check_project_unread, name='check-project-unread'),
     path('test-project-notification/<int:project_id>/', views.test_project_notification, name='test-project-notification'),
+    path('get-project-employees/<int:project_id>/', views.get_project_employees, name='get_project_employees'),
     #Tasks
     path('create-task/', views.CreateTask, name='create_task'),
     path('update-task-status/<int:task_id>/', views.UpdateTaskStatus, name='update_task_status'),

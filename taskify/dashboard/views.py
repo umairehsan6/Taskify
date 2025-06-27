@@ -20,13 +20,7 @@ from .models import ChatMessage, TaskReadStatus
 import logging
 from django.views.decorators.csrf import csrf_exempt
 logger = logging.getLogger(__name__)
-
-
-
-
-
 # Create your views here.
-
 def AddDepartments(request):
     if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:  
         user_role = request.session.get('user_role', 'employee')
@@ -64,23 +58,32 @@ def DeleteDepartment(request, department_id):
     return redirect('add_department')  # Redirect to the same page or any other page as needed
 
 def AssignDepartment(request, user_id, department_id):
-    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:  # Use 'user_role'
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+    if 'user_role' in request.session and request.session['user_role'] in ['admin', 'manager']:
         try:
             user = SignupUser.objects.get(id=user_id)
             department = Department.objects.get(id=department_id)
             user_department, created = UserDepartment.objects.get_or_create(user=user)
             user_department.department = department
             user_department.save()
+            if is_ajax:
+                return JsonResponse({'success': True, 'new_department': department.name})
             if created:
                 messages.success(request, f"{user.username} was newly linked to department {department.name}.")
             else:
                 messages.success(request, f"{user.username}'s department was updated to {department.name}.")
         except SignupUser.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'User does not exist.'}, status=404)
             messages.error(request, "User does not exist.")
         except Department.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Department does not exist.'}, status=404)
             messages.error(request, "Department does not exist.")
         return redirect('dashboard')
     else:
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': 'You do not have permission to perform this action.'}, status=403)
         messages.error(request, "You do not have permission to perform this action.")
         return redirect('login')
     
@@ -154,13 +157,20 @@ def AllProjects(request):
         return redirect('login')
     
 def UpdateProjectStatus(request, project_id, new_status):
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     try:
         project = Projects.objects.get(id=project_id)
         project.status = new_status
         project.save()
-        messages.success(request, f"Project status updated to {project.get_status_display()}.")
+        msg = f"Project status updated to {project.get_status_display()}."
+        if is_ajax:
+            return JsonResponse({'success': True, 'message': msg, 'new_status': project.get_status_display()})
+        messages.success(request, msg)
     except Projects.DoesNotExist:
-        messages.error(request, "Project does not exist.")
+        error_msg = "Project does not exist."
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': error_msg}, status=404)
+        messages.error(request, error_msg)
 
     user_role = request.session.get('user_role')
     if user_role == 'admin':
@@ -222,7 +232,7 @@ def CreateTask(request):
             )
             messages.success(request, "Task successfully created.")
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'success': True})
+                return JsonResponse({'success': True, 'message': 'Task created successfully!'})
             else:
                 return redirect('new_employee_dashboard')
         except Projects.DoesNotExist:
@@ -426,19 +436,26 @@ def stop_working(request, task_id):
 
 def DeleteTask(request, project_id):
     task_id = request.GET.get('task_id') or request.POST.get('task_id')
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     if task_id:
         try:
             task = Tasks.objects.get(id=task_id)
             task.delete()
+            if is_ajax:
+                return JsonResponse({'success': True, 'message': 'Task deleted successfully.'})
             messages.success(request, "Task deleted successfully.")
         except Tasks.DoesNotExist:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
     else:
+        if is_ajax:
+            return JsonResponse({'success': False, 'error': 'No task ID provided.'}, status=400)
         messages.error(request, "No task ID provided.")
 
     # Redirect based on user role
     if request.session['user_role'] == 'admin':
-        return redirect('all-projects')
+        return redirect('assigned_tasks')
     elif request.session['user_role'] in ['project_manager', 'teamlead']:
         return redirect('new_employee_dashboard')  # Redirect back to the team tasks page
     else:
@@ -1771,3 +1788,19 @@ def approval_pending_tasks_json(request):
         return JsonResponse({'tasks': tasks_data})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500)
+    
+def get_project_employees(request, project_id):
+    try:
+        project = Projects.objects.get(id=project_id)
+        employees = UserDepartment.objects.filter(department=project.department)
+        employee_list = [
+            {
+                'id': emp.user.id,
+                'name': f"{emp.user.first_name} {emp.user.last_name}".strip() or emp.user.username
+            }
+            for emp in employees if emp.user is not None  # Only include if user exists
+        ]
+        return JsonResponse({'employees': employee_list})
+    except Projects.DoesNotExist:
+        return JsonResponse({'employees': []})
+

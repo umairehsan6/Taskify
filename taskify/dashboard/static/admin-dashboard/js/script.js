@@ -1,50 +1,50 @@
-
       document.addEventListener("DOMContentLoaded", function () {
         const modal = document.getElementById("createTaskModal");
+        if (modal) {
+          modal.addEventListener("show.bs.modal", function (event) {
+            const button = event.relatedTarget;
+            const projectId = button.getAttribute("data-project-id");
+            const projectName = button
+              .closest("tr")
+              .querySelector("td:nth-child(2)").textContent;
 
-        modal.addEventListener("show.bs.modal", function (event) {
-          const button = event.relatedTarget;
-          const projectId = button.getAttribute("data-project-id");
-          const projectName = button
-            .closest("tr")
-            .querySelector("td:nth-child(2)").textContent;
+            // Update hidden project ID field
+            const projectIdInput = modal.querySelector(
+              'input[name="project_id"]'
+            );
+            projectIdInput.value = projectId;
 
-          // Update hidden project ID field
-          const projectIdInput = modal.querySelector(
-            'input[name="project_id"]'
-          );
-          projectIdInput.value = projectId;
+            // Update project name display
+            const projectNameInput = modal.querySelector(
+              'input[name="project_name"]'
+            );
+            projectNameInput.value = projectName;
 
-          // Update project name display
-          const projectNameInput = modal.querySelector(
-            'input[name="project_name"]'
-          );
-          projectNameInput.value = projectName;
+            // Update form action
+            const form = modal.querySelector("#createTaskForm");
+            form.action = `{% url 'create_task' %}?project_id=${projectId}`;
 
-          // Update form action
-          const form = modal.querySelector("#createTaskForm");
-          form.action = `{% url 'create_task' %}?project_id=${projectId}`;
+            // Fetch employees for the project's department
+            fetch(`/admin-dashboard/?project_id=${projectId}`)
+              .then((response) => response.text())
+              .then((html) => {
+                // Extract the filtered employees from the response
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                const employeeSelect = modal.querySelector(
+                  'select[name="assigned_to"]'
+                );
+                const newEmployeeSelect = doc.querySelector(
+                  'select[name="assigned_to"]'
+                );
 
-          // Fetch employees for the project's department
-          fetch(`/admin-dashboard/?project_id=${projectId}`)
-            .then((response) => response.text())
-            .then((html) => {
-              // Extract the filtered employees from the response
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(html, "text/html");
-              const employeeSelect = modal.querySelector(
-                'select[name="assigned_to"]'
-              );
-              const newEmployeeSelect = doc.querySelector(
-                'select[name="assigned_to"]'
-              );
-
-              if (newEmployeeSelect) {
-                employeeSelect.innerHTML = newEmployeeSelect.innerHTML;
-              }
-            })
-            .catch((error) => console.error("Error:", error));
-        });
+                if (newEmployeeSelect) {
+                  employeeSelect.innerHTML = newEmployeeSelect.innerHTML;
+                }
+              })
+              .catch((error) => console.error("Error:", error));
+          });
+        }
       });
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -77,35 +77,11 @@
             if (data.tasks.length > 0) {
               tasksTableContainer.classList.remove("d-none");
               data.tasks.forEach((task, index) => {
-                const viewFilesButton =
-                  task.status === "completed"
-                    ? `
-                    <button type="button"
-                            class="btn btn-outline-info btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#viewFilesModal"
-                            data-task-id="${task.id}"
-                            data-file-url="${task.file_url}"
-                            data-file-name="${task.file_name}"
-                            data-report-text="${task.report}"
-                            data-feedback="#">
-                      View Files
-                    </button>`
-                    : "";
-
-                const approveButton =
-                  task.status === "not_assigned"
-                    ? `
-                    <form action="/dashboard/tasks/approve-task/${task.id}/" method="POST" style="display: inline; margin: 0; padding: 0;">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success task-action-btn">Approve</button>
-                    </form>`
-                    : "";
-
+                const actionButtons = getAdminActionButtons(task, projectId);
                 const row = `
                     <tr>
                       <td>${index + 1}</td>
-                      <td>${task.name}</td>
+                      <td>${task.task_name}</td>
                       <td>${task.assigned_to}</td>
                       <td>${task.assigned_from}</td>
                       <td>${task.time_spent || "0h 0m"}</td>
@@ -117,11 +93,7 @@
                         } rounded-pill">${task.status_display}</span>
                       </td>
                       <td>
-                        ${approveButton}
-                        <a href="/dashboard/tasks/delete-task/${projectId}/?task_id=${
-                  task.id
-                }" class="btn btn-danger task-action-btn" onclick="return confirm('Are you sure you want to delete this task?');">Delete</a>
-                        ${viewFilesButton}
+                        ${actionButtons}
                       </td>
                     </tr>
                   `;
@@ -230,35 +202,11 @@
               if (data.tasks.length > 0) {
                 tasksTableContainer.classList.remove("d-none");
                 data.tasks.forEach((task, index) => {
-                  const viewFilesButton =
-                    task.status === "completed"
-                      ? `
-                    <button type="button"
-                            class="btn btn-outline-info btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#viewFilesModal"
-                            data-task-id="${task.id}"
-                            data-file-url="${task.file_url}"
-                            data-file-name="${task.file_name}"
-                            data-report-text="${task.report}"
-                            data-feedback="#">
-                      View Files
-                    </button>`
-                      : "";
-
-                  const approveButton =
-                    task.status === "not_assigned"
-                      ? `
-                    <form action="/dashboard/tasks/approve-task/${task.id}/" method="POST" style="display: inline; margin: 0; padding: 0;">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-success task-action-btn">Approve</button>
-                    </form>`
-                      : "";
-
+                  const actionButtons = getAdminActionButtons(task, projectId);
                   const row = `
                     <tr>
                       <td>${index + 1}</td>
-                      <td>${task.name}</td>
+                      <td>${task.task_name}</td>
                       <td>${task.assigned_to}</td>
                       <td>${task.assigned_from}</td>
                       <td>${task.time_spent || "0h 0m"}</td>
@@ -270,11 +218,7 @@
                         } rounded-pill">${task.status_display}</span>
                       </td>
                       <td>
-                        ${approveButton}
-                        <a href="/dashboard/tasks/delete-task/${projectId}/?task_id=${
-                    task.id
-                  }" class="btn btn-danger task-action-btn" onclick="return confirm('Are you sure you want to delete this task?');">Delete</a>
-                        ${viewFilesButton}
+                        ${actionButtons}
                       </td>
                     </tr>
                   `;
@@ -304,3 +248,503 @@
           });
         }
       });
+
+      // document.querySelectorAll('.update-status-btn').forEach(function(button) {
+      //   button.addEventListener('click', function(e) {
+      //     e.preventDefault();
+      //     const projectId = this.getAttribute('data-project-id');
+      //     const newStatus = this.getAttribute('data-new-status');
+      //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+      //     fetch(`/dashboard/update_project_status/${projectId}/${newStatus}/`, {
+      //       method: 'POST',
+      //       headers: {
+      //         'X-Requested-With': 'XMLHttpRequest',
+      //         'X-CSRFToken': csrfToken
+      //       }
+      //     })
+      //     .then(response => response.json())
+      //     .then(data => {
+      //       if (data.success) {
+      //         alert(data.message);
+      //         // Optionally update the status in the UI
+      //         // document.getElementById(`status-${projectId}`).textContent = data.new_status;
+      //       } else {
+      //         alert(data.error || 'Failed to update status.');
+      //       }
+      //     })
+      //     .catch(error => {
+      //       alert('An error occurred: ' + error);
+      //     });
+      //   });
+      // });
+      document.querySelectorAll('.update-status-btn').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const projectId = this.getAttribute('data-project-id');
+            const newStatus = this.getAttribute('data-new-status');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(`/dashboard/update-project-status/${projectId}/${newStatus}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update the badge text and color
+                    const badge = document.getElementById(`status-badge-${projectId}`);
+                    if (badge) {
+                        badge.textContent = data.new_status;
+                        badge.classList.remove('bg-warning', 'bg-primary', 'bg-success', 'bg-danger');
+                        switch (newStatus) {
+                            case 'pending':
+                                badge.classList.add('bg-warning');
+                                break;
+                            case 'ongoing':
+                                badge.classList.add('bg-primary');
+                                break;
+                            case 'completed':
+                                badge.classList.add('bg-success');
+                                break;
+                            case 'on_hold':
+                                badge.classList.add('bg-warning');
+                                break;
+                            case 'cancelled':
+                                badge.classList.add('bg-danger');
+                                break;
+                        }
+                    }
+                } else {
+                    alert(data.error || 'Failed to update status.');
+                }
+            })
+            .catch(error => {
+                alert('An error occurred: ' + error);
+            });
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.assign-task-link').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const projectId = this.getAttribute('data-project-id');
+                let projectName = '';
+                const row = this.closest('tr');
+                if (row) {
+                    const nameCell = row.querySelector('td:nth-child(2)');
+                    if (nameCell) {
+                        projectName = nameCell.textContent.trim();
+                    }
+                }
+                const modal = document.getElementById('createTaskModal');
+                const projectIdInput = modal.querySelector('input[name="project_id"]');
+                const projectNameInput = modal.querySelector('input[name="project_name"]');
+                if (projectIdInput) projectIdInput.value = projectId;
+                if (projectNameInput && projectName) projectNameInput.value = projectName;
+
+                // Fetch employees for the selected project and populate the dropdown
+                const employeeSelect = modal.querySelector('select[name="assigned_to"]');
+                if (employeeSelect) {
+                    employeeSelect.innerHTML = '<option value="">Select User</option>';
+                    console.log('Fetching employees for project:', projectId);
+                    fetch(`/dashboard/get-project-employees/${projectId}/`)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Received employees:', data.employees);
+                            data.employees.forEach(emp => {
+                                const option = document.createElement('option');
+                                option.value = emp.id;
+                                option.textContent = emp.name;
+                                employeeSelect.appendChild(option);
+                            });
+                        });
+                }
+                var bsModal = new bootstrap.Modal(modal);
+                bsModal.show();
+            });
+        });
+    });
+
+    // AJAX for admin create task form (similar to teamlead panel)
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('createTaskForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => { throw data; });
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Show success message (use Bootstrap alert or custom)
+                let msg = document.getElementById('createTaskMessage');
+                if (!msg) {
+                    msg = document.createElement('div');
+                    msg.id = 'createTaskMessage';
+                    msg.className = 'alert alert-success';
+                    msg.textContent = 'Task created successfully!';
+                    form.prepend(msg);
+                } else {
+                    msg.className = 'alert alert-success';
+                    msg.textContent = 'Task created successfully!';
+                    msg.classList.remove('d-none');
+                }
+                // Reset form fields
+                form.reset();
+                // Hide message after 3 seconds
+                setTimeout(() => {
+                    msg.classList.add('d-none');
+                }, 3000);
+                // Optionally close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('createTaskModal'));
+                if (modal) {
+                    setTimeout(() => modal.hide(), 1000);
+                }
+                // Optionally refresh the project/task list here
+            })
+            .catch(error => {
+                const errorMessage = error.error || error.message || 'Could not create task.';
+                alert('Error: ' + errorMessage);
+                console.error('Form submission error:', error);
+            });
+        });
+    });
+
+    // Helper function for action buttons
+    function getAdminActionButtons(task, projectId) {
+        let buttons = '';
+        if (task.status === 'not_assigned') {
+            buttons += `
+                <button type="button" class="btn btn-success btn-sm approve-task-btn" data-task-id="${task.id}">Approve</button>`;
+        }
+        buttons += `
+            <button type="button" class="btn btn-danger btn-sm delete-task-btn" data-task-id="${task.id}" data-project-id="${projectId}">Delete</button>`;
+        if (task.status === 'completed') {
+            buttons += `
+                <button type="button"
+                        class="btn btn-outline-info btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#viewFilesModal"
+                        data-task-id="${task.id}"
+                        data-file-url="${task.file_url}"
+                        data-file-name="${task.file_name}"
+                        data-report-text="${task.report}">
+                    View Files
+                </button>`;
+        }
+        return buttons;
+    }
+
+    console.log('Script loaded');
+function adminFilterTasksByProject() {
+    const projectDropdown = document.getElementById('projectDropdown');
+    const getTasksUrl = projectDropdown.getAttribute('data-get-tasks-url');
+    const projectId = projectDropdown.value;
+    const tasksTableContainer = document.getElementById('tasksTableContainer');
+    const tasksTableBody = document.getElementById('tasksTableBody');
+
+    if (!projectId) {
+        tasksTableContainer.classList.add('d-none');
+        return;
+    }
+
+    tasksTableBody.innerHTML = '';
+    fetch(getTasksUrl + '?project_id=' + projectId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.tasks.length > 0) {
+                tasksTableContainer.classList.remove('d-none');
+                data.tasks.forEach((task, index) => {
+                    const statusClass = task.status === 'completed' ? 'bg-success' :
+                                      task.status === 'in_progress' ? 'bg-primary' :
+                                      task.status === 'on_hold' ? 'bg-warning' : 'bg-secondary';
+
+                    const actionButtons = getAdminActionButtons(task, projectId);
+
+                    const row = `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${task.task_name}</td>
+                            <td>${task.assigned_to}</td>
+                            <td>${task.assigned_from}</td>
+                            <td>${task.time_spent || '0h 0m'}</td>
+                            <td><span class="badge ${statusClass} rounded-pill">${task.status_display}</span></td>
+                            <td>${actionButtons}</td>
+                        </tr>
+                    `;
+                    tasksTableBody.innerHTML += row;
+                });
+            } else {
+                tasksTableContainer.classList.remove('d-none');
+                tasksTableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center">No tasks found for this project.</td>
+                    </tr>
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching tasks:', error);
+            tasksTableContainer.classList.remove('d-none');
+            tasksTableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center text-danger">Error loading tasks. Please try again.</td>
+                </tr>
+            `;
+        });
+}
+
+function getAdminActionButtons(task, projectId) {
+    let buttons = '';
+    if (task.status === 'not_assigned') {
+        buttons += `
+            <button type="button" class="btn btn-success btn-sm approve-task-btn" data-task-id="${task.id}">Approve</button>`;
+    }
+    buttons += `
+        <button type="button" class="btn btn-danger btn-sm delete-task-btn" data-task-id="${task.id}" data-project-id="${projectId}">Delete</button>`;
+    if (task.status === 'completed') {
+        buttons += `
+            <button type="button"
+                    class="btn btn-outline-info btn-sm"
+                    data-bs-toggle="modal"
+                    data-bs-target="#viewFilesModal"
+                    data-task-id="${task.id}"
+                    data-file-url="${task.file_url}"
+                    data-file-name="${task.file_name}"
+                    data-report-text="${task.report}">
+                View Files
+            </button>`;
+    }
+    return buttons;
+}
+
+// Initialize modal functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const viewFilesModal = document.getElementById('viewFilesModal');
+    if (viewFilesModal) {
+        viewFilesModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const taskId = button.getAttribute('data-task-id');
+            const fileUrl = button.getAttribute('data-file-url');
+            const fileName = button.getAttribute('data-file-name');
+            const reportText = button.getAttribute('data-report-text');
+
+            const fileDisplay = viewFilesModal.querySelector('#fileDisplay');
+            const reportDisplay = viewFilesModal.querySelector('#reportDisplay');
+
+            if (fileUrl && fileUrl !== '#') {
+                fileDisplay.innerHTML = `
+                    <div class="mb-2">
+                        <a href="${fileUrl}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-file"></i> ${fileName}
+                        </a>
+                    </div>`;
+            } else {
+                fileDisplay.innerHTML = '<p class="text-muted">No file uploaded</p>';
+            }
+
+            if (reportText) {
+                reportDisplay.innerHTML = `
+                    <div class="border p-3 mb-3">
+                        ${reportText}
+                    </div>`;
+            } else {
+                reportDisplay.innerHTML = '<p class="text-muted">No report submitted</p>';
+            }
+        });
+    }
+
+    document.getElementById('tasksTableBody').addEventListener('click', function(e) {
+        // Approve button
+        const approveBtn = e.target.closest('.approve-task-btn');
+        if (approveBtn) {
+            e.preventDefault();
+            const taskId = approveBtn.getAttribute('data-task-id');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(`/dashboard/approve-task/${taskId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update status badge and remove Approve button
+                    const row = approveBtn.closest('tr');
+                    if (row) {
+                        const statusCell = row.querySelector('td:nth-child(6) .badge');
+                        if (statusCell) {
+                            statusCell.textContent = data.status_display || 'Approved';
+                            statusCell.classList.remove('bg-primary', 'bg-warning', 'bg-secondary');
+                            statusCell.classList.add('bg-success');
+                        }
+                        approveBtn.remove();
+                    }
+                } else {
+                    alert(data.error || 'Could not approve task.');
+                }
+            })
+            .catch(() => {
+                alert('Error approving task.');
+            });
+            return;
+        }
+        // ... existing delete handler ...
+        const btn = e.target.closest('.delete-task-btn');
+        if (btn) {
+            console.log('Delete button clicked');
+            e.preventDefault();
+            const taskId = btn.getAttribute('data-task-id');
+            const projectId = btn.getAttribute('data-project-id');
+            if (confirm('Are you sure you want to delete this task?')) {
+                fetch(`/dashboard/delete-task/${projectId}/?task_id=${taskId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': (document.querySelector('[name=csrfmiddlewaretoken]') || {}).value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.closest('tr').remove();
+                    } else {
+                        alert('Error: ' + (data.error || 'Could not delete task.'));
+                    }
+                })
+                .catch(() => {
+                    alert('Error deleting task.');
+                });
+            }
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const userTable = document.querySelector('table');
+    if (!userTable) return;
+    userTable.addEventListener('click', function(e) {
+        // Promote User
+        const promoteBtn = e.target.closest('.promote-user-btn');
+        if (promoteBtn) {
+            e.preventDefault();
+            const userId = promoteBtn.getAttribute('data-user-id');
+            const roleValue = promoteBtn.getAttribute('data-role-value');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(`/promote-user/${userId}/${roleValue}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update role cell in the row
+                    const row = promoteBtn.closest('tr');
+                    if (row) {
+                        const roleCell = row.querySelector('td:nth-child(6)');
+                        if (roleCell) roleCell.textContent = data.new_role || roleValue;
+                    }
+                } else {
+                    alert(data.error || 'Could not promote user.');
+                }
+            })
+            .catch(() => {
+                alert('Error promoting user.');
+            });
+            return;
+        }
+        // Assign Department
+        const assignBtn = e.target.closest('.assign-department-btn');
+        if (assignBtn) {
+            e.preventDefault();
+            const userId = assignBtn.getAttribute('data-user-id');
+            const deptId = assignBtn.getAttribute('data-dept-id');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(`/dashboard/assign-department/${userId}/${deptId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update department cell in the row
+                    const row = assignBtn.closest('tr');
+                    if (row) {
+                        const deptCell = row.querySelector('td:nth-child(7)');
+                        if (deptCell) deptCell.textContent = data.new_department || 'Assigned';
+                    }
+                } else {
+                    alert(data.error || 'Could not assign department.');
+                }
+            })
+            .catch(() => {
+                alert('Error assigning department.');
+            });
+            return;
+        }
+        // Toggle Status
+        const toggleBtn = e.target.closest('.toggle-status-btn');
+        if (toggleBtn) {
+            e.preventDefault();
+            const userId = toggleBtn.getAttribute('data-user-id');
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            fetch(`/toggle-status/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRFToken': csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update status badge and button
+                    const row = toggleBtn.closest('tr');
+                    if (row) {
+                        const statusCell = row.querySelector('td:nth-child(8) .badge');
+                        if (statusCell) {
+                            statusCell.textContent = data.new_status_display || (data.is_active ? 'Active' : 'Disabled');
+                            statusCell.classList.toggle('bg-success', data.is_active);
+                            statusCell.classList.toggle('bg-danger', !data.is_active);
+                        }
+                        // Update button text and color
+                        toggleBtn.textContent = data.is_active ? 'Disable' : 'Activate';
+                        toggleBtn.classList.toggle('btn-success', !data.is_active);
+                        toggleBtn.classList.toggle('btn-danger', data.is_active);
+                    }
+                } else {
+                    alert(data.error || 'Could not toggle status.');
+                }
+            })
+            .catch(() => {
+                alert('Error toggling status.');
+            });
+            return;
+        }
+    });
+});
