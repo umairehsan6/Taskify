@@ -1237,6 +1237,7 @@ function renderPendingTasks(tasks) {
     container.querySelectorAll('.start-task-form').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log("Complete task form submitted!");
             const formData = new FormData(form);
             fetch(form.action, {
                 method: 'POST',
@@ -1248,11 +1249,21 @@ function renderPendingTasks(tasks) {
             })
             .then(response => response.json())
             .then(data => {
-                pollPendingTasks(); // Refresh the list
-                updateOngoingTasks(); // Refresh ongoing tasks
+                console.log("Complete task AJAX response:", data);
+                pollPendingTasks();
+                updateOngoingTasks();
+                updateTodayStats();
+                // Trigger stat update after completing a task
+                if (typeof updateTaskStats === 'function') {
+                    updateTaskStats();
+                } else {
+                    // Fallback: dispatch a custom event for stats update
+                    document.dispatchEvent(new Event('taskDoneStatUpdate'));
+                }
             })
             .catch(error => {
-                alert('Error: ' + (error.error || 'Could not start task.'));
+                alert('Error: Could not complete task.');
+                console.error('Complete task AJAX error:', error);
             });
         });
     });
@@ -1280,6 +1291,7 @@ function setupOngoingTaskAjax() {
     document.querySelectorAll('.complete-task-form').forEach(form => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log("Complete task form submitted!");
             const formData = new FormData(form);
             fetch(form.action, {
                 method: 'POST',
@@ -1291,11 +1303,21 @@ function setupOngoingTaskAjax() {
             })
             .then(response => response.json())
             .then(data => {
+                console.log("Complete task AJAX response:", data);
                 pollPendingTasks();
                 updateOngoingTasks();
+                updateTodayStats();
+                // Trigger stat update after completing a task
+                if (typeof updateTaskStats === 'function') {
+                    updateTaskStats();
+                } else {
+                    // Fallback: dispatch a custom event for stats update
+                    document.dispatchEvent(new Event('taskDoneStatUpdate'));
+                }
             })
             .catch(error => {
                 alert('Error: Could not complete task.');
+                console.error('Complete task AJAX error:', error);
             });
         });
     });
@@ -1801,4 +1823,72 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('taskSubmitted', function() {
         pollApprovalPendingTasks();
     });
+});
+
+function updateTodayStats() {
+    console.log("updateTodayStats called!");
+    fetch('/dashboard/employee-today-stats-json/', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Stats response:", data);
+        if (data.total_time_today !== undefined) {
+            const timeElem = document.getElementById('totalTimeToday');
+            if (timeElem) timeElem.textContent = data.total_time_today;
+        }
+        // Robustly update 'Tasks Done'
+        let tasksDoneUpdated = false;
+        if (data.tasks_done_today !== undefined) {
+            document.querySelectorAll('.row.text-center.mb-4 .col-md-3 .card').forEach(card => {
+                const p = card.querySelector('p.text-secondary');
+                if (p && p.textContent.trim() === 'Tasks Done') {
+                    const h3 = card.querySelector('h3');
+                    if (h3) {
+                        h3.textContent = data.tasks_done_today;
+                        tasksDoneUpdated = true;
+                    }
+                }
+            });
+            // Fallback: update the second .col-md-3 h3 if not found by label
+            if (!tasksDoneUpdated) {
+                const fallback = document.querySelector('.row.text-center.mb-4 .col-md-3:nth-of-type(2) h3');
+                if (fallback) fallback.textContent = data.tasks_done_today;
+            }
+        }
+        if (data.tasks_expiring_today !== undefined) {
+            document.querySelectorAll('.row.text-center.mb-4 .col-md-3 .card').forEach(card => {
+                const p = card.querySelector('p.text-secondary');
+                if (p && p.textContent.trim() === 'Tasks Expiring Today') {
+                    const h3 = card.querySelector('h3');
+                    if (h3) h3.textContent = data.tasks_expiring_today;
+                }
+            });
+        }
+        if (data.expired_tasks !== undefined) {
+            document.querySelectorAll('.row.text-center.mb-4 .col-md-3 .card').forEach(card => {
+                const p = card.querySelector('p.text-secondary');
+                if (p && p.textContent.trim() === 'Expired Tasks') {
+                    const h3 = card.querySelector('h3');
+                    if (h3) h3.textContent = data.expired_tasks;
+                }
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error updating today stats:', error);
+    });
+}
+
+document.addEventListener('click', function(e) {
+    // If a button inside a complete-task-form is clicked
+    const btn = e.target.closest('form.complete-task-form button');
+    if (btn) {
+        // Call updateTodayStats after a short delay to allow backend to process
+        setTimeout(updateTodayStats, 500);
+    }
 });

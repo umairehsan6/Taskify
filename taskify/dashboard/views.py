@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from .models import ChatMessage, TaskReadStatus
 import logging
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 logger = logging.getLogger(__name__)
 # Create your views here.
 def AddDepartments(request):
@@ -314,6 +315,8 @@ def UpdateTaskStatus(request, task_id):
             task = Tasks.objects.get(id=task_id)
             new_status = request.POST.get('status') or 'completed'
             task.status = new_status
+            if new_status == 'completed':
+                task.submitted_on = timezone.now()
             task.save()
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True})
@@ -1699,7 +1702,7 @@ def start_task(request, task_id):
         try:
             task = Tasks.objects.get(id=task_id)
             if task.status == 'pending':
-                task.status = 'in_progress'
+                task.status = 'on_hold'
                 task.save()
                 return JsonResponse({'success': True})
             else:
@@ -1803,4 +1806,37 @@ def get_project_employees(request, project_id):
         return JsonResponse({'employees': employee_list})
     except Projects.DoesNotExist:
         return JsonResponse({'employees': []})
+
+@require_GET
+@csrf_exempt
+def employee_today_stats_json(request):
+    if 'user_id' not in request.session:
+        return JsonResponse({'error': 'Not authenticated'}, status=401)
+
+    signup_user = SignupUser.objects.get(id=request.session['user_id'])
+    user_department = UserDepartment.objects.filter(user=signup_user).first()
+    today = timezone.now().date()
+    total_time_today = get_user_total_time_today(user_department)
+    start_of_day = timezone.make_aware(datetime.combine(today, datetime.min.time()))
+    end_of_day = timezone.make_aware(datetime.combine(today, datetime.max.time()))
+    tasks_done_today = Tasks.objects.filter(
+        assigned_to__user=signup_user,
+        status='completed',
+        submitted_on__gte=start_of_day,
+        submitted_on__lte=end_of_day
+    ).count()
+    tasks_expiring_today = Tasks.objects.filter(
+        due_date=today,
+        assigned_to__user=signup_user
+    ).exclude(status='completed').count()
+    expired_tasks = Tasks.objects.filter(
+        due_date__lt=today,
+        assigned_to__user=signup_user
+    ).exclude(status='completed').count()
+    return JsonResponse({
+        'total_time_today': total_time_today,
+        'tasks_done_today': tasks_done_today,
+        'tasks_expiring_today': tasks_expiring_today,
+        'expired_tasks': expired_tasks
+    })
 

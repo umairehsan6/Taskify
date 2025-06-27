@@ -2,6 +2,7 @@ from . import views
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from .views import employee_today_stats_json
 
 
 urlpatterns = [
@@ -10,6 +11,7 @@ urlpatterns = [
     # path('employee_dashboard/', views.employee_dashboard, name='employee_dashboard'),
     path('', views.new_employee_dashboard, name='new_employee_dashboard'),
     path('employee_statistics/' , views.employee_statistics, name='employee_statistics'),
+    path('employee-today-stats-json/', employee_today_stats_json, name='employee-today-stats-json'),
     #department management
     path('add-department/', views.AddDepartments, name='add_department'),
     path('delete-department/<int:department_id>/', views.DeleteDepartment, name='delete_department'),
