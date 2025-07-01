@@ -279,3 +279,32 @@ class TaskReadStatus(models.Model):
     def __str__(self):
         return f"{self.user.username} last read {self.task.task_name} at {self.last_read_at.strftime('%Y-%m-%d %H:%M')}"
 
+class Notification(models.Model):
+    user = models.ForeignKey(SignupUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Notification for {self.user.username} - {self.message[:20]}... ({'Read' if self.is_read else 'Unread'})"
+
+    @classmethod
+    def get_relevant_notifications(cls, user):
+        """
+        Returns notifications that are either:
+        1. Unread (regardless of age)
+        2. Read but less than 24 hours old
+        """
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        twenty_four_hours_ago = timezone.now() - timedelta(hours=24)
+        
+        return cls.objects.filter(
+            user=user
+        ).filter(
+            # Get unread notifications (any age)
+            models.Q(is_read=False) |
+            # OR get read notifications less than 24 hours old
+            models.Q(is_read=True, timestamp__gte=twenty_four_hours_ago)
+        ).order_by('-timestamp')

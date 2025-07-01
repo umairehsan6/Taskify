@@ -3,10 +3,20 @@
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="#">Tâskify.</a>
         <div class="d-flex align-items-center order-lg-3">
-            <div class="icons me-3" style="padding:0; font-size:1.5rem; color: #333;">
-                <i class="fa fa-bell"></i>
+            <!-- Mobile Notification Dropdown -->
+            <div class="mobile-notification-dropdown">
+                <button class="notification-bell-mobile" id="mobileNotificationBell" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell"></i>
+                    <span id="mobileNotificationBadge" class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="display:none;">0</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end p-0" id="mobileNotificationDropdown">
+                    <li class="dropdown-header">Task Notifications</li>
+                    <li id="mobileNotificationList">
+                        <!-- Notifications will be loaded here by JS -->
+                    </li>
+                </ul>
             </div>
-            <button class="navbar-toggler" type="button"
+            <button class="navbar-toggler ms-3" type="button"
                     data-bs-toggle="offcanvas"
                     data-bs-target="#offcanvasSidebar"
                     aria-controls="offcanvasSidebar">

@@ -12,7 +12,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
+const csrftoken = getCookie('csrftoken');
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all modals
     const modals = document.querySelectorAll('.modal');
@@ -304,6 +304,8 @@ if (projectTasksModal) {
             return response.json();
         })
         .then(data => {
+            console.log("Fetched data:", data); // <--- Add this line
+            window.allProjectTasks = data.tasks || [];
             container.innerHTML = ''; // Clear loading state
 
             if (data.tasks && data.tasks.length > 0) {
@@ -363,10 +365,14 @@ if (projectTasksModal) {
                                             </button>
                                             ${hasUnread ? '<span class="message-indicator" style="display: block !important;"></span>' : ''}
                                         </div>
-                                        <button class="task-action-btn" onclick="deleteTask(${task.id})">
-                                            <i class="fa fa-trash"></i>
-                                            <span>Delete</span>
-                                        </button>
+                                        ${['employee', 'teamlead', 'project_manager', 'admin'].includes(window.USER_ROLE) ? `
+                                            <button class="btn btn-outline-danger task-action-btn"
+                                                    type="button"
+                                                    onclick="deleteTask(${task.id})">
+                                                <i class="fa fa-trash"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        ` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -417,23 +423,30 @@ function changeTaskPriority(taskId) {
 // Function to delete task
 function deleteTask(taskId) {
     if (confirm('Are you sure you want to delete this task?')) {
-        fetch(`/delete-task/${taskId}/`, {
+        let url;
+        if (["teamlead", "project_manager", "admin"].includes(window.USER_ROLE)) {
+            url = `/dashboard/teamlead/delete-task/${taskId}/`;
+        } else {
+            url = `/delete-task/${taskId}/`;
+        }
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
+                'X-CSRFToken': getCookie('csrftoken'),
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Remove the task card from the modal
+                // Remove the task card from the modal or list
                 const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
                 if (taskCard) {
                     taskCard.remove();
                 }
             } else {
-                alert('Error deleting task');
+                alert('Error deleting task: ' + (data.error || 'Unknown error'));
             }
         })
         .catch(error => {
@@ -1892,3 +1905,294 @@ document.addEventListener('click', function(e) {
         setTimeout(updateTodayStats, 500);
     }
 });
+
+
+
+// Project Tasks Search ---
+function setupProjectTasksSearch() {
+    const projectTasksModal = document.getElementById('projectTasksModal');
+    if (!projectTasksModal) return;
+
+    let debounceTimeout = null;
+
+    // Helper to render tasks
+    function renderProjectTasks(tasks) {
+        const container = document.getElementById('projectTasksContainer');
+        container.innerHTML = '';
+        if (tasks && tasks.length > 0) {
+            tasks.forEach(task => {
+                const priorityClass = task.priority === 'high' ? 'bg-danger' :
+                    task.priority === 'medium' ? 'bg-warning' : 'bg-success';
+                const hasUnread = task.has_unread_messages || false;
+                const taskCard = `
+                    <div class="col-12 mb-3">
+                        <div class="task-card card p-3" data-priority="${task.priority}" data-task-id="${task.id}">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="flex-grow-1">
+                                    <h6 class="fw-semibold mb-2">${task.task_name}</h6>
+                                    <p class="text-secondary mb-2">${task.task_description}</p>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <span class="badge 
+                                            ${task.status === 'in_progress' ? 'bg-success' : 
+                                              task.status === 'completed' ? 'bg-primary' : 
+                                              task.status === 'on_hold' ? 'bg-warning' : 
+                                              'bg-secondary'}">
+                                            ${task.status_display}
+                                        </span>
+                                        <span class="badge ${priorityClass}">
+                                            ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} Priority
+                                        </span>
+                                    </div>
+                                    <div class="d-flex gap-3 mb-2">
+                                        <p class="text-muted mb-0">
+                                            <i class="fa fa-user me-1"></i>
+                                            Assigned to: ${task.assigned_to}
+                                        </p>
+                                        <p class="text-muted mb-0">
+                                            <i class="fa fa-clock me-1"></i>
+                                            Time spent: ${task.time_spent || '0h 0m 0s'}
+                                        </p>
+                                    </div>
+                                    ${task.report ? `<p class="text-muted mt-2 mb-0">Report: ${task.report}</p>` : ''}
+                                    ${task.file_url ? 
+                                    `<p class="text-muted mt-2 mb-0">
+                                        File Url: 
+                                        <a href="${task.file_url}" class="btn btn-outline-primary btn-sm ms-2" download>
+                                            <i class="fas fa-file-download"></i> ${task.file_name}
+                                        </a>
+                                    </p>` 
+                                    : ''
+                                }
+                                </div>
+                                <div class="task-card-buttons2 d-flex ms-3">
+                                    <div class="position-relative">
+                                        <button class="task-action-btn" data-bs-toggle="modal" data-bs-target="#commentsModal" data-task-id="${task.id}">
+                                            <i class="fa fa-comments"></i>
+                                            <span>Comments</span>
+                                        </button>
+                                        ${hasUnread ? '<span class="message-indicator" style="display: block !important;"></span>' : ''}
+                                    </div>
+                                    ${['employee', 'teamlead', 'project_manager', 'admin'].includes(window.USER_ROLE) ? `
+                                        <button class="btn btn-outline-danger task-action-btn"
+                                                type="button"
+                                                onclick="deleteTask(${task.id})">
+                                            <i class="fa fa-trash"></i>
+                                            <span>Delete</span>
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += taskCard;
+            });
+        } else {
+            container.innerHTML = '<div class="col-12"><p class="text-center">No tasks found for this project.</p></div>';
+        }
+    }
+
+    projectTasksModal.addEventListener('show.bs.modal', function (event) {
+        const searchInput = projectTasksModal.querySelector('#projectTasksSearchInput');
+        if (!searchInput) return;
+
+        // Try to get projectId from the triggering button
+        let projectId = null;
+        if (event && event.relatedTarget) {
+            projectId = event.relatedTarget.getAttribute('data-project-id');
+        }
+        // Fallback: try to get from modal attribute if needed
+        if (!projectId && projectTasksModal.getAttribute('data-project-id')) {
+            projectId = projectTasksModal.getAttribute('data-project-id');
+        }
+        if (!projectId) {
+            const container = projectTasksModal.querySelector('#projectTasksContainer');
+            container.innerHTML = '<div class="col-12"><p class="text-center text-danger">No project ID found.</p></div>';
+            return;
+        }
+
+        // If already loaded for this project, use cached data
+        if (window.allProjectTasks && Array.isArray(window.allProjectTasks) && window.allProjectTasks.projectId === projectId && window.allProjectTasks.tasks && window.allProjectTasks.tasks.length > 0) {
+            searchInput.value = '';
+            renderProjectTasks(window.allProjectTasks.tasks);
+
+            // Remove previous event listeners
+            searchInput.oninput = null;
+            searchInput.addEventListener('input', function() {
+                if (debounceTimeout) clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    const query = searchInput.value.trim().toLowerCase();
+                    const words = query.split(/\s+/).filter(Boolean);
+                    const filtered = window.allProjectTasks.tasks.filter(task => {
+                        const taskName = (task.task_name || '').toLowerCase();
+                        const assignedTo = (task.assigned_to || '').toLowerCase();
+                        const allInTaskName = words.every(word => taskName.includes(word));
+                        const allInAssignedTo = words.every(word => assignedTo.includes(word));
+                        return allInTaskName || allInAssignedTo;
+                    });
+                    renderProjectTasks(filtered);
+                }, 2000);
+            });
+            return;
+        }
+
+        // Otherwise, fetch and cache
+        const container = projectTasksModal.querySelector('#projectTasksContainer');
+        container.innerHTML = '<div class="col-12"><p class="text-center">Loading tasks...</p></div>';
+
+        fetch(`/dashboard/get-project-tasks/${projectId}/`, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            },
+            credentials: 'same-origin'
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.allProjectTasks = { projectId: projectId, tasks: data.tasks || [] };
+            searchInput.value = '';
+            renderProjectTasks(window.allProjectTasks.tasks);
+
+            // Remove previous event listeners
+            searchInput.oninput = null;
+            searchInput.addEventListener('input', function() {
+                if (debounceTimeout) clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    const query = searchInput.value.trim().toLowerCase();
+                    const words = query.split(/\s+/).filter(Boolean);
+                    const filtered = window.allProjectTasks.tasks.filter(task => {
+                        const taskName = (task.task_name || '').toLowerCase();
+                        const assignedTo = (task.assigned_to || '').toLowerCase();
+                        const allInTaskName = words.every(word => taskName.includes(word));
+                        const allInAssignedTo = words.every(word => assignedTo.includes(word));
+                        return allInTaskName || allInAssignedTo;
+                    });
+                    renderProjectTasks(filtered);
+                }, 2000);
+            });
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    setupProjectTasksSearch();
+});
+
+// ... existing code ...
+
+    // Notification Dropdown Logic
+    const notificationBell = document.getElementById('notificationBell');
+    const notificationList = document.getElementById('notificationList');
+    const notificationBadge = document.getElementById('notificationBadge');
+    const mobileNotificationBell = document.getElementById('mobileNotificationBell');
+    const mobileNotificationList = document.getElementById('mobileNotificationList');
+    const mobileNotificationBadge = document.getElementById('mobileNotificationBadge');
+    let notificationsCache = null;
+
+    async function fetchNotifications() {
+        try {
+            const response = await fetch('/dashboard/employee-notifications-json/');
+            const data = await response.json();
+            notificationsCache = data.notifications || [];
+            renderNotifications();
+        } catch (e) {
+            const errorMessage = '<div class="p-3 text-danger">Failed to load notifications.</div>';
+            if (notificationList) notificationList.innerHTML = errorMessage;
+            if (mobileNotificationList) mobileNotificationList.innerHTML = errorMessage;
+        }
+    }
+
+    function renderNotifications() {
+        if (!notificationsCache || notificationsCache.length === 0) {
+            const emptyMessage = '<div class="p-3 text-muted">No notifications.</div>';
+            if (notificationList) {
+                notificationList.innerHTML = emptyMessage;
+                notificationBadge.style.display = 'none';
+            }
+            if (mobileNotificationList) {
+                mobileNotificationList.innerHTML = emptyMessage;
+                if (mobileNotificationBadge) mobileNotificationBadge.style.display = 'none';
+            }
+            return;
+        }
+
+        let unreadCount = 0;
+        const notificationHtml = notificationsCache.map(n => {
+            if (!n.is_read) unreadCount++;
+            return `<div class="notification-item${n.is_read ? '' : ' unread'}">
+                <div class="notification-title">${n.message}</div>
+                <div class="notification-status">${n.timestamp}${!n.is_read ? '<span class=\"notification-new ms-2\">New</span>' : ''}</div>
+            </div>`;
+        }).join('');
+
+        // Update desktop notifications
+        if (notificationList) {
+            notificationList.innerHTML = notificationHtml;
+            notificationBadge.textContent = unreadCount;
+            notificationBadge.style.display = unreadCount > 0 ? '' : 'none';
+        }
+
+        // Update mobile notifications
+        if (mobileNotificationList) {
+            mobileNotificationList.innerHTML = notificationHtml;
+            if (mobileNotificationBadge) {
+                mobileNotificationBadge.textContent = unreadCount;
+                mobileNotificationBadge.style.display = unreadCount > 0 ? '' : 'none';
+            }
+        }
+    }
+
+    // Mark all as read when either dropdown is closed (not opened)
+    const markAsRead = async () => {
+        if (!notificationsCache) await fetchNotifications();
+        if (notificationsCache && notificationsCache.some(n => !n.is_read)) {
+            await fetch('/dashboard/mark-notifications-read/', { 
+                method: 'POST', 
+                headers: { 'X-CSRFToken': getCookie('csrftoken') } 
+            });
+            notificationsCache = notificationsCache.map(n => ({ ...n, is_read: true }));
+            renderNotifications();
+        }
+    };
+
+    const notificationDropdownMenu = document.getElementById('notificationDropdown');
+    const mobileNotificationDropdownMenu = document.getElementById('mobileNotificationDropdown');
+
+    // Fetch notifications on page load
+    fetchNotifications();
+
+    // Fetch notifications when bell is clicked
+    if (notificationBell) {
+        notificationBell.addEventListener('click', function() {
+            fetchNotifications();
+        });
+    }
+    if (mobileNotificationBell) {
+        mobileNotificationBell.addEventListener('click', function() {
+            fetchNotifications();
+        });
+    }
+
+    // GOD MODE: Use event delegation for dropdown close event (works for both desktop and mobile)
+    document.body.addEventListener('hidden.bs.dropdown', function(e) {
+        // Desktop
+        if (e.target && e.target.id === 'notificationBell') {
+            console.log('[GOD MODE] Desktop dropdown closed, marking notifications as read');
+            markAsRead();
+        }
+        // Mobile
+        if (e.target && e.target.id === 'mobileNotificationBell') {
+            console.log('[GOD MODE] Mobile dropdown closed, marking notifications as read');
+            markAsRead();
+        }
+    });
+
+    ['show.bs.dropdown', 'shown.bs.dropdown', 'hide.bs.dropdown', 'hidden.bs.dropdown'].forEach(eventName => {
+        document.body.addEventListener(eventName, function(e) {
+            console.log(`[DEBUG] ${eventName} fired!`, 'e.target:', e.target, 'id:', e.target.id, 'class:', e.target.className);
+        });
+    });
+
+    // Poll notifications every 10 seconds
+    setInterval(fetchNotifications, 10000);
+

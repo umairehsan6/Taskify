@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Department, UserDepartment , Projects , Tasks , TaskActivityLog, OfficeHours , companyDetails, employeeProfile , ChatMessage, TaskReadStatus
+from .models import Notification
+
 
 # Register your models here.
 
@@ -72,3 +74,8 @@ class TaskReadStatusAdmin(admin.ModelAdmin):
     list_display = ('user', 'task', 'last_read_at')
     list_filter = ('user', 'task')
     search_fields = ('user__username', 'task__task_name')
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message', 'timestamp', 'is_read')
+    search_fields = ('user__username', 'message')
+    list_filter = ('is_read', 'timestamp')

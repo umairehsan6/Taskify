@@ -60,4 +60,7 @@ urlpatterns = [
     path('ongoing-tasks-json/', views.ongoing_tasks_json, name='ongoing-tasks-json'),
     path('get-task-report/<int:task_id>/', views.get_task_report, name='get_task_report'),
     path('get-task-file/<int:task_id>/', views.get_task_file, name='get_task_file'),
+    path('employee-notifications-json/', views.employee_notifications_json, name='employee-notifications-json'),
+    path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
+    path('teamlead/delete-task/<int:task_id>/', views.DeleteTaskTeamlead, name='teamlead_delete_task'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

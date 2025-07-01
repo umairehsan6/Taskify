@@ -170,13 +170,92 @@ body {
     box-shadow: none ;
 }
 
-.icons{
+.icons {
     display: flex;
-    gap: 10px; /* Adjusted spacing between icons */
-    color: black;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.profile-picture-small {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: #f8f9fa;
+}
+
+.notification-dropdown {
+    position: relative;
+}
+
+.notification-bell {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #212529;
+    border: none;
     padding: 0;
-    font-size: 28.8px; /* Match the size from the screenshot */
-    justify-content: flex-end;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-bell:hover {
+    background: #343a40;
+}
+
+.notification-bell .fa-bell {
+    color: white;
+    font-size: 19px;
+}
+
+/* Badge positioning */
+.notification-bell .badge {
+    transform: translate(25%, -25%) !important;
+    font-size: 11px;
+    padding: 0.25em 0.4em;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dropdown styling */
+.notification-dropdown .dropdown-menu {
+    position: absolute;
+    top: 100% !important;
+    right: 0 !important;
+    left: auto !important;
+    transform: none !important;
+    margin-top: 8px;
+    width: 300px;
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 0;
+    overflow: hidden;
+}
+
+.notification-dropdown .dropdown-header {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Ensure both icons are centered vertically */
+.profile-link, .notification-bell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Default user icon styling */
+.profile-picture-small .fa-user {
+    font-size: 19px;
+    color: #6c757d;
 }
 
 .create-task-btn .text-block {
@@ -653,122 +732,6 @@ body {
     }
 }
 
-.profile-picture-small {
-    width: 28.8px !important;
-    height: 28.8px !important;
-    object-fit: cover;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
-}
-.profile-link:hover .profile-picture-small {
-    transform: scale(1.1);
-    border-color: rgba(255, 255, 255, 0.5);
-}
-.profile-link {
-    text-decoration: none;
-    display: flex !important; /* Make the link a flex container to center its content */
-    align-items: center !important; /* Center content vertically */
-    justify-content: center !important; /* Center content horizontally for the default icon */
-    line-height: 1 !important; /* Ensure consistent line-height */
-}
-.icons {
-    display: flex !important;
-    align-items: center !important;
-    gap: 10px !important; /* Adjusted spacing between icons */
-    color: black !important;
-    padding: 0 !important;
-    font-size: 28.8px !important; /* Match the size from the screenshot */
-    justify-content: flex-end !important;
-}
-.icons .fa {
-    font-size: 28.8px !important; /* Match the size from the screenshot */
-    line-height: 1 !important; /* Ensure consistent line-height for font icons */
-    margin: 0 !important; /* Remove any default margins */
-}
-/* Specific style for the default user icon within its rounded circle container */
-.profile-picture-small.rounded-circle.bg-light.d-flex.align-items-center.justify-content-center .fa {
-    font-size: 28.8px !important; /* Adjusted for better fit within the smaller circle, consistent with other icons */
-}
-
-
-/* Ensure the notification dot is visible */
-.task-action-btn .notification-dot {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 103 !important;
-}
-
-/* WhatsApp-like notification dot */
-.notification-dot {
-    position: absolute;
-    top: 0px;
-    right: 103px;
-    width: 18px;
-    height: 18px;
-    background-color: #ff3b30;
-    border: 2px solid #121212;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 10px;
-    font-weight: bold;
-    animation: pulse 2s infinite;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7);
-    }
-    70% {
-        transform: scale(1.1);
-        box-shadow: 0 0 0 6px rgba(255, 59, 48, 0);
-    }
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(255, 59, 48, 0);
-    }
-}
-
-/* Unread message badge - more specific selector */
-.task-action-btn .unread-badge {
-    position: absolute !important;
-    top: -5px !important;
-    right: -5px !important;
-    width: 12px !important;
-    height: 12px !important;
-    background-color: #ff3b30 !important;
-    border: 2px solid #121212 !important;
-    border-radius: 50% !important;
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    z-index: 9999 !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-    pointer-events: none !important;
-    transition: none !important;
-    transform: none !important;
-}
-
-/* Override any hover effects on the badge */
-.task-action-btn:hover .unread-badge {
-    background-color: #ff3b30 !important;
-    border-color: #121212 !important;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* Ensure parent button has relative positioning */
-.task-action-btn {
-    position: relative ;
-    overflow: visible ;
-}
-
 /* Message indicator styles - Fixed for ongoing tasks */
 .message-indicator {
     position: absolute !important;
@@ -901,4 +864,268 @@ body {
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+}
+input::placeholder {
+    color: #ffffff7f !important;
+  }
+
+/* Discord-style notification dropdown */
+.notification-dropdown .dropdown-menu {
+    background: #23272a;
+    color: #fff;
+    border: none;
+    min-width: 320px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+}
+.notification-dropdown .dropdown-header {
+    background: #2c2f33;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #36393f;
+}
+.notification-dropdown .notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #36393f;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #2f3136;
+    color: #fff;
+}
+.notification-dropdown .notification-item:last-child {
+    border-bottom: none;
+}
+.notification-dropdown .notification-item.unread {
+    background: #5865f2;
+}
+.notification-dropdown .notification-item:hover {
+    background: #40444b;
+}
+.notification-dropdown .notification-title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #fff;
+}
+.notification-dropdown .notification-status {
+    font-size: 0.8rem;
+    color: #b9bbbe;
+}
+.notification-dropdown .notification-new {
+    background: #43b581;
+    color: #fff;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    display: inline-block;
+}
+
+/* Hide notification and profile on smaller screens */
+@media (max-width: 991.98px) {
+    .notification-dropdown,
+    .profile-link {
+        display: none !important;
+    }
+}
+
+/* Mobile notification styles */
+.notification-bell-mobile {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #212529;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.notification-bell-mobile .fa-bell {
+    font-size: 19px;
+    color: #fff;
+}
+
+.mobile-notification-dropdown {
+    position: relative;
+}
+
+/* Mobile notification dropdown styling */
+.mobile-notification-dropdown .dropdown-menu {
+    background: #23272a;
+    color: #fff;
+    border: none;
+    width: 320px;
+    max-width: 90vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+}
+
+.mobile-notification-dropdown .dropdown-header {
+    background: #2c2f33;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border-bottom: 1px solid #36393f;
+    padding: 12px 16px;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid #36393f;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+    background: #2f3136;
+    color: #fff;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-item:last-child {
+    border-bottom: none;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-item.unread {
+    background: #5865f2;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-item:hover {
+    background: #40444b;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-title {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #fff;
+}
+
+.mobile-notification-dropdown #mobileNotificationList .notification-status {
+    font-size: 0.8rem;
+    color: #b9bbbe;
+}
+
+/* Ensure mobile dropdown is only visible below 992px */
+@media (min-width: 992px) {
+    .mobile-notification-dropdown {
+        display: none !important;
+    }
+}
+
+/* Adjust dropdown position for mobile */
+@media (max-width: 991.98px) {
+    .mobile-notification-dropdown {
+        position: relative;
+    }
+
+    .mobile-notification-dropdown .dropdown-menu {
+        position: absolute !important;
+        top: 100% !important;
+        right: 0 !important;
+        left: auto !important;
+        transform: none !important;
+        margin-top: 8px;
+        width: 300px;
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .mobile-notification-dropdown .notification-bell-mobile {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .mobile-notification-dropdown .fa-bell {
+        font-size: 19px;
+        color: #333;
+    }
+
+    /* Animation for mobile dropdown */
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -10px);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, 0);
+        }
+    }
+
+    /* Badge positioning for mobile */
+    .mobile-notification-dropdown .badge {
+        transform: translate(25%, -25%) !important;
+        font-size: 11px;
+        min-width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #ff3b30;
+        border: 2px solid #fff;
+    }
+}
+
+/* Hide desktop notification on mobile */
+@media (max-width: 991.98px) {
+    .notification-dropdown,
+    .profile-link {
+        display: none !important;
+    }
+}
+
+/* Mobile notification dropdown styling */
+.mobile-notification-dropdown .dropdown-menu {
+    background: #23272a;
+    color: #fff;
+    border: none;
+    width: 320px;
+    max-width: 90vw;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.2);
+    font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+}
+
+@media (max-width: 576px) {
+    .mobile-notification-dropdown .dropdown-menu {
+        position: fixed !important;
+        top: 70px !important;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        width: calc(100% - 32px) !important;
+        max-width: 100%;
+        margin: 0;
+    }
+
+    .mobile-notification-dropdown #mobileNotificationList .notification-item {
+        padding: 16px;
+    }
+
+    .mobile-notification-dropdown .dropdown-header {
+        padding: 16px;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 991px) {
+    .mobile-notification-dropdown .dropdown-menu {
+        width: 350px;
+        max-width: calc(100vw - 32px);
+        right: -8px !important;
+    }
 }

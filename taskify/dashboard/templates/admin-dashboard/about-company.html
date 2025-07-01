@@ -196,32 +196,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('#editCompanyModal form');
     form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Create social media links object
-        const platforms = form.querySelectorAll('input[name="social_platform[]"]');
-        const urls = form.querySelectorAll('input[name="social_url[]"]');
-        const socialLinks = {};
-        
-        platforms.forEach((platform, index) => {
-            if (urls[index].value) {
-                socialLinks[platform.value] = urls[index].value;
-            }
-        });
-        
-        // Add social links to form data
-        const formData = new FormData(form);
-        formData.append('company_social_media_links', JSON.stringify(socialLinks));
-        
-        // Submit form
-        fetch(form.action, {
-            method: 'POST',
-            body: formData
-        }).then(response => {
-            if (response.ok) {
-                window.location.reload();
-            }
-        });
+        // Let the form submit normally - Django will handle the processing
+        // The social media links will be processed by the view
     });
 });
 </script>

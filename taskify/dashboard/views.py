@@ -10,6 +10,7 @@ from django.utils import timezone
 from .models import Tasks, TaskActivityLog
 from django.db.models import Sum, Q, F
 from datetime import datetime, timedelta
+from .models import Notification
 import logging
 from .tasks import check_office_hours
 from .models import companyDetails
@@ -19,7 +20,7 @@ from django.http import JsonResponse
 from .models import ChatMessage, TaskReadStatus
 import logging
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST
 logger = logging.getLogger(__name__)
 # Create your views here.
 def AddDepartments(request):
@@ -219,7 +220,7 @@ def CreateTask(request):
             status = 'not_assigned' if user_role == 'employee' else 'pending'
             
             # Create the task
-            Tasks.objects.create(
+            task = Tasks.objects.create(
                 project=project,
                 assigned_to=user_department,
                 task_name=task_name,
@@ -229,8 +230,32 @@ def CreateTask(request):
                 status=status,
                 assigned_from=assigned_from_user,
                 expected_time=expected_time
-                
             )
+
+            
+#notifications
+            # If teamlead/admin assigns to employee
+            if user_role in ['teamlead', 'project_manager', 'admin'] and assigned_from_user != user_department.user:
+                notif_msg = f"You have been assigned a new task: {task_name} by { assigned_from_user.username}"
+                Notification.objects.get_or_create(
+                    user=user_department.user,
+                    message=notif_msg,
+                    defaults={'is_read': False}
+                )
+            # If employee creates a task for themselves
+            elif user_role == 'employee' and assigned_from_user == user_department.user:
+                notif_msg = f"{assigned_from_user.username} requested approval for a new task: {task_name}. Available to approve in the approval section."
+                # Only notify teamleads for the employee's department
+                teamlead_admins = SignupUser.objects.filter(Q(role='teamlead') & Q(userdepartment__department=user_department.department)).distinct()
+                print("Teamleads for department:", list(teamlead_admins.values_list('username', 'id', 'role')))
+                for leader in teamlead_admins:
+                    if leader != assigned_from_user:  # Exclude the task creator
+                        Notification.objects.get_or_create(
+                            user=leader,
+                            message=notif_msg,
+                            defaults={'is_read': False}
+                        )
+
             messages.success(request, "Task successfully created.")
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
                 return JsonResponse({'success': True, 'message': 'Task created successfully!'})
@@ -310,6 +335,7 @@ def AssignedTasks(request):
 
     
 def UpdateTaskStatus(request, task_id):
+    is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     if request.method == 'POST':
         try:
             task = Tasks.objects.get(id=task_id)
@@ -318,13 +344,37 @@ def UpdateTaskStatus(request, task_id):
             if new_status == 'completed':
                 task.submitted_on = timezone.now()
             task.save()
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+            # Notification logic (as you have it)
+            department = task.assigned_to.department if task.assigned_to else None
+            if department:
+                teamleads_and_admins = SignupUser.objects.filter(
+                    userdepartment__department=department,
+                    role__in=['teamlead', 'admin']
+                ).distinct()
+                print(f"[DEBUG] Found {teamleads_and_admins.count()} teamleads/admins for department '{department.name}': {[user.username for user in teamleads_and_admins]}")
+                notif_count = 0
+                for user in teamleads_and_admins:
+                    Notification.objects.create(
+                        user=user,
+                        message=f"Task '{task.task_name}' from {task.project.name} by {task.assigned_to.user.first_name} has been updated to {task.get_status_display()} now you can view reports and files",
+                        is_read=False
+                    )
+                    notif_count += 1
+                print(f"[DEBUG] Notifications created: {notif_count}")
+            if is_ajax:
                 return JsonResponse({'success': True})
             messages.success(request, f"Task status updated to {task.get_status_display()}.")
         except Tasks.DoesNotExist:
-            if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-                return JsonResponse({'error': 'Task does not exist.'}, status=404)
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
             messages.error(request, "Task does not exist.")
+        except Exception as e:
+            if is_ajax:
+                return JsonResponse({'success': False, 'error': str(e)}, status=500)
+            messages.error(request, f"Error: {str(e)}")
+    if is_ajax:
+        # If AJAX and we reach here, something went wrong
+        return JsonResponse({'success': False, 'error': 'Could not complete task.'}, status=400)
     return redirect('new_employee_dashboard')
 
 def hold_task(request, task_id):
@@ -440,9 +490,22 @@ def stop_working(request, task_id):
 def DeleteTask(request, project_id):
     task_id = request.GET.get('task_id') or request.POST.get('task_id')
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
+    user_id = request.session['user_id']
+    username = request.session.get('username')
     if task_id:
         try:
             task = Tasks.objects.get(id=task_id)
+            if task.status=="not_assigned":
+                # --- Notification logic start ---
+                from .models import Notification
+                # Notify the assigned employee
+                if task.assigned_to and task.assigned_to.user:
+                    Notification.objects.create(
+                        user=task.assigned_to.user,
+                        message=f"Your task '{task.task_name}' has been rejected and deleted by {username}",
+                        is_read=False
+                    )
+                # --- Notification logic end ---
             task.delete()
             if is_ajax:
                 return JsonResponse({'success': True, 'message': 'Task deleted successfully.'})
@@ -578,6 +641,21 @@ def approve_task(request, task_id):
             if task.status == 'not_assigned':
                 task.status = 'pending'
                 task.save()
+                # Notify the assigned employee
+                if task.assigned_to and task.assigned_to.user:
+                    Notification.objects.create(
+                        user=task.assigned_to.user,
+                        message=f"Your task '{task.task_name}' has been approved and is now pending.",
+                        is_read=False
+                    )
+                # Optionally notify the creator if different
+                if task.assigned_from and task.assigned_from != task.assigned_to.user:
+                    Notification.objects.create(
+                        user=task.assigned_from,
+                        message=f"The task '{task.task_name}' you requested has been approved.",
+                        is_read=False
+                    )
+                # --- Notification logic end ---
                 if is_ajax:
                     return JsonResponse({'success': True})
                 messages.success(request, "Task has been approved and is now pending.")
@@ -1195,7 +1273,7 @@ def admindashboard_stats(request):
     else:
         end_of_month = timezone.make_aware(datetime(year, month + 1, 1)) - timedelta(days=1)
     
-    # Calculate total working hours for the month
+    # Calculate total working hours for the month (per employee)
     total_working_hours_month = timedelta()
     current_date = start_of_month.date()
     while current_date <= end_of_month.date():
@@ -1244,9 +1322,16 @@ def admindashboard_stats(request):
         
         current_date += timedelta(days=1)
     
-    # Convert total working hours to float
-    total_working_hours_float = total_working_hours_month.total_seconds() / 3600
+    # Get all employees (excluding admin users and disabled users)
+    employees = UserDepartment.objects.filter(user__role__in=['employee', 'teamlead', 'project_manager', 'manager'], user__status=True).select_related('user')
+    num_employees = employees.count()
     
+    # Multiply per-employee working hours by number of enabled employees
+    per_employee_hours = total_working_hours_month.total_seconds() / 3600
+    total_working_hours_agency = per_employee_hours * num_employees
+    print(f"[DEBUG] Per-employee working hours: {per_employee_hours}")
+    print(f"[DEBUG] Number of enabled employees: {num_employees}")
+    print(f"[DEBUG] Total working hours (all enabled employees): {total_working_hours_agency}")
     # First get tasks completed in the selected month
     completed_tasks = Tasks.objects.filter(
         status='completed',
@@ -1269,12 +1354,7 @@ def admindashboard_stats(request):
     # Count tasks completed in the selected month
     tasks_done = completed_tasks.count()
 
-    # Get all employees (excluding admin users)
-    employees = UserDepartment.objects.exclude(
-        user__role='admin'
-    ).select_related('user')
-
-    # Calculate efficiency for each employee
+    # Calculate efficiency for each employee (existing code follows)
     employee_stats = []
     for employee in employees:
         # Get all tasks assigned to this employee in the current month
@@ -1364,10 +1444,6 @@ def admindashboard_stats(request):
         # Calculate task completion score based on assigned tasks
         task_completion_score = (tasks_done_this_month / total_assigned_tasks * 100) if total_assigned_tasks > 0 else 0
         
-        # Calculate final efficiency percentage with new weights
-        # 40% for task completion (completed vs assigned tasks)
-        # 30% for time efficiency (hours worked vs available)
-        # 30% for task quality (on-time vs late)
         efficiency = round(
             (task_completion_score * 0.4) +  # Weight for task completion ratio
             (time_efficiency * 100 * 0.3) +  # Weight for time efficiency
@@ -1400,7 +1476,7 @@ def admindashboard_stats(request):
         'user_role': request.session.get('user_role', 'employee'),
         'current_month': current_month,
         'hours_worked': round(total_hours, 1),
-        'total_working_hours': round(total_working_hours_float, 1),
+        'total_working_hours': round(total_working_hours_agency, 1),
         'tasks_done': tasks_done,
         'employee_stats': employee_stats
     }
@@ -1478,7 +1554,11 @@ def about_company(request):
     user_role = request.session.get('user_role', 'employee')
     company = companyDetails.get_instance()
     
-    if request.method == 'POST' and request.user.is_staff:
+    if request.method == 'POST' and user_role in ['admin', 'manager']:
+        print(f"Processing company update for user role: {user_role}")
+        print(f"POST data: {request.POST}")
+        print(f"FILES data: {request.FILES}")
+        
         company.company_name = request.POST.get('company_name')
         company.company_description = request.POST.get('company_description')
         company.company_email = request.POST.get('company_email')
@@ -1505,12 +1585,35 @@ def about_company(request):
         # Handle social media links (JSON field)
         social_media_links_json = request.POST.get('company_social_media_links')
         if social_media_links_json:
-            company.company_social_media_links = json.loads(social_media_links_json)
+            try:
+                company.company_social_media_links = json.loads(social_media_links_json)
+            except json.JSONDecodeError:
+                # Fallback: handle array format from form
+                social_platforms = request.POST.getlist('social_platform[]')
+                social_urls = request.POST.getlist('social_url[]')
+                social_links = {}
+                for i, platform in enumerate(social_platforms):
+                    if i < len(social_urls) and social_urls[i]:
+                        social_links[platform] = social_urls[i]
+                company.company_social_media_links = social_links
         else:
-            company.company_social_media_links = {}
+            # Handle array format from form
+            social_platforms = request.POST.getlist('social_platform[]')
+            social_urls = request.POST.getlist('social_url[]')
+            social_links = {}
+            for i, platform in enumerate(social_platforms):
+                if i < len(social_urls) and social_urls[i]:
+                    social_links[platform] = social_urls[i]
+            company.company_social_media_links = social_links
+        
+        print(f"Final social links: {company.company_social_media_links}")
 
         company.save()
         messages.success(request, 'Company details updated successfully!')
+        return redirect('about_company')
+    elif request.method == 'POST':
+        print(f"POST request received but user role '{user_role}' not authorized")
+        messages.error(request, 'You do not have permission to update company details.')
         return redirect('about_company')
     
     context = {
@@ -1839,4 +1942,63 @@ def employee_today_stats_json(request):
         'tasks_expiring_today': tasks_expiring_today,
         'expired_tasks': expired_tasks
     })
+
+@require_GET
+def employee_notifications_json(request):
+    if 'user_id' not in request.session:
+        return JsonResponse({'notifications': []}, status=401)
+    from .models import Notification, SignupUser
+    try:
+        user = SignupUser.objects.get(id=request.session['user_id'])
+        # Use the new method to get only relevant notifications
+        notifications = Notification.get_relevant_notifications(user)
+        notifications_data = [
+            {
+                'id': n.id,
+                'message': n.message,
+                'timestamp': n.timestamp.strftime('%Y-%m-%d %H:%M'),
+                'is_read': n.is_read
+            }
+            for n in notifications
+        ]
+        return JsonResponse({'notifications': notifications_data})
+    except Exception as e:
+        return JsonResponse({'notifications': [], 'error': str(e)}, status=500)
+
+@csrf_exempt
+@require_POST
+def mark_notifications_read(request):
+    if 'user_id' not in request.session:
+        return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
+    from .models import Notification, SignupUser
+    try:
+        user = SignupUser.objects.get(id=request.session['user_id'])
+        Notification.objects.filter(user=user, is_read=False).update(is_read=True)
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+#******
+@require_POST
+@login_required
+def DeleteTaskTeamlead(request, task_id):
+    from .models import Tasks, Notification
+    user = request.user
+    user_role = request.session.get('user_role')
+    if user_role not in ['teamlead', 'project_manager', 'admin']:
+        return JsonResponse({'success': False, 'error': 'Permission denied.'}, status=403)
+    try:
+        task = Tasks.objects.get(id=task_id)
+        if task.status == "not_assigned":
+            if task.assigned_to and task.assigned_to.user:
+                Notification.objects.create(
+                    user=task.assigned_to.user,
+                    message=f"Your task '{task.task_name}' has been rejected and deleted by {user.username}",
+                    is_read=False
+                )
+        task.delete()
+        return JsonResponse({'success': True, 'message': 'Task deleted successfully.'})
+    except Tasks.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
+#******
+
 
