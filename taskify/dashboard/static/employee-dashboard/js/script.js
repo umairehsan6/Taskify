@@ -420,41 +420,71 @@ function changeTaskPriority(taskId) {
     console.log('Change priority for task:', taskId);
 }
 
-// Function to delete task
+// Function to delete task (for admin/employee)
 function deleteTask(taskId) {
-    if (confirm('Are you sure you want to delete this task?')) {
-        let url;
-        if (["teamlead", "project_manager", "admin"].includes(window.USER_ROLE)) {
-            url = `/dashboard/teamlead/delete-task/${taskId}/`;
+    console.log('[ADMIN/EMPLOYEE] Attempting to delete task:', taskId);
+    let url = `/delete-task/${taskId}/`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Delete response:', data);
+        if (data.success) {
+            let taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (taskCard) {
+                let cardToRemove = taskCard.closest('.task-card.card') || taskCard.closest('.task-card') || taskCard.closest('.col-12') || taskCard;
+                cardToRemove.remove();
+            }
         } else {
-            url = `/delete-task/${taskId}/`;
+            alert('Error deleting task: ' + (data.error || 'Unknown error'));
         }
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Remove the task card from the modal or list
-                const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
-                if (taskCard) {
-                    taskCard.remove();
-                }
-            } else {
-                alert('Error deleting task: ' + (data.error || 'Unknown error'));
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Error deleting task');
-        });
-    }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error deleting task');
+    });
 }
+window.deleteTask = deleteTask;
+
+// Function to delete/reject task as teamlead/project_manager/admin
+function deleteTaskTeamlead(taskId) {
+    console.log('[TEAMLEAD] Attempting to delete/reject task:', taskId);
+    let url = `/dashboard/teamlead/delete-task/${taskId}/`;
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Teamlead delete response:', data);
+        if (data.success) {
+            let taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+            if (taskCard) {
+                let cardToRemove = taskCard.closest('.task-card.card') || taskCard.closest('.task-card') || taskCard.closest('.col-12') || taskCard;
+                cardToRemove.remove();
+            }
+        } else {
+            alert('Error deleting task: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error deleting task');
+    });
+}
+window.deleteTaskTeamlead = deleteTaskTeamlead;
 
 // Handle comment form submission
 const commentForm = document.getElementById('commentForm');
@@ -1723,7 +1753,7 @@ function renderApprovalPendingTasks(tasks) {
     let html = '';
     tasks.forEach(task => {
         html += `
-            <div class="task-card card p-3 mb-3" data-priority="high">
+            <div class="task-card card p-3 mb-3" data-priority="high" data-task-id="${task.id}">
                 <div class="priority-light"></div>
                 <h6 class="fw-semibold">Name: ${task.task_name}</h6>
                 <p class="text-secondary">Description: ${task.task_description}</p>
@@ -1742,13 +1772,10 @@ function renderApprovalPendingTasks(tasks) {
                                 <span>Approve</span>
                             </button>
                         </form>
-                        <form method="POST" action="#" class="reject-task-form">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${getCookie('csrftoken')}">
-                            <button type="submit" class="task-action-btn">
-                                <i class="fa fa-times-circle"></i>
-                                <span>Reject</span>
-                            </button>
-                        </form>
+                        <button type="button" class="task-action-btn reject-task-btn" onclick="deleteTaskTeamlead(${task.id})">
+                            <i class="fa fa-times-circle"></i>
+                            <span>Reject</span>
+                        </button>
                       ` : ''
                     }
                     <button class="task-action-btn"
@@ -2116,28 +2143,47 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        let unreadCount = 0;
-        const notificationHtml = notificationsCache.map(n => {
-            if (!n.is_read) unreadCount++;
+        // Count ALL unread notifications for the badge
+        const totalUnread = notificationsCache.filter(n => !n.is_read).length;
+        // Only show the 3 most recent notifications in the dropdown
+        const notificationsToShow = notificationsCache.slice(0, 3);
+        const notificationHtml = notificationsToShow.map(n => {
             return `<div class="notification-item${n.is_read ? '' : ' unread'}">
-                <div class="notification-title">${n.message}</div>
-                <div class="notification-status">${n.timestamp}${!n.is_read ? '<span class=\"notification-new ms-2\">New</span>' : ''}</div>
+                <i class='fa fa-bell notification-icon'></i>
+                <div class="notification-content">
+                  <div class="notification-title">${n.message}</div>
+                  <div class="notification-status">${n.timestamp}${!n.is_read ? '<span class=\"notification-new ms-2\">New</span>' : ''}</div>
+                </div>
             </div>`;
         }).join('');
 
         // Update desktop notifications
         if (notificationList) {
             notificationList.innerHTML = notificationHtml;
-            notificationBadge.textContent = unreadCount;
-            notificationBadge.style.display = unreadCount > 0 ? '' : 'none';
+            notificationBadge.textContent = totalUnread;
+            notificationBadge.style.display = totalUnread > 0 ? '' : 'none';
+            // Show remaining unread count in 'See All' badge
+            const seeAllUnreadBadge = document.getElementById('seeAllUnreadBadge');
+            if (seeAllUnreadBadge) {
+                // Count unread in the first 3
+                const unreadInDropdown = notificationsToShow.filter(n => !n.is_read).length;
+                const remainingUnread = totalUnread - unreadInDropdown;
+                console.log('See All badge: totalUnread=', totalUnread, 'unreadInDropdown=', unreadInDropdown, 'remainingUnread=', remainingUnread);
+                if (remainingUnread > 0) {
+                    seeAllUnreadBadge.textContent = '+' + remainingUnread;
+                    seeAllUnreadBadge.style.display = '';
+                } else {
+                    seeAllUnreadBadge.style.display = 'none';
+                }
+            }
         }
 
         // Update mobile notifications
         if (mobileNotificationList) {
             mobileNotificationList.innerHTML = notificationHtml;
             if (mobileNotificationBadge) {
-                mobileNotificationBadge.textContent = unreadCount;
-                mobileNotificationBadge.style.display = unreadCount > 0 ? '' : 'none';
+                mobileNotificationBadge.textContent = totalUnread;
+                mobileNotificationBadge.style.display = totalUnread > 0 ? '' : 'none';
             }
         }
     }
@@ -2145,12 +2191,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mark all as read when either dropdown is closed (not opened)
     const markAsRead = async () => {
         if (!notificationsCache) await fetchNotifications();
-        if (notificationsCache && notificationsCache.some(n => !n.is_read)) {
-            await fetch('/dashboard/mark-notifications-read/', { 
-                method: 'POST', 
-                headers: { 'X-CSRFToken': getCookie('csrftoken') } 
+        // Only mark as read the 3 notifications currently shown in the dropdown
+        const notificationsToShow = notificationsCache ? notificationsCache.slice(0, 3) : [];
+        const unreadToMark = notificationsToShow.filter(n => !n.is_read && n.id);
+        if (unreadToMark.length > 0) {
+            const ids = unreadToMark.map(n => n.id);
+            console.log('Marking as read notification IDs:', ids);
+            const response = await fetch('/dashboard/mark-notifications-read/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': getCookie('csrftoken'), 'Content-Type': 'application/json' },
+                body: JSON.stringify({ notification_ids: ids })
             });
-            notificationsCache = notificationsCache.map(n => ({ ...n, is_read: true }));
+            const data = await response.json();
+            console.log('Mark as read response:', data);
+            // Update only those as read in the cache
+            notificationsCache = notificationsCache.map(n => ids.includes(n.id) ? { ...n, is_read: true } : n);
             renderNotifications();
         }
     };
@@ -2195,4 +2250,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Poll notifications every 10 seconds
     setInterval(fetchNotifications, 10000);
+
+    // --- Fix reject-task-form to prevent reload and use AJAX ---
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.reject-task-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // Get the taskId from the button's onclick or data attribute
+                const btn = form.querySelector('button[onclick^="deleteTask("]');
+                let taskId = null;
+                if (btn) {
+                    const match = btn.getAttribute('onclick').match(/deleteTask\((\d+)\)/);
+                    if (match) {
+                        taskId = match[1];
+                    }
+                }
+                if (taskId) {
+                    deleteTask(taskId);
+                } else {
+                    alert('Could not determine task ID for rejection.');
+                }
+            });
+        });
+    });
 

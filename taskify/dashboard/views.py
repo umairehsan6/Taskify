@@ -1971,9 +1971,18 @@ def mark_notifications_read(request):
     if 'user_id' not in request.session:
         return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
     from .models import Notification, SignupUser
+    import json
     try:
         user = SignupUser.objects.get(id=request.session['user_id'])
-        Notification.objects.filter(user=user, is_read=False).update(is_read=True)
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            notification_ids = data.get('notification_ids', None)
+        except Exception:
+            notification_ids = None
+        if notification_ids:
+            Notification.objects.filter(user=user, id__in=notification_ids, is_read=False).update(is_read=True)
+        else:
+            Notification.objects.filter(user=user, is_read=False).update(is_read=True)
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
@@ -2000,5 +2009,59 @@ def DeleteTaskTeamlead(request, task_id):
     except Tasks.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
 #******
+
+
+def allNotificaations(request):
+    if 'user_id' not in request.session:
+        return redirect('login')
+    
+    user = SignupUser.objects.get(id=request.session['user_id'])
+    notifications = Notification.get_relevant_notifications(user)
+    
+    
+    context = {
+        'notifications': notifications,
+        'user_role': request.session.get('user_role', 'employee'),
+        # 'active_page': 'all_notifications'
+    }
+    return render(request, 'employee-dashboard/notifications.html', context)
+
+#read all notifications
+@require_POST
+def readAllNotifications(request):
+    print("=== readAllNotifications view called ===")
+    print(f"Request method: {request.method}")
+    print(f"Session user_id: {request.session.get('user_id', 'NOT FOUND')}")
+    
+    # Use session-based user lookup for consistency
+    if 'user_id' not in request.session:
+        print("ERROR: No user_id in session")
+        return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
+    
+    try:
+        user = SignupUser.objects.get(id=request.session['user_id'])
+        print(f"Found user: {user.username} (ID: {user.id})")
+        
+        # Count unread notifications before update
+        unread_count_before = Notification.objects.filter(user=user, is_read=False).count()
+        print(f"Unread notifications before update: {unread_count_before}")
+        
+        # Update notifications
+        updated_count = Notification.objects.filter(user=user, is_read=False).update(is_read=True)
+        print(f"Marked {updated_count} notifications as read")
+        
+        # Count unread notifications after update
+        unread_count_after = Notification.objects.filter(user=user, is_read=False).count()
+        print(f"Unread notifications after update: {unread_count_after}")
+        
+        print("=== readAllNotifications view completed successfully ===")
+        return JsonResponse({'success': True, 'updated_count': updated_count})
+        
+    except SignupUser.DoesNotExist:
+        print(f"ERROR: User with ID {request.session['user_id']} does not exist")
+        return JsonResponse({'success': False, 'error': 'User not found'}, status=404)
+    except Exception as e:
+        print(f"ERROR in readAllNotifications: {str(e)}")
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 

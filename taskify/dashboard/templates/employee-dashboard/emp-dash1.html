@@ -45,10 +45,16 @@
                         <i class="fa fa-bell"></i>
                         <span id="notificationBadge" class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-danger" style="display:none;">0</span>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end p-0" id="notificationDropdown" style="width: 350px; max-height: 400px; overflow-y: auto; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.2);">
+                    <ul class="dropdown-menu dropdown-menu-end p-0" id="notificationDropdown" style="width: 350px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.2);">
                         <li class="dropdown-header bg-dark text-white py-2 px-3" style="border-radius: 12px 12px 0 0;">Task Notifications</li>
                         <li id="notificationList">
                             <!-- Notifications will be loaded here by JS -->
+                        </li>
+                        <li class="dropdown-header bg-dark text-white py-2 px-3" style="border-radius: 12px 12px 0 0;">
+                            <a href="{% url 'all-notifications' %}" id="seeAllNotificationsLink" class="text-decoration-none text-white d-flex align-items-center">
+                                See All
+                                <span id="seeAllUnreadBadge" class="badge bg-danger ms-2" style="display:none;"></span>
+                            </a>
                         </li>
                     </ul>
                 </div>

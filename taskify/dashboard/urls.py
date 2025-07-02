@@ -63,4 +63,7 @@ urlpatterns = [
     path('employee-notifications-json/', views.employee_notifications_json, name='employee-notifications-json'),
     path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
     path('teamlead/delete-task/<int:task_id>/', views.DeleteTaskTeamlead, name='teamlead_delete_task'),
+#all notifications
+    path('all-notifications/', views.allNotificaations, name='all-notifications'),
+    path('read-all-notifications/', views.readAllNotifications, name='read-all-notifications'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
