@@ -464,7 +464,13 @@ function getAdminActionButtons(task, projectId) {
                 View Files
             </button>`;
     }
-    return buttons;
+    let commentsBtn = `<button type="button" class="btn btn-warning btn-sm position-relative comments-btn ms-1" data-task-id="${task.id}" data-bs-toggle="modal" data-bs-target="#adminCommentsModal">
+        <i class="fa fa-comments"></i>
+        <span>Comments</span>
+        <span class="message-indicator position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle" style="display:none;"></span>
+    </button>`;
+    // Wrap all buttons in a flex container for horizontal alignment
+    return `<div class="d-flex flex-row gap-1 align-items-center">${buttons}${commentsBtn}</div>`;
 }
 
 console.log('Script loaded');
@@ -474,6 +480,8 @@ function adminFilterTasksByProject() {
     const projectId = projectDropdown.value;
     const tasksTableContainer = document.getElementById('tasksTableContainer');
     const tasksTableBody = document.getElementById('tasksTableBody');
+    const statusFilter = document.getElementById('taskStatusFilter');
+    const selectedStatus = statusFilter ? statusFilter.value : 'pending_approval';
 
     if (!projectId) {
         tasksTableContainer.classList.add('d-none');
@@ -486,7 +494,19 @@ function adminFilterTasksByProject() {
         .then(data => {
             if (data.tasks.length > 0) {
                 tasksTableContainer.classList.remove('d-none');
-                data.tasks.forEach((task, index) => {
+                let filteredTasks = data.tasks;
+                // Map filter values to backend status values
+                const statusMap = {
+                    'pending_approval': ['pending_approval', 'not_assigned', 'awaiting_approval'],
+                    'ongoing': ['ongoing', 'in_progress'],
+                    'on_hold': ['on_hold'],
+                    'pending': ['pending'],
+                    'completed': ['completed', 'closed']
+                };
+                if (selectedStatus && statusMap[selectedStatus]) {
+                    filteredTasks = data.tasks.filter(task => statusMap[selectedStatus].includes(task.status));
+                }
+                filteredTasks.forEach((task, index) => {
                     const statusClass = task.status === 'completed' ? 'bg-success' :
                                       task.status === 'in_progress' ? 'bg-primary' :
                                       task.status === 'on_hold' ? 'bg-warning' : 'bg-secondary';
@@ -526,29 +546,16 @@ function adminFilterTasksByProject() {
         });
 }
 
-function getAdminActionButtons(task, projectId) {
-    let buttons = '';
-    if (task.status === 'not_assigned') {
-        buttons += `
-            <button type="button" class="btn btn-success btn-sm approve-task-btn" data-task-id="${task.id}">Approve</button>`;
+// Listen for status filter changes
+
+document.addEventListener('DOMContentLoaded', function() {
+    const statusFilter = document.getElementById('taskStatusFilter');
+    if (statusFilter) {
+        statusFilter.addEventListener('change', function() {
+            adminFilterTasksByProject();
+        });
     }
-    buttons += `
-        <button type="button" class="btn btn-danger btn-sm delete-task-btn" data-task-id="${task.id}" data-project-id="${projectId}">Delete</button>`;
-    if (task.status === 'completed') {
-        buttons += `
-            <button type="button"
-                    class="btn btn-outline-info btn-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#viewFilesModal"
-                    data-task-id="${task.id}"
-                    data-file-url="${task.file_url}"
-                    data-file-name="${task.file_name}"
-                    data-report-text="${task.report}">
-                View Files
-            </button>`;
-    }
-    return buttons;
-}
+});
 
 // Initialize modal functionality
 document.addEventListener('DOMContentLoaded', function() {
@@ -871,5 +878,231 @@ document.body.addEventListener('hidden.bs.dropdown', async function(e) {
         await markAdminNotificationsRead();
         // Immediately update badge after marking as read
         fetchAdminNotifications();
+    }
+});
+
+// --- WebSocket Chat for Admin Assigned Tasks ---
+let adminChatSocket = null;
+let adminChatSocketTaskId = null;
+let adminChatSocketReconnectTimeout = null;
+let adminChatSocketIntentionalClose = false;
+
+function showAdminChatError(message) {
+    const commentsList = document.getElementById('adminCommentsList');
+    if (commentsList) {
+        commentsList.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    }
+}
+
+function addAdminReconnectButton(taskId) {
+    const commentsList = document.getElementById('adminCommentsList');
+    if (commentsList) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-warning mt-2';
+        btn.textContent = 'Reconnect';
+        btn.onclick = () => {
+            showAdminChatError('Reconnecting...');
+            connectAdminWebSocket(taskId, true);
+        };
+        commentsList.appendChild(btn);
+    }
+}
+
+function scrollAdminCommentsToBottom() {
+    const commentsList = document.getElementById('adminCommentsList');
+    if (commentsList) {
+        requestAnimationFrame(() => {
+            commentsList.scrollTop = commentsList.scrollHeight;
+        });
+    }
+}
+
+function connectAdminWebSocket(taskId, forceReconnect = false) {
+    if (adminChatSocket && adminChatSocket.readyState === WebSocket.OPEN && adminChatSocketTaskId === taskId && !forceReconnect) {
+        return adminChatSocket;
+    }
+    if (adminChatSocket) {
+        adminChatSocket.close();
+        adminChatSocket = null;
+        adminChatSocketTaskId = null;
+    }
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws_path = `/ws/comments/${taskId}/`;
+    const ws_url = `${ws_scheme}://${window.location.host}${ws_path}`;
+    adminChatSocket = new WebSocket(ws_url);
+    adminChatSocketTaskId = taskId;
+
+    adminChatSocket.onopen = function(e) {
+        const commentsList = document.getElementById('adminCommentsList');
+        if (commentsList) commentsList.innerHTML = '';
+        const anchor = document.createElement('div');
+        anchor.id = 'admin-comments-bottom-anchor';
+        commentsList.appendChild(anchor);
+    };
+
+    adminChatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.error) {
+            showAdminChatError('WebSocket error: ' + data.error);
+            addAdminReconnectButton(taskId);
+            return;
+        }
+        const commentsList = document.getElementById('adminCommentsList');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `mb-3 ${data.is_current_user ? 'bg-dark text-white message-right' : 'bg-secondary text-black message-left'}`;
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-center mb-1">
+                <span class="fw-semibold me-2">${data.username}</span>
+                <span class="text-muted small">${data.timestamp}</span>
+            </div>
+            <div class="p-2">
+                ${data.message}
+            </div>
+        `;
+        const anchor = document.getElementById('admin-comments-bottom-anchor');
+        if (anchor) {
+            commentsList.insertBefore(messageDiv, anchor);
+        } else {
+            commentsList.appendChild(messageDiv);
+        }
+        setTimeout(() => {
+            scrollAdminCommentsToBottom();
+        }, 100);
+    };
+
+    adminChatSocket.onclose = function(e) {
+        if (adminChatSocketIntentionalClose) {
+            adminChatSocketIntentionalClose = false;
+            return;
+        }
+        showAdminChatError('Chat connection lost.');
+        addAdminReconnectButton(taskId);
+        if (!forceReconnect) {
+            if (adminChatSocketReconnectTimeout) clearTimeout(adminChatSocketReconnectTimeout);
+            adminChatSocketReconnectTimeout = setTimeout(() => connectAdminWebSocket(taskId, true), 5000);
+        }
+    };
+
+    adminChatSocket.onerror = function(e) {
+        showAdminChatError('WebSocket error.');
+        addAdminReconnectButton(taskId);
+    };
+    return adminChatSocket;
+}
+window.connectAdminWebSocket = connectAdminWebSocket;
+
+// Add event delegation for Comments button clicks
+document.addEventListener('DOMContentLoaded', function() {
+    const tasksTableBody = document.getElementById('tasksTableBody');
+    if (tasksTableBody) {
+        tasksTableBody.addEventListener('click', function(e) {
+            const commentsBtn = e.target.closest('.comments-btn');
+            if (commentsBtn) {
+                const taskId = commentsBtn.getAttribute('data-task-id');
+                document.getElementById('adminTaskId').value = taskId;
+                document.getElementById('adminCommentsList').innerHTML = '';
+                connectAdminWebSocket(taskId);
+                // Hide unread indicator for this task
+                const indicator = commentsBtn.querySelector('.message-indicator');
+                if (indicator) indicator.style.display = 'none';
+                // Check task status and toggle input/message
+                let isCompleted = false;
+                // Try to get status from row
+                const row = commentsBtn.closest('tr');
+                if (row) {
+                    const statusCell = row.querySelector('td:nth-child(6) .badge');
+                    if (statusCell) {
+                        const statusText = statusCell.textContent.trim().toLowerCase();
+                        if (statusText === 'completed' || statusText === 'closed') {
+                            isCompleted = true;
+                        }
+                    }
+                }
+                // Toggle input/message
+                const chatForm = document.getElementById('adminCommentForm');
+                const completedMsg = document.getElementById('adminChatCompletedMsg');
+                if (isCompleted) {
+                    if (chatForm) chatForm.classList.add('d-none');
+                    if (completedMsg) completedMsg.classList.remove('d-none');
+                } else {
+                    if (chatForm) chatForm.classList.remove('d-none');
+                    if (completedMsg) completedMsg.classList.add('d-none');
+                }
+            }
+        });
+    }
+});
+
+// Handle chat form submission
+const adminCommentForm = document.getElementById('adminCommentForm');
+if (adminCommentForm) {
+    adminCommentForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const taskId = document.getElementById('adminTaskId').value;
+        const messageInput = document.getElementById('adminMessageInput');
+        const messageText = messageInput.value.trim();
+        if (!messageText) return;
+        if (!adminChatSocket || adminChatSocket.readyState !== WebSocket.OPEN) {
+            alert('Chat connection is not open. Please try reconnecting.');
+            return;
+        }
+        try {
+            adminChatSocket.send(JSON.stringify({
+                'message': messageText,
+                'task_id': taskId
+            }));
+            messageInput.value = '';
+        } catch (error) {
+            alert('Error sending message. Please try again.');
+        }
+    });
+}
+
+// Unread indicator update logic (to be called on notification or polling)
+function updateAdminTaskUnreadIndicator(taskId, hasUnread) {
+    document.querySelectorAll(`.comments-btn[data-task-id="${taskId}"] .message-indicator`).forEach(indicator => {
+        indicator.style.display = hasUnread ? 'block' : 'none';
+    });
+}
+
+// Example: Integrate with your notification WebSocket or polling logic
+// If you have a WebSocket for notifications, call updateAdminTaskUnreadIndicator(taskId, true/false) when a new unread message is detected
+
+// Example WebSocket notification handler (pseudo-code):
+// notificationSocket.onmessage = function(e) {
+//     const data = JSON.parse(e.data);
+//     if (data.type === 'unread_message' && data.task_id) {
+//         updateAdminTaskUnreadIndicator(data.task_id, true);
+//     }
+//     if (data.type === 'read_message' && data.task_id) {
+//         updateAdminTaskUnreadIndicator(data.task_id, false);
+//     }
+// };
+
+document.addEventListener('DOMContentLoaded', function() {
+    const projectStatusFilter = document.getElementById('projectStatusFilter');
+    const projectsTable = document.querySelector('#allProjectsSection table');
+    if (projectStatusFilter && projectsTable) {
+        projectStatusFilter.addEventListener('change', function() {
+            const selectedStatus = projectStatusFilter.value;
+            const rows = projectsTable.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                // Get the status from the badge in the 7th cell
+                const statusCell = row.querySelector('td:nth-child(7) .badge');
+                if (!statusCell) return;
+                const status = statusCell.textContent.trim().toLowerCase();
+                let show = false;
+                if (selectedStatus === 'all') {
+                    show = true;
+                } else if (selectedStatus === 'ongoing' && status === 'ongoing') {
+                    show = true;
+                } else if (selectedStatus === 'pending' && status === 'pending') {
+                    show = true;
+                } else if (selectedStatus === 'completed' && status === 'completed') {
+                    show = true;
+                }
+                row.style.display = show ? '' : 'none';
+            });
+        });
     }
 });
