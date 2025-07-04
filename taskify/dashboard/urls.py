@@ -62,8 +62,9 @@ urlpatterns = [
     path('get-task-file/<int:task_id>/', views.get_task_file, name='get_task_file'),
     path('employee-notifications-json/', views.employee_notifications_json, name='employee-notifications-json'),
     path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
-    path('teamlead/delete-task/<int:task_id>/', views.DeleteTaskTeamlead, name='teamlead_delete_task'),
 #all notifications
     path('all-notifications/', views.allNotificaations, name='all-notifications'),
     path('read-all-notifications/', views.readAllNotifications, name='read-all-notifications'),
+    path('admin-notifications-json/', views.admin_notifications_json, name='admin-notifications-json'),
+    path('admin-all-notifications/', views.adminAllNotifications, name='admin-all-notifications'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

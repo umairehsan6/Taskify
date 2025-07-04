@@ -1792,6 +1792,7 @@ def pending_tasks_json(request):
             'id': task.id,
             'task_name': task.task_name,
             'project': task.project.name if task.project else '',
+            'project_id': task.project.id if task.project else '',
             'priority': task.get_priority_display(),
             'status': task.get_status_display(),
             'due_date': task.due_date.strftime('%B %d, %Y') if task.due_date else '',
@@ -1883,6 +1884,7 @@ def approval_pending_tasks_json(request):
                 'task_name': task.task_name,
                 'task_description': task.task_description,
                 'project_name': task.project.name if task.project else '',
+                'project_id': task.project.id if task.project else '',
                 'project_department': task.project.department.name if task.project and task.project.department else '',
                 'due_date': task.due_date.strftime('%Y-%m-%d') if task.due_date else '',
                 'status': task.status,
@@ -1947,11 +1949,9 @@ def employee_today_stats_json(request):
 def employee_notifications_json(request):
     if 'user_id' not in request.session:
         return JsonResponse({'notifications': []}, status=401)
-    from .models import Notification, SignupUser
     try:
         user = SignupUser.objects.get(id=request.session['user_id'])
-        # Use the new method to get only relevant notifications
-        notifications = Notification.get_relevant_notifications(user)
+        notifications = Notification.objects.filter(user=user).order_by('-timestamp')
         notifications_data = [
             {
                 'id': n.id,
@@ -1970,8 +1970,6 @@ def employee_notifications_json(request):
 def mark_notifications_read(request):
     if 'user_id' not in request.session:
         return JsonResponse({'success': False, 'error': 'Not authenticated'}, status=401)
-    from .models import Notification, SignupUser
-    import json
     try:
         user = SignupUser.objects.get(id=request.session['user_id'])
         try:
@@ -1986,29 +1984,6 @@ def mark_notifications_read(request):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
-#******
-@require_POST
-@login_required
-def DeleteTaskTeamlead(request, task_id):
-    from .models import Tasks, Notification
-    user = request.user
-    user_role = request.session.get('user_role')
-    if user_role not in ['teamlead', 'project_manager', 'admin']:
-        return JsonResponse({'success': False, 'error': 'Permission denied.'}, status=403)
-    try:
-        task = Tasks.objects.get(id=task_id)
-        if task.status == "not_assigned":
-            if task.assigned_to and task.assigned_to.user:
-                Notification.objects.create(
-                    user=task.assigned_to.user,
-                    message=f"Your task '{task.task_name}' has been rejected and deleted by {user.username}",
-                    is_read=False
-                )
-        task.delete()
-        return JsonResponse({'success': True, 'message': 'Task deleted successfully.'})
-    except Tasks.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Task does not exist.'}, status=404)
-#******
 
 
 def allNotificaations(request):
@@ -2016,8 +1991,7 @@ def allNotificaations(request):
         return redirect('login')
     
     user = SignupUser.objects.get(id=request.session['user_id'])
-    notifications = Notification.get_relevant_notifications(user)
-    
+    notifications = Notification.objects.filter(user=user).order_by('-timestamp')
     
     context = {
         'notifications': notifications,
@@ -2065,3 +2039,35 @@ def readAllNotifications(request):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 
+#delete task by teamlead or project manager
+
+def admin_notifications_json(request):
+    if 'user_id' not in request.session or request.session.get('user_role') != 'admin':
+        return JsonResponse({'notifications': []}, status=401)
+    try:
+        user = SignupUser.objects.get(id=request.session['user_id'])
+        notifications = Notification.objects.filter(user=user).order_by('-timestamp')
+        notifications_data = [
+            {
+                'id': n.id,
+                'message': n.message,
+                'timestamp': n.timestamp.strftime('%Y-%m-%d %H:%M'),
+                'is_read': n.is_read
+            }
+            for n in notifications
+        ]
+        return JsonResponse({'notifications': notifications_data})
+    except Exception as e:
+        return JsonResponse({'notifications': [], 'error': str(e)}, status=500)
+
+def adminAllNotifications(request):
+    if 'user_id' not in request.session or request.session.get('user_role') != 'admin':
+        return redirect('login')
+    user = SignupUser.objects.get(id=request.session['user_id'])
+    notifications = Notification.objects.filter(user=user).order_by('-timestamp')
+    # Do NOT mark as read here; this will be handled by JS after page load
+    context = {
+        'notifications': notifications,
+        'user_role': 'admin',
+    }
+    return render(request, 'admin-dashboard/notifications.html', context)

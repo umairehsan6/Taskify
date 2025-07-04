@@ -287,24 +287,3 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user.username} - {self.message[:20]}... ({'Read' if self.is_read else 'Unread'})"
-
-    @classmethod
-    def get_relevant_notifications(cls, user):
-        """
-        Returns notifications that are either:
-        1. Unread (regardless of age)
-        2. Read but less than 24 hours old
-        """
-        from django.utils import timezone
-        from datetime import timedelta
-        
-        twenty_four_hours_ago = timezone.now() - timedelta(hours=24)
-        
-        return cls.objects.filter(
-            user=user
-        ).filter(
-            # Get unread notifications (any age)
-            models.Q(is_read=False) |
-            # OR get read notifications less than 24 hours old
-            models.Q(is_read=True, timestamp__gte=twenty_four_hours_ago)
-        ).order_by('-timestamp')

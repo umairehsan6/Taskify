@@ -12,6 +12,128 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+// --- WebSocket Chat Improvements ---
+let chatSocket = null;
+let chatSocketTaskId = null;
+let chatSocketReconnectTimeout = null;
+let chatSocketIntentionalClose = false; // NEW FLAG
+
+function showChatError(message) {
+    const commentsList = document.getElementById('commentsList');
+    if (commentsList) {
+        commentsList.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    }
+}
+
+function addReconnectButton(taskId) {
+    const commentsList = document.getElementById('commentsList');
+    if (commentsList) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-warning mt-2';
+        btn.textContent = 'Reconnect';
+        btn.onclick = () => {
+            showChatError('Reconnecting...');
+            connectWebSocket(taskId, true);
+        };
+        commentsList.appendChild(btn);
+    }
+}
+
+// Move scrollCommentsToBottom here so it is defined before use
+function scrollCommentsToBottom() {
+    const commentsList = document.getElementById('commentsList');
+    if (commentsList) {
+        requestAnimationFrame(() => {
+            console.log('Scrolling to bottom. scrollHeight:', commentsList.scrollHeight, 'clientHeight:', commentsList.clientHeight);
+            commentsList.scrollTop = 999999; // Set to a very large number to ensure it goes to the very bottom
+        });
+    }
+}
+
+function connectWebSocket(taskId, forceReconnect = false) {
+    // Only reconnect if not already connected to this task
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN && chatSocketTaskId === taskId && !forceReconnect) {
+        console.log('[WebSocket] Already connected to this task.');
+        return chatSocket;
+    }
+    // Close previous socket if open
+    if (chatSocket) {
+        chatSocket.close();
+        chatSocket = null;
+        chatSocketTaskId = null;
+    }
+    const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
+    const ws_path = `/ws/comments/${taskId}/`;
+    const ws_url = `${ws_scheme}://${window.location.host}${ws_path}`;
+    console.log(`[WebSocket] Connecting to: ${ws_url}`);
+    chatSocket = new WebSocket(ws_url);
+    chatSocketTaskId = taskId;
+
+    chatSocket.onopen = function(e) {
+        console.log('[WebSocket] Connection established');
+        const commentsList = document.getElementById('commentsList');
+        if (commentsList) commentsList.innerHTML = '';
+        const anchor = document.createElement('div');
+        anchor.id = 'comments-bottom-anchor';
+        commentsList.appendChild(anchor);
+    };
+
+    chatSocket.onmessage = function(e) {
+        console.log('[WebSocket] Received message:', e.data);
+        const data = JSON.parse(e.data);
+        if (data.error) {
+            showChatError('WebSocket error: ' + data.error);
+            addReconnectButton(taskId);
+            return;
+        }
+        const commentsList = document.getElementById('commentsList');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `mb-3 ${data.is_current_user ? 'bg-dark text-white message-right' : 'bg-secondary text-black message-left'}`;
+        messageDiv.innerHTML = `
+            <div class="d-flex align-items-center mb-1">
+                <span class="fw-semibold me-2">${data.username}</span>
+                <span class="text-muted small">${data.timestamp}</span>
+            </div>
+            <div class="p-2">
+                ${data.message}
+            </div>
+        `;
+        const anchor = document.getElementById('comments-bottom-anchor');
+        if (anchor) {
+            commentsList.insertBefore(messageDiv, anchor);
+        } else {
+            commentsList.appendChild(messageDiv);
+        }
+        setTimeout(() => {
+            scrollCommentsToBottom();
+        }, 100);
+    };
+
+    chatSocket.onclose = function(e) {
+        if (chatSocketIntentionalClose) {
+            chatSocketIntentionalClose = false; // reset for next time
+            return; // Don't show reconnect UI
+        }
+        console.error('[WebSocket] Connection closed:', e);
+        showChatError('Chat connection lost.');
+        addReconnectButton(taskId);
+        // Optionally, auto-reconnect after a delay
+        if (!forceReconnect) {
+            if (chatSocketReconnectTimeout) clearTimeout(chatSocketReconnectTimeout);
+            chatSocketReconnectTimeout = setTimeout(() => connectWebSocket(taskId, true), 5000);
+        }
+    };
+
+    chatSocket.onerror = function(e) {
+        console.error('[WebSocket] Error:', e);
+        showChatError('WebSocket error.');
+        addReconnectButton(taskId);
+    };
+    return chatSocket;
+}
+window.connectWebSocket = connectWebSocket;
+
 const csrftoken = getCookie('csrftoken');
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all modals
@@ -388,12 +510,8 @@ if (projectTasksModal) {
                         const commentsList = document.getElementById('commentsList');
                         const modalTaskIdInput = document.getElementById('taskId');
                         modalTaskIdInput.value = taskId;
-
-                        // Clear existing comments
                         commentsList.innerHTML = '';
-
-                        // Connect WebSocket for this task
-                        connectWebSocket(taskId);
+                        window.connectWebSocket(taskId);
 
                         // Hide indicator for this task
                         const parentDiv = this.closest('.position-relative');
@@ -487,7 +605,7 @@ function changeTaskPriority(taskId) {
 //         alert('Error deleting task');
 //     });
 // }
-window.deleteTaskTeamlead = deleteTaskTeamlead;
+// window.deleteTaskTeamlead = deleteTaskTeamlead;
 
 // Handle comment form submission
 const commentForm = document.getElementById('commentForm');
@@ -503,21 +621,21 @@ if (commentForm) {
             return;
         }
 
-        if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
-            try {
-                chatSocket.send(JSON.stringify({
-                    'message': messageText,
-                    'task_id': taskId
-                }));
-                messageInput.value = ''; // Clear input field immediately
-                console.log('Message sent via WebSocket.');
-            } catch (error) {
-                console.error('Error sending message:', error);
-                alert('Error sending message. Please try again.');
-            }
-        } else {
-            console.error('WebSocket is not open. Cannot send message.');
-            alert('Cannot send message. WebSocket connection not established.');
+        if (!chatSocket || chatSocket.readyState !== WebSocket.OPEN) {
+            alert('Chat connection is not open. Please try reconnecting.');
+            return;
+        }
+
+        try {
+            chatSocket.send(JSON.stringify({
+                'message': messageText,
+                'task_id': taskId
+            }));
+            messageInput.value = ''; // Clear input field immediately
+            console.log('Message sent via WebSocket.');
+        } catch (error) {
+            console.error('Error sending message:', error);
+            alert('Error sending message. Please try again.');
         }
     });
 }
@@ -535,7 +653,7 @@ commentButtons.forEach(button => {
         commentsList.innerHTML = '';
 
         // Connect WebSocket for the specific task
-        connectWebSocket(taskId);
+        window.connectWebSocket(taskId);
 
         // Historical messages will be sent by the consumer upon connection.
     });
@@ -607,41 +725,68 @@ if (commentsModal) {
     });
 }
 
+// --- WebSocket Chat Improvements ---
 let chatSocket = null;
+let chatSocketTaskId = null;
+let chatSocketReconnectTimeout = null;
 
-function connectWebSocket(taskId) {
-    // Close existing socket if it exists
+function showChatError(message) {
+    const commentsList = document.getElementById('commentsList');
+    if (commentsList) {
+        commentsList.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    }
+}
+
+function addReconnectButton(taskId) {
+    const commentsList = document.getElementById('commentsList');
+    if (commentsList) {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-warning mt-2';
+        btn.textContent = 'Reconnect';
+        btn.onclick = () => {
+            showChatError('Reconnecting...');
+            connectWebSocket(taskId, true);
+        };
+        commentsList.appendChild(btn);
+    }
+}
+
+function connectWebSocket(taskId, forceReconnect = false) {
+    // Only reconnect if not already connected to this task
+    if (chatSocket && chatSocket.readyState === WebSocket.OPEN && chatSocketTaskId === taskId && !forceReconnect) {
+        console.log('[WebSocket] Already connected to this task.');
+        return chatSocket;
+    }
+    // Close previous socket if open
     if (chatSocket) {
         chatSocket.close();
         chatSocket = null;
+        chatSocketTaskId = null;
     }
-
     const ws_scheme = window.location.protocol === "https:" ? "wss" : "ws";
     const ws_path = `/ws/comments/${taskId}/`;
-    
-    console.log(`Connecting to WebSocket at ${ws_scheme}://${window.location.host}${ws_path}`);
-    
-    chatSocket = new WebSocket(
-        `${ws_scheme}://${window.location.host}${ws_path}`
-    );
+    const ws_url = `${ws_scheme}://${window.location.host}${ws_path}`;
+    console.log(`[WebSocket] Connecting to: ${ws_url}`);
+    chatSocket = new WebSocket(ws_url);
+    chatSocketTaskId = taskId;
 
     chatSocket.onopen = function(e) {
-        console.log('WebSocket connection established');
+        console.log('[WebSocket] Connection established');
         const commentsList = document.getElementById('commentsList');
-        commentsList.innerHTML = ''; // Clear comments before receiving from socket
+        if (commentsList) commentsList.innerHTML = '';
         const anchor = document.createElement('div');
         anchor.id = 'comments-bottom-anchor';
         commentsList.appendChild(anchor);
     };
 
     chatSocket.onmessage = function(e) {
-        console.log('Received message:', e.data);
+        console.log('[WebSocket] Received message:', e.data);
         const data = JSON.parse(e.data);
         if (data.error) {
-            console.error('WebSocket error:', data.error);
+            showChatError('WebSocket error: ' + data.error);
+            addReconnectButton(taskId);
             return;
         }
-
         const commentsList = document.getElementById('commentsList');
         const messageDiv = document.createElement('div');
         messageDiv.className = `mb-3 ${data.is_current_user ? 'bg-dark text-white message-right' : 'bg-secondary text-black message-left'}`;
@@ -654,32 +799,65 @@ function connectWebSocket(taskId) {
                 ${data.message}
             </div>
         `;
-        
         const anchor = document.getElementById('comments-bottom-anchor');
         if (anchor) {
             commentsList.insertBefore(messageDiv, anchor);
         } else {
             commentsList.appendChild(messageDiv);
         }
-
-        // Scroll to bottom after new message is appended
         setTimeout(() => {
             scrollCommentsToBottom();
         }, 100);
     };
 
     chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly:', e);
+        if (chatSocketIntentionalClose) {
+            chatSocketIntentionalClose = false; // reset for next time
+            return; // Don't show reconnect UI
+        }
+        console.error('[WebSocket] Connection closed:', e);
+        showChatError('Chat connection lost.');
+        addReconnectButton(taskId);
+        // Optionally, auto-reconnect after a delay
+        if (!forceReconnect) {
+            if (chatSocketReconnectTimeout) clearTimeout(chatSocketReconnectTimeout);
+            chatSocketReconnectTimeout = setTimeout(() => connectWebSocket(taskId, true), 5000);
+        }
     };
 
     chatSocket.onerror = function(e) {
-        console.error('WebSocket error:', e);
+        console.error('[WebSocket] Error:', e);
+        showChatError('WebSocket error.');
+        addReconnectButton(taskId);
     };
-
     return chatSocket;
 }
 window.connectWebSocket = connectWebSocket;
-console.log('connectWebSocket is now globally available:', typeof window.connectWebSocket);
+
+// Prevent duplicate event listeners for comments modal
+(function() {
+    let lastTaskId = null;
+    const commentsModal = document.getElementById('commentsModal');
+    if (commentsModal) {
+        commentsModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const taskId = button ? button.getAttribute('data-task-id') : null;
+            if (!taskId) return;
+            if (lastTaskId !== taskId) {
+                lastTaskId = taskId;
+                connectWebSocket(taskId, true);
+            }
+        });
+        commentsModal.addEventListener('hide.bs.modal', function() {
+            chatSocketIntentionalClose = true; // SET FLAG
+            if (chatSocket) {
+                chatSocket.close();
+                chatSocket = null;
+                chatSocketTaskId = null;
+            }
+        });
+    }
+})();
 
 function sendMessage(taskId, message) {
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
@@ -710,26 +888,19 @@ function hideTaskIndicator(taskId) {
 function updateProjectIndicator(projectId, hasUnread) {
     console.log(`=== UPDATING PROJECT INDICATOR ===`);
     console.log(`Project ID: ${projectId}, Has Unread: ${hasUnread}`);
-    
-    // Find the Show Tasks button for this project
-    const showTasksButton = document.querySelector(`[data-project-id="${projectId}"][data-bs-target="#projectTasksModal"]`);
-    console.log('Show Tasks button found:', showTasksButton);
-    console.log('Button HTML:', showTasksButton ? showTasksButton.outerHTML : 'NOT FOUND');
-    
-    if (showTasksButton) {
+
+    // Find ALL Show Tasks buttons for this project
+    const showTasksButtons = document.querySelectorAll(`[data-project-id="${projectId}"][data-bs-target="#projectTasksModal"]`);
+    console.log('Show Tasks buttons found:', showTasksButtons.length);
+
+    showTasksButtons.forEach(showTasksButton => {
         let indicator = showTasksButton.querySelector('.message-indicator');
-        console.log('Existing indicator:', indicator);
-        console.log('Indicator HTML:', indicator ? indicator.outerHTML : 'NOT FOUND');
-        
         if (hasUnread) {
             if (!indicator) {
-                // Create new indicator if it doesn't exist
-                console.log('Creating new project indicator');
                 indicator = document.createElement('span');
                 indicator.className = 'message-indicator';
                 indicator.style.cssText = 'position: absolute; top: -8px; right: -8px; width: 12px; height: 12px; background-color: #ff3b30; border: 2px solid #fff; border-radius: 50%; display: block; z-index: 10; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); pointer-events: none;';
                 showTasksButton.appendChild(indicator);
-                console.log('New indicator created and added');
             }
             indicator.style.display = 'block';
             indicator.style.visibility = 'visible';
@@ -738,15 +909,19 @@ function updateProjectIndicator(projectId, hasUnread) {
         } else {
             if (indicator) {
                 indicator.style.display = 'none';
+                indicator.style.visibility = 'hidden';
+                indicator.style.opacity = '0';
                 console.log(`✅ HIDING project indicator for project ${projectId}`);
             }
         }
-    } else {
+    });
+
+    if (showTasksButtons.length === 0) {
         console.log(`❌ Show Tasks button not found for project ${projectId}`);
-        console.log('All buttons with data-project-id:', document.querySelectorAll('[data-project-id]'));
     }
     console.log(`=== END PROJECT INDICATOR UPDATE ===`);
 }
+window.updateProjectIndicator = updateProjectIndicator;
 
 // Make function globally accessible
 window.updateProjectIndicator = updateProjectIndicator;
@@ -891,7 +1066,9 @@ async function processNotificationQueue() {
             } else if (notification.type === 'project_unread_notification') {
                 // Normalize project_id to string for consistent comparison
                 const projectId = String(notification.project_id);
-                await updateProjectIndicator(projectId, notification.has_unread);
+                // --- PATCH: Always update project indicator for this user ---
+                console.log(`[WS] Project ${projectId} unread state for current user: ${notification.has_unread}`);
+                updateProjectIndicator(projectId, notification.has_unread);
             }
         } catch (error) {
             console.error('Error processing notification:', error);
@@ -963,26 +1140,29 @@ async function processNotificationQueue() {
 
 // Function to update task indicator
 async function updateTaskIndicator(taskId, hasUnread) {
-        // Don't show indicators if comments modal is open
+    // Don't show indicators if comments modal is open
     if (window.isCommentsModalOpen && hasUnread) {
-            console.log('Comments modal is open, skipping indicator update for task:', taskId);
-            return;
-        }
-        
+        console.log('Comments modal is open, skipping indicator update for task:', taskId);
+        return;
+    }
     // Use debounce to prevent rapid updates
     const key = `task_${taskId}`;
     debounceIndicatorUpdate(key, async () => {
         // Find all Comments buttons for this task
         const commentButtons = document.querySelectorAll(`[data-task-id="${taskId}"][data-bs-target="#commentsModal"]`);
         console.log(`Found ${commentButtons.length} comment buttons for task ${taskId}`);
-        
+        let projectId = null;
         for (const button of commentButtons) {
             // Look for indicator in the button's parent div (position-relative wrapper)
             const parentDiv = button.closest('.position-relative');
             let indicator = parentDiv ? parentDiv.querySelector('.message-indicator') : null;
-            
-            console.log(`Task ${taskId}: Parent div found:`, !!parentDiv, 'Existing indicator:', !!indicator);
-            
+            // Find project ID from the closest task card
+            if (!projectId) {
+                const taskCard = button.closest('[data-project-id]');
+                if (taskCard) {
+                    projectId = taskCard.getAttribute('data-project-id');
+                }
+            }
             if (hasUnread) {
                 if (!indicator) {
                     // Create new indicator if it doesn't exist
@@ -991,7 +1171,6 @@ async function updateTaskIndicator(taskId, hasUnread) {
                     indicator.className = 'message-indicator';
                     indicator.setAttribute('data-task-id', taskId); // Add data attribute for tracking
                     indicator.style.cssText = 'position: absolute !important; top: -5px !important; right: -5px !important; width: 12px !important; height: 12px !important; background-color: #ff3b30 !important; border: 2px solid #121212 !important; border-radius: 50% !important; display: block !important; z-index: 9999 !important; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important; pointer-events: none !important;';
-                    
                     if (parentDiv) {
                         parentDiv.appendChild(indicator);
                     } else {
@@ -999,18 +1178,15 @@ async function updateTaskIndicator(taskId, hasUnread) {
                     }
                     console.log(`New task indicator created and added for task ${taskId}`);
                 }
-                
                 // Force indicator to be visible with multiple methods
                 indicator.style.setProperty('display', 'block', 'important');
                 indicator.style.setProperty('visibility', 'visible', 'important');
                 indicator.style.setProperty('opacity', '1', 'important');
                 indicator.style.setProperty('background-color', '#ff3b30', 'important');
                 indicator.style.setProperty('border-color', '#121212', 'important');
-                
                 // Remove any classes that might interfere
                 indicator.classList.remove('show', 'hide');
                 indicator.classList.add('active');
-                
                 console.log(`✅ SHOWING task indicator for task ${taskId}`);
             } else {
                 if (indicator) {
@@ -1018,17 +1194,26 @@ async function updateTaskIndicator(taskId, hasUnread) {
                     indicator.style.setProperty('display', 'none', 'important');
                     indicator.style.setProperty('visibility', 'hidden', 'important');
                     indicator.style.setProperty('opacity', '0', 'important');
-                    
                     // Remove any classes that might interfere
                     indicator.classList.remove('show', 'active');
                     indicator.classList.add('hide');
-                    
                     console.log(`✅ HIDING task indicator for task ${taskId}`);
                 }
             }
         }
+        // --- Project indicator logic ---
+        if (projectId) {
+            // Check if any task in this project has an unread indicator
+            const anyUnread = !!document.querySelector(
+                `[data-project-id="${projectId}"] .message-indicator[style*='display: block']`
+            );
+            console.log(
+                `[LOG] updateTaskIndicator: Project ${projectId} anyUnread=${anyUnread} (triggered by task ${taskId})`
+            );
+            updateProjectIndicator(projectId, anyUnread);
+        }
     }, 500); // 500ms debounce delay
-    }
+}
 
     // Handle project tasks modal
     if (projectTasksModal) {
@@ -2332,4 +2517,6 @@ function deleteTask(taskId, projectId, cardElem) {
         console.error('Delete task AJAX error:', error);
     });
 }
+
+
 

@@ -9031,3 +9031,607 @@ INFO 2025-07-02 09:45:19,720 views Project 3 (AI Virtual Stylist) has unread mes
 INFO 2025-07-02 09:45:30,790 views Project 3 (AI Virtual Stylist) has unread messages for user 4
 INFO 2025-07-02 09:45:40,019 views Project 3 (AI Virtual Stylist) has unread messages for user 4
 INFO 2025-07-02 09:49:38,776 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-02 10:20:44,866 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-02 10:49:54,917 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-02 12:38:48,376 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 10:04:46,785 consumers No messages found for task 70, skipping read status update
+INFO 2025-07-03 10:04:48,923 consumers Starting send_unread_notification for task 70, sender 5
+INFO 2025-07-03 10:04:48,929 consumers Users to notify: []
+INFO 2025-07-03 10:04:50,542 consumers User 5 stopped viewing task 70
+INFO 2025-07-03 10:15:31,114 consumers Marking task 70 as read for user 5 with latest message timestamp 2025-07-03 05:04:48.916655+00:00
+INFO 2025-07-03 10:15:31,130 consumers Successfully marked task 70 as read for user 5
+INFO 2025-07-03 10:15:33,890 consumers User 5 stopped viewing task 70
+INFO 2025-07-03 10:15:37,360 consumers Marking task 70 as read for user 5 with latest message timestamp 2025-07-03 05:04:48.916655+00:00
+INFO 2025-07-03 10:15:37,364 consumers Successfully marked task 70 as read for user 5
+INFO 2025-07-03 10:15:44,630 consumers User 5 stopped viewing task 70
+INFO 2025-07-03 12:14:04,061 consumers Marking task 70 as read for user 5 with latest message timestamp 2025-07-03 05:04:48.916655+00:00
+INFO 2025-07-03 12:14:04,064 consumers Successfully marked task 70 as read for user 5
+INFO 2025-07-03 12:14:05,479 consumers User 5 stopped viewing task 70
+INFO 2025-07-03 12:18:44,348 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 12:53:59,944 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:36:46,134 consumers Marking task 54 as read for user 6 with latest message timestamp 2025-06-26 05:38:16.115234+00:00
+INFO 2025-07-03 15:36:46,170 consumers Successfully marked task 54 as read for user 6
+INFO 2025-07-03 15:36:57,973 consumers No messages found for task 92, skipping read status update
+INFO 2025-07-03 15:37:01,503 consumers Starting send_unread_notification for task 92, sender 6
+INFO 2025-07-03 15:37:01,515 consumers Users to notify: [4, 5]
+INFO 2025-07-03 15:37:01,516 consumers Sending notifications to user 4
+INFO 2025-07-03 15:37:01,516 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:37:01,526 consumers Got project_id 3 for task 92
+INFO 2025-07-03 15:37:01,527 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:37:01,527 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:37:01,527 consumers Sending notifications to user 5
+INFO 2025-07-03 15:37:01,528 consumers Sent task unread notification to user 5
+INFO 2025-07-03 15:37:01,539 consumers Got project_id 3 for task 92
+INFO 2025-07-03 15:37:01,539 consumers Sending project unread notification for project 3 to user 5
+INFO 2025-07-03 15:37:01,540 consumers Sent project unread notification to user 5
+INFO 2025-07-03 15:38:15,128 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:38:15,188 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:38:36,187 consumers No messages found for task 78, skipping read status update
+INFO 2025-07-03 15:38:38,021 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:38:38,035 consumers Users to notify: [4]
+INFO 2025-07-03 15:38:38,035 consumers Sending notifications to user 4
+INFO 2025-07-03 15:38:38,036 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:38:38,047 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:38:38,047 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:38:38,048 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:38:55,891 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:38:55,920 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:38:55,967 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:39:02,488 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:39:02,514 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:39:02,561 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:39:05,624 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:39:05,639 consumers Users to notify: [4]
+INFO 2025-07-03 15:39:05,639 consumers Sending notifications to user 4
+INFO 2025-07-03 15:39:05,640 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:39:05,655 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:39:05,656 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:39:05,656 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:39:22,754 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:22,798 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:23,163 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:39:28,488 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:28,537 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:28,793 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:28,828 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:38,455 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:38,502 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:38,804 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:39:43,887 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:43,962 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:44,527 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:39:44,567 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:39:57,499 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:39:57,515 consumers Users to notify: [4]
+INFO 2025-07-03 15:39:57,516 consumers Sending notifications to user 4
+INFO 2025-07-03 15:39:57,517 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:39:57,529 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:39:57,530 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:39:57,530 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:40:53,924 consumers Marking task 78 as read for user 6 with latest message timestamp 2025-07-03 10:39:57.494260+00:00
+INFO 2025-07-03 15:40:53,962 consumers Successfully marked task 78 as read for user 6
+INFO 2025-07-03 15:40:56,765 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:40:56,791 consumers Users to notify: [4]
+INFO 2025-07-03 15:40:56,793 consumers Sending notifications to user 4
+INFO 2025-07-03 15:40:56,794 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:40:56,815 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:40:56,817 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:40:56,818 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:40:59,873 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:40:59,887 consumers Users to notify: [4]
+INFO 2025-07-03 15:40:59,888 consumers Sending notifications to user 4
+INFO 2025-07-03 15:40:59,888 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:40:59,901 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:40:59,902 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:40:59,903 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:41:02,487 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:41:02,508 consumers Users to notify: [4]
+INFO 2025-07-03 15:41:02,509 consumers Sending notifications to user 4
+INFO 2025-07-03 15:41:02,511 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:41:02,532 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:41:02,534 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:41:02,536 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:41:06,004 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:41:06,020 consumers Users to notify: [4]
+INFO 2025-07-03 15:41:06,021 consumers Sending notifications to user 4
+INFO 2025-07-03 15:41:06,022 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:41:06,035 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:41:06,036 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:41:06,037 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:41:07,948 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:41:07,962 consumers Users to notify: [4]
+INFO 2025-07-03 15:41:07,963 consumers Sending notifications to user 4
+INFO 2025-07-03 15:41:07,964 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:41:07,984 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:41:07,985 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:41:07,987 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:41:27,679 consumers Starting send_unread_notification for task 78, sender 6
+INFO 2025-07-03 15:41:27,692 consumers Users to notify: [4]
+INFO 2025-07-03 15:41:27,692 consumers Sending notifications to user 4
+INFO 2025-07-03 15:41:27,693 consumers Sent task unread notification to user 4
+INFO 2025-07-03 15:41:27,706 consumers Got project_id 3 for task 78
+INFO 2025-07-03 15:41:27,707 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-03 15:41:27,709 consumers Sent project unread notification to user 4
+INFO 2025-07-03 15:41:34,828 views Project 3 (AI Virtual Stylist) has unread messages for user 6
+INFO 2025-07-03 15:42:28,267 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:42:28,314 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:42:28,692 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:42:33,960 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:42:34,050 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:42:34,607 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:42:34,635 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:42:47,815 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:42:47,870 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:42:48,323 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:43:11,363 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:43:11,469 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:43:11,799 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:43:11,833 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:43:17,743 views Project 3 (AI Virtual Stylist) has unread messages for user 6
+INFO 2025-07-03 15:43:41,267 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:43:41,326 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:43:41,783 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:43:45,030 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:43:45,097 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:43:45,531 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:43:45,571 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:44:04,740 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:44:04,799 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:44:05,102 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:44:38,564 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:44:38,590 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:44:38,635 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:47:41,884 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:47:41,946 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:47:42,047 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:47:52,353 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:47:52,385 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:47:52,448 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:48:57,621 consumers Marking task 78 as read for user 6 with latest message timestamp 2025-07-03 10:41:27.671565+00:00
+INFO 2025-07-03 15:48:57,661 consumers Successfully marked task 78 as read for user 6
+INFO 2025-07-03 15:49:15,751 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 15:49:15,775 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 15:49:15,823 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 15:49:28,912 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:49:28,939 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:49:29,197 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:49:48,909 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:49:48,941 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:49:49,184 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:49:52,923 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:49:53,013 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:49:53,510 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:49:53,557 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:54:09,692 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:54:09,720 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:54:09,954 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:54:12,922 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:54:13,001 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:54:13,474 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:54:13,518 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:21,036 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:21,121 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:21,512 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:21,549 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:30,900 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:30,929 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:31,163 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:55:35,756 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:35,852 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:36,350 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:36,395 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:48,937 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:55:48,995 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:55:49,290 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:56:05,955 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:56:06,015 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:56:06,464 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 15:59:51,747 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 15:59:51,809 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 15:59:52,396 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:00:17,304 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:00:17,364 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:00:17,856 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:03:03,840 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:03:03,883 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:03:04,177 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:03:37,409 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:03:37,468 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:03:37,938 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:06:28,902 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:06:28,953 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:06:29,357 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:06:34,359 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:06:34,403 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:06:34,732 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:06:34,772 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:06:42,067 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:06:42,100 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:06:42,459 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:09:15,896 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:09:15,919 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:09:16,135 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:11:12,457 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:11:12,512 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:11:12,951 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:12:07,282 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:12:07,309 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:12:07,574 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:12:27,297 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:12:27,344 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:12:27,724 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:17:31,782 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:17:31,814 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:17:32,150 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:17:49,619 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:17:49,648 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:17:49,881 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:18:11,274 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:18:11,342 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:18:11,891 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:18:16,972 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:18:17,083 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:18:17,416 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:18:17,454 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:18:25,307 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:18:25,352 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:18:25,761 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:38:09,831 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:38:09,860 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:38:10,090 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:38:26,125 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:38:26,176 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:38:39,342 consumers No messages found for task 19, skipping read status update
+INFO 2025-07-03 16:38:41,048 consumers Starting send_unread_notification for task 19, sender 5
+INFO 2025-07-03 16:38:41,059 consumers Users to notify: [8, 6]
+INFO 2025-07-03 16:38:41,060 consumers Sending notifications to user 8
+INFO 2025-07-03 16:38:41,061 consumers Sent task unread notification to user 8
+INFO 2025-07-03 16:38:41,069 consumers Got project_id 3 for task 19
+INFO 2025-07-03 16:38:41,070 consumers Sending project unread notification for project 3 to user 8
+INFO 2025-07-03 16:38:41,071 consumers Sent project unread notification to user 8
+INFO 2025-07-03 16:38:41,072 consumers Sending notifications to user 6
+INFO 2025-07-03 16:38:41,073 consumers Sent task unread notification to user 6
+INFO 2025-07-03 16:38:41,086 consumers Got project_id 3 for task 19
+INFO 2025-07-03 16:38:41,087 consumers Sending project unread notification for project 3 to user 6
+INFO 2025-07-03 16:38:41,088 consumers Sent project unread notification to user 6
+INFO 2025-07-03 16:39:04,894 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 16:39:04,920 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 16:39:04,935 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 16:39:41,546 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-03 16:39:41,601 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-03 16:39:41,637 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-03 16:40:02,955 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:40:03,001 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:40:03,399 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:40:09,234 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:40:09,304 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:40:11,865 consumers Marking task 19 as read for user 5 with latest message timestamp 2025-07-03 11:38:41.038860+00:00
+INFO 2025-07-03 16:40:11,889 consumers Successfully marked task 19 as read for user 5
+INFO 2025-07-03 16:40:15,558 consumers Starting send_unread_notification for task 19, sender 5
+INFO 2025-07-03 16:40:15,571 consumers Users to notify: [8, 6]
+INFO 2025-07-03 16:40:15,571 consumers Sending notifications to user 8
+INFO 2025-07-03 16:40:15,572 consumers Sent task unread notification to user 8
+INFO 2025-07-03 16:40:15,581 consumers Got project_id 3 for task 19
+INFO 2025-07-03 16:40:15,582 consumers Sending project unread notification for project 3 to user 8
+INFO 2025-07-03 16:40:15,583 consumers Sent project unread notification to user 8
+INFO 2025-07-03 16:40:15,584 consumers Sending notifications to user 6
+INFO 2025-07-03 16:40:15,585 consumers Sent task unread notification to user 6
+INFO 2025-07-03 16:40:15,595 consumers Got project_id 3 for task 19
+INFO 2025-07-03 16:40:15,596 consumers Sending project unread notification for project 3 to user 6
+INFO 2025-07-03 16:40:15,597 consumers Sent project unread notification to user 6
+INFO 2025-07-03 16:40:57,301 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:40:57,361 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:40:57,815 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:41:32,216 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:41:32,245 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:41:32,452 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:44:33,809 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:44:33,860 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:44:34,228 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:45:00,246 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:45:00,312 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:45:00,604 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:47:23,387 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:47:23,444 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:47:23,955 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:47:31,818 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:47:31,875 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:47:32,331 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:48:11,758 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:48:11,822 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:48:12,290 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:48:47,101 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:48:47,147 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:48:47,415 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:49:10,570 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:10,619 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:49:11,060 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:49:14,483 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:14,567 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:49:15,194 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:15,250 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:49:21,326 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:21,386 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:49:21,904 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:49:25,548 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:25,657 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:49:26,076 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:49:26,121 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:50:23,743 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:50:23,796 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:50:24,136 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 16:58:19,047 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 16:58:19,108 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 16:58:19,556 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:00:55,480 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:00:55,543 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:00:56,132 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:01:15,663 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:01:15,716 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:01:16,157 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:03:11,821 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:03:11,876 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:03:12,167 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:04:45,985 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:04:46,048 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:04:46,325 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:04:56,560 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:04:56,618 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:04:56,987 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:05:02,555 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:05:02,583 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:05:02,793 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:05:06,700 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:05:06,757 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:05:07,240 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:10:26,258 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:10:26,311 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:10:26,816 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:10:44,698 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:10:44,753 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:10:45,198 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:11:02,550 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:11:02,607 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:11:03,021 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:13:03,656 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:13:03,712 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:13:04,009 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:13:04,044 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:13:15,987 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:13:16,063 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:13:16,745 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:13:16,777 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:23:06,015 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:23:06,041 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:23:06,259 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:25:03,057 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:25:03,114 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:25:03,558 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:25:27,256 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:25:27,308 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:25:27,774 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:26:54,107 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:26:54,162 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:26:54,633 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:27:04,529 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:27:04,598 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:27:04,828 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:27:12,376 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:27:12,436 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:27:12,939 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:29:32,389 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:29:32,444 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:29:32,854 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:29:41,371 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:29:41,397 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:29:41,623 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:32:19,476 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:32:19,538 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:32:19,919 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:32:29,921 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:32:29,969 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:32:30,378 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:32:35,174 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:32:35,222 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:32:35,602 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:33:04,967 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:33:05,021 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:33:05,463 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:33:16,710 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:33:16,764 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:33:17,213 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 17:37:46,007 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:37:46,059 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:37:46,365 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:37:46,399 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:43:15,007 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 17:43:15,032 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 17:43:15,385 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:12:30,941 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:12:30,983 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:12:31,431 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:12:31,477 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:13:34,331 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:13:34,387 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:13:34,674 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:13:34,703 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:13:57,809 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:13:57,879 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:13:58,479 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:15:13,093 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:15:13,121 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:15:13,332 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:18:27,214 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:18:27,253 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:18:27,545 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:18:31,434 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:18:31,464 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:18:31,691 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:18:40,109 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:18:40,151 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:18:40,533 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:19:41,338 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:19:41,367 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:19:41,612 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:20:13,509 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:20:13,568 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:20:13,850 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:23:26,580 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:23:26,648 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:23:27,166 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-03 18:25:05,309 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-03 18:25:05,336 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-03 18:25:05,560 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:41:47,639 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:41:47,655 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:41:47,730 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:42:56,292 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:42:56,321 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:42:56,515 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:42:56,543 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:43:03,415 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:43:03,426 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:43:03,513 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:46:09,652 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:46:09,662 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:46:09,742 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:49:10,128 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:49:10,150 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:49:10,257 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:49:31,154 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:49:31,170 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:49:31,286 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:51:28,513 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:51:28,528 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:51:28,634 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:51:44,412 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:51:44,422 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:51:44,505 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:53:47,435 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:53:47,447 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:53:47,542 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:53:51,208 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:53:51,223 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:53:51,311 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:54:04,522 consumers No messages found for task 77, skipping read status update
+INFO 2025-07-04 09:54:19,524 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:54:19,538 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:54:19,643 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:54:27,087 consumers No messages found for task 77, skipping read status update
+INFO 2025-07-04 09:56:20,804 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:56:20,820 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:56:20,943 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:56:25,013 consumers No messages found for task 77, skipping read status update
+INFO 2025-07-04 09:56:30,621 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:56:30,641 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:56:30,772 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:56:33,775 consumers No messages found for task 77, skipping read status update
+INFO 2025-07-04 09:57:58,973 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:57:58,987 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:57:59,070 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:58:04,278 consumers No messages found for task 69, skipping read status update
+INFO 2025-07-04 09:58:13,856 consumers Starting send_unread_notification for task 69, sender 5
+INFO 2025-07-04 09:58:13,864 consumers Users to notify: []
+INFO 2025-07-04 09:58:24,821 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 09:58:24,834 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 09:58:24,917 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 09:58:27,551 consumers No messages found for task 77, skipping read status update
+INFO 2025-07-04 09:58:28,916 consumers Starting send_unread_notification for task 77, sender 5
+INFO 2025-07-04 09:58:28,924 consumers Users to notify: []
+INFO 2025-07-04 10:00:26,669 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:00:26,683 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:00:26,769 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:00:29,945 consumers Marking task 69 as read for user 5 with latest message timestamp 2025-07-04 04:58:13.851240+00:00
+INFO 2025-07-04 10:00:29,955 consumers Successfully marked task 69 as read for user 5
+INFO 2025-07-04 10:00:34,105 consumers Starting send_unread_notification for task 69, sender 5
+INFO 2025-07-04 10:00:34,112 consumers Users to notify: []
+INFO 2025-07-04 10:00:54,275 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:00:54,290 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:00:54,412 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:00:57,825 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:00:57,863 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:00:58,090 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:00:58,125 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:01:05,947 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:01:05,956 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:01:06,043 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:01:10,716 consumers Marking task 69 as read for user 5 with latest message timestamp 2025-07-04 05:00:34.100110+00:00
+INFO 2025-07-04 10:01:10,726 consumers Successfully marked task 69 as read for user 5
+INFO 2025-07-04 10:01:15,877 consumers Starting send_unread_notification for task 69, sender 5
+INFO 2025-07-04 10:01:15,883 consumers Users to notify: []
+INFO 2025-07-04 10:01:33,481 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:01:33,493 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:01:33,583 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:01:41,226 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 04:58:28.912587+00:00
+INFO 2025-07-04 10:01:41,237 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:04:02,144 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:04:02,155 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:04:02,243 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:04:05,339 consumers Marking task 69 as read for user 5 with latest message timestamp 2025-07-04 05:01:15.874039+00:00
+INFO 2025-07-04 10:04:05,350 consumers Successfully marked task 69 as read for user 5
+INFO 2025-07-04 10:04:16,957 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:04:16,967 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:04:17,062 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:04:20,095 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 04:58:28.912587+00:00
+INFO 2025-07-04 10:04:20,098 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:07:04,562 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:07:04,575 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:07:04,660 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:07:07,045 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 04:58:28.912587+00:00
+INFO 2025-07-04 10:07:07,052 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:08:17,314 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:08:17,330 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:08:17,425 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:08:20,578 consumers Marking task 69 as read for user 5 with latest message timestamp 2025-07-04 05:01:15.874039+00:00
+INFO 2025-07-04 10:08:20,581 consumers Successfully marked task 69 as read for user 5
+INFO 2025-07-04 10:08:24,825 consumers Starting send_unread_notification for task 69, sender 5
+INFO 2025-07-04 10:08:24,835 consumers Users to notify: []
+INFO 2025-07-04 10:11:05,059 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:11:05,072 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:11:05,161 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:11:08,041 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 04:58:28.912587+00:00
+INFO 2025-07-04 10:11:08,044 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:13:02,997 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:13:03,010 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:13:03,095 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:13:05,905 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 04:58:28.912587+00:00
+INFO 2025-07-04 10:13:05,910 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:13:07,750 consumers Starting send_unread_notification for task 77, sender 5
+INFO 2025-07-04 10:13:07,757 consumers Users to notify: []
+INFO 2025-07-04 10:18:35,485 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:18:35,499 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:18:35,581 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:18:44,457 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:18:44,468 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:18:44,553 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:18:47,506 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 05:13:07.745298+00:00
+INFO 2025-07-04 10:18:47,514 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:19:32,172 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:19:32,190 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:19:32,297 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:19:37,667 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 05:13:07.745298+00:00
+INFO 2025-07-04 10:19:37,671 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 10:33:14,658 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:33:14,669 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:33:14,753 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:34:07,971 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:34:07,985 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:34:08,080 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:34:16,753 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:34:16,781 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:34:16,927 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:43:59,516 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:43:59,529 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:43:59,615 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:45:27,025 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:45:27,038 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:45:27,121 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:50:49,534 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:50:49,545 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:50:49,625 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:52:48,258 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:52:48,269 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:52:48,353 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 10:54:22,522 views Task 78 (notification check ) has unread messages for user 5
+INFO 2025-07-04 10:54:22,536 views Task 92 (lkejnf) has unread messages for user 5
+INFO 2025-07-04 10:54:22,628 views Project 3 (AI Virtual Stylist) has unread messages for user 5
