@@ -646,7 +646,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="task_id" id="fileTaskId">
                                 <input type="file" name="myfile" class="form-control bg-dark text-white border-secondary mb-2" required>
-                                <button type="submit" class="btn btn-primary btn-sm">Upload File</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Upload File</button>
                             </form>
                         </div>
                         <div id="uploadMessage"></div>
@@ -662,7 +662,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="task_id" id="reportTaskId">
                                 <textarea name="report" class="form-control bg-dark text-white border-secondary mb-2" rows="3" required placeholder="Enter your task report here..."></textarea>
-                                <button type="submit" class="btn btn-primary btn-sm">Submit Report</button>
+                                <button type="submit" class="btn btn-danger btn-sm">Submit Report</button>
                             </form>
                         </div>
                     </div>

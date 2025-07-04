@@ -10316,3 +10316,397 @@ INFO 2025-07-04 12:53:57,781 consumers All tasks in project 3 are read for user 
 INFO 2025-07-04 12:53:57,787 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': False}
 INFO 2025-07-04 12:53:57,787 consumers Sent project notification to client: project_id=3, has_unread=False
 INFO 2025-07-04 12:56:14,426 consumers No messages found for task 22, skipping read status update
+INFO 2025-07-04 13:05:16,117 consumers Marking task 105 as read for user 4 with latest message timestamp 2025-07-04 07:53:57.300137+00:00
+INFO 2025-07-04 13:05:16,124 consumers Successfully marked task 105 as read for user 4
+INFO 2025-07-04 13:06:10,064 consumers Starting send_unread_notification for task 105, sender 4
+INFO 2025-07-04 13:06:10,076 consumers Users to notify: []
+INFO 2025-07-04 13:11:01,301 consumers Marking task 19 as read for user 6 with latest message timestamp 2025-07-04 07:53:28.000889+00:00
+INFO 2025-07-04 13:11:01,344 consumers Successfully marked task 19 as read for user 6
+INFO 2025-07-04 13:12:11,248 consumers No messages found for task 20, skipping read status update
+INFO 2025-07-04 13:12:19,599 consumers No messages found for task 40, skipping read status update
+INFO 2025-07-04 13:12:24,614 consumers No messages found for task 20, skipping read status update
+INFO 2025-07-04 13:12:29,626 consumers No messages found for task 40, skipping read status update
+INFO 2025-07-04 13:15:23,860 consumers Marking task 19 as read for user 6 with latest message timestamp 2025-07-04 07:53:28.000889+00:00
+INFO 2025-07-04 13:15:23,881 consumers Successfully marked task 19 as read for user 6
+INFO 2025-07-04 13:16:30,715 consumers Marking task 69 as read for user 6 with latest message timestamp 2025-07-04 05:08:24.821719+00:00
+INFO 2025-07-04 13:16:30,759 consumers Successfully marked task 69 as read for user 6
+INFO 2025-07-04 13:16:46,842 consumers Starting send_unread_notification for task 69, sender 6
+INFO 2025-07-04 13:16:46,868 consumers Users to notify: [5]
+INFO 2025-07-04 13:16:46,869 consumers Sending notifications to user 5
+INFO 2025-07-04 13:16:46,871 consumers Sent task unread notification to user 5
+INFO 2025-07-04 13:16:46,891 consumers Got project_id 3 for task 69
+INFO 2025-07-04 13:16:46,893 consumers Sending project unread notification for project 3 to user 5
+INFO 2025-07-04 13:16:46,895 consumers Sent project unread notification to user 5
+INFO 2025-07-04 13:18:15,816 consumers Marking task 69 as read for user 6 with latest message timestamp 2025-07-04 08:16:46.815152+00:00
+INFO 2025-07-04 13:18:15,850 consumers Successfully marked task 69 as read for user 6
+INFO 2025-07-04 13:19:53,716 consumers User 4 stopped viewing task 105
+INFO 2025-07-04 13:20:04,540 consumers Marking task 105 as read for user 6 with latest message timestamp 2025-07-04 08:06:10.058119+00:00
+INFO 2025-07-04 13:20:04,564 consumers Successfully marked task 105 as read for user 6
+INFO 2025-07-04 13:20:07,576 consumers Starting send_unread_notification for task 105, sender 6
+INFO 2025-07-04 13:20:07,592 consumers Users to notify: [4]
+INFO 2025-07-04 13:20:07,593 consumers Sending notifications to user 4
+INFO 2025-07-04 13:20:07,594 consumers Sent task unread notification to user 4
+INFO 2025-07-04 13:20:07,606 consumers Got project_id 3 for task 105
+INFO 2025-07-04 13:20:07,607 consumers Sending project unread notification for project 3 to user 4
+INFO 2025-07-04 13:20:07,609 consumers Sent project unread notification to user 4
+INFO 2025-07-04 13:20:07,615 consumers UserNotificationConsumer received project_unread_notification: {'type': 'project_unread_notification', 'project_id': 3, 'has_unread': True}
+INFO 2025-07-04 13:20:07,616 consumers Sent project notification to client: project_id=3, has_unread=True
+INFO 2025-07-04 13:20:11,560 consumers Marking task 105 as read for user 4 with latest message timestamp 2025-07-04 08:20:07.571244+00:00
+INFO 2025-07-04 13:20:11,599 consumers Successfully marked task 105 as read for user 4
+INFO 2025-07-04 13:20:14,826 consumers Starting send_unread_notification for task 105, sender 4
+INFO 2025-07-04 13:20:14,851 consumers Users to notify: []
+INFO 2025-07-04 13:20:14,902 consumers Marking task 105 as read for user 6 with latest message timestamp 2025-07-04 08:20:14.798554+00:00
+INFO 2025-07-04 13:20:14,920 consumers Successfully marked task 105 as read for user 6
+INFO 2025-07-04 13:20:39,380 consumers User 4 stopped viewing task 105
+INFO 2025-07-04 13:20:47,921 consumers Marking task 105 as read for user 4 with latest message timestamp 2025-07-04 08:20:14.798554+00:00
+INFO 2025-07-04 13:20:47,960 consumers Successfully marked task 105 as read for user 4
+INFO 2025-07-04 13:20:50,005 consumers Starting send_unread_notification for task 105, sender 4
+INFO 2025-07-04 13:20:50,018 consumers Users to notify: []
+INFO 2025-07-04 13:20:50,047 consumers Marking task 105 as read for user 6 with latest message timestamp 2025-07-04 08:20:49.999376+00:00
+INFO 2025-07-04 13:20:50,056 consumers Successfully marked task 105 as read for user 6
+INFO 2025-07-04 13:21:23,111 consumers No messages found for task 72, skipping read status update
+INFO 2025-07-04 13:21:28,134 consumers Marking task 105 as read for user 6 with latest message timestamp 2025-07-04 08:20:49.999376+00:00
+INFO 2025-07-04 13:21:28,148 consumers Successfully marked task 105 as read for user 6
+INFO 2025-07-04 13:21:33,125 consumers No messages found for task 72, skipping read status update
+INFO 2025-07-04 13:22:12,132 views Task 69 (check) has unread messages for user 5
+INFO 2025-07-04 13:22:12,425 views Task 69 (check) has unread messages for user 5
+INFO 2025-07-04 13:22:12,545 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:12,863 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 13:22:16,546 views Task 69 (check) has unread messages for user 5
+INFO 2025-07-04 13:22:16,775 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:17,178 views Task 69 (check) has unread messages for user 5
+INFO 2025-07-04 13:22:17,277 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:23,123 consumers Marking task 69 as read for user 5 with latest message timestamp 2025-07-04 08:16:46.815152+00:00
+INFO 2025-07-04 13:22:23,136 consumers Successfully marked task 69 as read for user 5
+INFO 2025-07-04 13:22:26,339 consumers User 5 stopped viewing task 69
+INFO 2025-07-04 13:22:27,995 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:28,607 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:35,359 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:35,771 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:40,537 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:40,929 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 13:22:47,622 consumers Marking task 105 as read for user 5 with latest message timestamp 2025-07-04 08:20:49.999376+00:00
+INFO 2025-07-04 13:22:47,662 consumers Successfully marked task 105 as read for user 5
+INFO 2025-07-04 13:22:51,693 consumers User 5 stopped viewing task 105
+INFO 2025-07-04 13:28:53,537 consumers Marking task 19 as read for user 5 with latest message timestamp 2025-07-04 07:53:28.000889+00:00
+INFO 2025-07-04 13:28:53,566 consumers Successfully marked task 19 as read for user 5
+INFO 2025-07-04 13:29:22,658 consumers Marking task 19 as read for user 5 with latest message timestamp 2025-07-04 07:53:28.000889+00:00
+INFO 2025-07-04 13:29:22,677 consumers Successfully marked task 19 as read for user 5
+INFO 2025-07-04 13:29:24,886 consumers Starting send_unread_notification for task 19, sender 5
+INFO 2025-07-04 13:29:24,902 consumers Users to notify: [8, 6]
+INFO 2025-07-04 13:29:24,902 consumers Sending notifications to user 8
+INFO 2025-07-04 13:29:24,903 consumers Sent task unread notification to user 8
+INFO 2025-07-04 13:29:24,915 consumers Got project_id 3 for task 19
+INFO 2025-07-04 13:29:24,917 consumers Sending project unread notification for project 3 to user 8
+INFO 2025-07-04 13:29:24,918 consumers Sent project unread notification to user 8
+INFO 2025-07-04 13:29:24,918 consumers Sending notifications to user 6
+INFO 2025-07-04 13:29:24,919 consumers Sent task unread notification to user 6
+INFO 2025-07-04 13:29:24,930 consumers Got project_id 3 for task 19
+INFO 2025-07-04 13:29:24,930 consumers Sending project unread notification for project 3 to user 6
+INFO 2025-07-04 13:29:24,931 consumers Sent project unread notification to user 6
+INFO 2025-07-04 13:29:26,637 consumers User 5 stopped viewing task 19
+INFO 2025-07-04 13:31:04,388 consumers Marking task 19 as read for user 5 with latest message timestamp 2025-07-04 08:29:24.879501+00:00
+INFO 2025-07-04 13:31:04,410 consumers Successfully marked task 19 as read for user 5
+INFO 2025-07-04 13:31:06,778 consumers Starting send_unread_notification for task 19, sender 5
+INFO 2025-07-04 13:31:06,790 consumers Users to notify: [8, 6]
+INFO 2025-07-04 13:31:06,791 consumers Sending notifications to user 8
+INFO 2025-07-04 13:31:06,792 consumers Sent task unread notification to user 8
+INFO 2025-07-04 13:31:06,802 consumers Got project_id 3 for task 19
+INFO 2025-07-04 13:31:06,803 consumers Sending project unread notification for project 3 to user 8
+INFO 2025-07-04 13:31:06,804 consumers Sent project unread notification to user 8
+INFO 2025-07-04 13:31:06,804 consumers Sending notifications to user 6
+INFO 2025-07-04 13:31:06,805 consumers Sent task unread notification to user 6
+INFO 2025-07-04 13:31:06,814 consumers Got project_id 3 for task 19
+INFO 2025-07-04 13:31:06,815 consumers Sending project unread notification for project 3 to user 6
+INFO 2025-07-04 13:31:06,816 consumers Sent project unread notification to user 6
+INFO 2025-07-04 13:31:08,834 consumers User 5 stopped viewing task 19
+INFO 2025-07-04 13:43:50,591 views Task 30 (Testing) has unread messages for user 4
+INFO 2025-07-04 13:43:50,680 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-04 13:43:50,731 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-04 13:43:50,780 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-04 13:45:40,425 views Task 30 (Testing) has unread messages for user 4
+INFO 2025-07-04 13:45:40,521 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-04 13:45:40,580 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-04 13:45:40,644 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-04 13:46:49,684 tasks Current time in Karachi: 2025-07-04 13:46:49 PKT
+INFO 2025-07-04 13:46:49,684 tasks Current time in Karachi: 2025-07-04 13:46:49 PKT
+INFO 2025-07-04 13:46:49,712 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:46:49,712 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:46:49,713 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:46:49,713 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:47:49,716 tasks Current time in Karachi: 2025-07-04 13:47:49 PKT
+INFO 2025-07-04 13:47:49,716 tasks Current time in Karachi: 2025-07-04 13:47:49 PKT
+INFO 2025-07-04 13:47:49,722 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:47:49,722 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:47:49,724 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:47:49,724 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:48:49,728 tasks Current time in Karachi: 2025-07-04 13:48:49 PKT
+INFO 2025-07-04 13:48:49,728 tasks Current time in Karachi: 2025-07-04 13:48:49 PKT
+INFO 2025-07-04 13:48:49,733 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:48:49,733 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:48:49,734 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:48:49,734 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:49:49,736 tasks Current time in Karachi: 2025-07-04 13:49:49 PKT
+INFO 2025-07-04 13:49:49,736 tasks Current time in Karachi: 2025-07-04 13:49:49 PKT
+INFO 2025-07-04 13:49:49,740 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:49:49,740 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:49:49,741 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:49:49,741 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:50:20,416 consumers User 4 stopped viewing task 105
+INFO 2025-07-04 13:50:49,744 tasks Current time in Karachi: 2025-07-04 13:50:49 PKT
+INFO 2025-07-04 13:50:49,744 tasks Current time in Karachi: 2025-07-04 13:50:49 PKT
+INFO 2025-07-04 13:50:49,750 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:50:49,750 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:50:49,752 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:50:49,752 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:51:49,756 tasks Current time in Karachi: 2025-07-04 13:51:49 PKT
+INFO 2025-07-04 13:51:49,756 tasks Current time in Karachi: 2025-07-04 13:51:49 PKT
+INFO 2025-07-04 13:51:49,762 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:51:49,762 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:51:49,764 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:51:49,764 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:52:49,768 tasks Current time in Karachi: 2025-07-04 13:52:49 PKT
+INFO 2025-07-04 13:52:49,768 tasks Current time in Karachi: 2025-07-04 13:52:49 PKT
+INFO 2025-07-04 13:52:49,774 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:52:49,774 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:52:49,775 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:52:49,775 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:53:49,780 tasks Current time in Karachi: 2025-07-04 13:53:49 PKT
+INFO 2025-07-04 13:53:49,780 tasks Current time in Karachi: 2025-07-04 13:53:49 PKT
+INFO 2025-07-04 13:53:49,786 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:53:49,786 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 13:53:49,788 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 13:53:49,788 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:07:34,488 tasks Current time in Karachi: 2025-07-04 15:07:34 PKT
+INFO 2025-07-04 15:07:34,488 tasks Current time in Karachi: 2025-07-04 15:07:34 PKT
+INFO 2025-07-04 15:07:34,692 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:07:34,692 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:07:34,713 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:07:34,713 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:07:48,464 views Task 30 (Testing) has unread messages for user 4
+INFO 2025-07-04 15:07:48,534 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-04 15:07:48,578 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-04 15:07:48,626 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-04 15:08:34,910 tasks Current time in Karachi: 2025-07-04 15:08:34 PKT
+INFO 2025-07-04 15:08:34,910 tasks Current time in Karachi: 2025-07-04 15:08:34 PKT
+INFO 2025-07-04 15:08:34,915 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:08:34,915 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:08:34,918 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:08:34,918 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:09:34,922 tasks Current time in Karachi: 2025-07-04 15:09:34 PKT
+INFO 2025-07-04 15:09:34,922 tasks Current time in Karachi: 2025-07-04 15:09:34 PKT
+INFO 2025-07-04 15:09:34,929 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:09:34,929 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:09:34,930 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:09:34,930 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:09:50,134 views Task 30 (Testing) has unread messages for user 4
+INFO 2025-07-04 15:09:50,187 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-04 15:09:50,212 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-04 15:09:50,233 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-04 15:10:34,934 tasks Current time in Karachi: 2025-07-04 15:10:34 PKT
+INFO 2025-07-04 15:10:34,934 tasks Current time in Karachi: 2025-07-04 15:10:34 PKT
+INFO 2025-07-04 15:10:34,942 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:10:34,942 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:10:34,944 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:10:34,944 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:11:01,123 consumers Marking task 69 as read for user 6 with latest message timestamp 2025-07-04 08:16:46.815152+00:00
+INFO 2025-07-04 15:11:01,139 consumers Successfully marked task 69 as read for user 6
+INFO 2025-07-04 15:11:34,947 tasks Current time in Karachi: 2025-07-04 15:11:34 PKT
+INFO 2025-07-04 15:11:34,947 tasks Current time in Karachi: 2025-07-04 15:11:34 PKT
+INFO 2025-07-04 15:11:34,954 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:11:34,954 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:11:34,956 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:11:34,956 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:12:34,960 tasks Current time in Karachi: 2025-07-04 15:12:34 PKT
+INFO 2025-07-04 15:12:34,960 tasks Current time in Karachi: 2025-07-04 15:12:34 PKT
+INFO 2025-07-04 15:12:34,969 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:12:34,969 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:12:34,971 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:12:34,971 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:13:34,978 tasks Current time in Karachi: 2025-07-04 15:13:34 PKT
+INFO 2025-07-04 15:13:34,978 tasks Current time in Karachi: 2025-07-04 15:13:34 PKT
+INFO 2025-07-04 15:13:34,989 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:13:34,989 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:13:34,992 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:13:34,992 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:14:34,996 tasks Current time in Karachi: 2025-07-04 15:14:34 PKT
+INFO 2025-07-04 15:14:34,996 tasks Current time in Karachi: 2025-07-04 15:14:34 PKT
+INFO 2025-07-04 15:14:35,006 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:14:35,006 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:14:35,008 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:14:35,008 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:15:35,013 tasks Current time in Karachi: 2025-07-04 15:15:35 PKT
+INFO 2025-07-04 15:15:35,013 tasks Current time in Karachi: 2025-07-04 15:15:35 PKT
+INFO 2025-07-04 15:15:35,020 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:15:35,020 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:15:35,022 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:15:35,022 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:16:35,026 tasks Current time in Karachi: 2025-07-04 15:16:35 PKT
+INFO 2025-07-04 15:16:35,026 tasks Current time in Karachi: 2025-07-04 15:16:35 PKT
+INFO 2025-07-04 15:16:35,034 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:16:35,034 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:16:35,036 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:16:35,036 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:17:35,039 tasks Current time in Karachi: 2025-07-04 15:17:35 PKT
+INFO 2025-07-04 15:17:35,039 tasks Current time in Karachi: 2025-07-04 15:17:35 PKT
+INFO 2025-07-04 15:17:35,045 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:17:35,045 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:17:35,046 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:17:35,046 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:18:35,052 tasks Current time in Karachi: 2025-07-04 15:18:35 PKT
+INFO 2025-07-04 15:18:35,052 tasks Current time in Karachi: 2025-07-04 15:18:35 PKT
+INFO 2025-07-04 15:18:35,058 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:18:35,058 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:18:35,060 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:18:35,060 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:19:26,389 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 06:21:36.479255+00:00
+INFO 2025-07-04 15:19:26,402 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 15:19:26,487 consumers Marking task 77 as read for user 5 with latest message timestamp 2025-07-04 06:21:36.479255+00:00
+INFO 2025-07-04 15:19:26,500 consumers Successfully marked task 77 as read for user 5
+INFO 2025-07-04 15:19:28,811 consumers Starting send_unread_notification for task 77, sender 5
+INFO 2025-07-04 15:19:28,822 consumers Users to notify: []
+INFO 2025-07-04 15:19:30,462 consumers User 5 stopped viewing task 77
+INFO 2025-07-04 15:19:35,063 tasks Current time in Karachi: 2025-07-04 15:19:35 PKT
+INFO 2025-07-04 15:19:35,063 tasks Current time in Karachi: 2025-07-04 15:19:35 PKT
+INFO 2025-07-04 15:19:35,071 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:19:35,071 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:19:35,072 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:19:35,072 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:20:23,278 views Task 30 (Testing) has unread messages for user 4
+INFO 2025-07-04 15:20:23,330 views Task 78 (notification check ) has unread messages for user 4
+INFO 2025-07-04 15:20:23,361 views Task 92 (lkejnf) has unread messages for user 4
+INFO 2025-07-04 15:20:23,395 views Project 3 (AI Virtual Stylist) has unread messages for user 4
+INFO 2025-07-04 15:20:32,459 consumers Marking task 105 as read for user 4 with latest message timestamp 2025-07-04 08:20:49.999376+00:00
+INFO 2025-07-04 15:20:32,500 consumers Successfully marked task 105 as read for user 4
+INFO 2025-07-04 15:20:32,605 consumers Marking task 105 as read for user 4 with latest message timestamp 2025-07-04 08:20:49.999376+00:00
+INFO 2025-07-04 15:20:32,620 consumers Successfully marked task 105 as read for user 4
+INFO 2025-07-04 15:20:34,992 consumers Starting send_unread_notification for task 105, sender 4
+INFO 2025-07-04 15:20:35,004 consumers Users to notify: []
+INFO 2025-07-04 15:20:35,076 tasks Current time in Karachi: 2025-07-04 15:20:35 PKT
+INFO 2025-07-04 15:20:35,076 tasks Current time in Karachi: 2025-07-04 15:20:35 PKT
+INFO 2025-07-04 15:20:35,083 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:20:35,083 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:20:35,086 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:20:35,086 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:20:36,874 consumers User 4 stopped viewing task 105
+INFO 2025-07-04 15:20:46,285 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 15:20:46,550 views Project 3 (AI Virtual Stylist) has unread messages for user 5
+INFO 2025-07-04 15:20:50,173 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 15:20:51,008 views Task 105 (Websocket) has unread messages for user 5
+INFO 2025-07-04 15:20:54,919 consumers Marking task 105 as read for user 5 with latest message timestamp 2025-07-04 10:20:34.981314+00:00
+INFO 2025-07-04 15:20:54,952 consumers Successfully marked task 105 as read for user 5
+INFO 2025-07-04 15:21:35,091 tasks Current time in Karachi: 2025-07-04 15:21:35 PKT
+INFO 2025-07-04 15:21:35,091 tasks Current time in Karachi: 2025-07-04 15:21:35 PKT
+INFO 2025-07-04 15:21:35,098 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:21:35,098 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:21:35,100 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:21:35,100 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:22:35,103 tasks Current time in Karachi: 2025-07-04 15:22:35 PKT
+INFO 2025-07-04 15:22:35,103 tasks Current time in Karachi: 2025-07-04 15:22:35 PKT
+INFO 2025-07-04 15:22:35,112 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:22:35,112 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:22:35,113 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:22:35,113 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:23:15,006 consumers User 5 stopped viewing task 105
+INFO 2025-07-04 15:23:35,117 tasks Current time in Karachi: 2025-07-04 15:23:35 PKT
+INFO 2025-07-04 15:23:35,117 tasks Current time in Karachi: 2025-07-04 15:23:35 PKT
+INFO 2025-07-04 15:23:35,124 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:23:35,124 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:23:35,132 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:23:35,132 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:24:35,137 tasks Current time in Karachi: 2025-07-04 15:24:35 PKT
+INFO 2025-07-04 15:24:35,137 tasks Current time in Karachi: 2025-07-04 15:24:35 PKT
+INFO 2025-07-04 15:24:35,142 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:24:35,142 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:24:35,144 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:24:35,144 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:25:35,148 tasks Current time in Karachi: 2025-07-04 15:25:35 PKT
+INFO 2025-07-04 15:25:35,148 tasks Current time in Karachi: 2025-07-04 15:25:35 PKT
+INFO 2025-07-04 15:25:35,155 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:25:35,155 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:25:35,157 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:25:35,157 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:26:35,164 tasks Current time in Karachi: 2025-07-04 15:26:35 PKT
+INFO 2025-07-04 15:26:35,164 tasks Current time in Karachi: 2025-07-04 15:26:35 PKT
+INFO 2025-07-04 15:26:35,171 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:26:35,171 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:26:35,173 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:26:35,173 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:27:35,177 tasks Current time in Karachi: 2025-07-04 15:27:35 PKT
+INFO 2025-07-04 15:27:35,177 tasks Current time in Karachi: 2025-07-04 15:27:35 PKT
+INFO 2025-07-04 15:27:35,182 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:27:35,182 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:27:35,183 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:27:35,183 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:28:35,186 tasks Current time in Karachi: 2025-07-04 15:28:35 PKT
+INFO 2025-07-04 15:28:35,186 tasks Current time in Karachi: 2025-07-04 15:28:35 PKT
+INFO 2025-07-04 15:28:35,193 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:28:35,193 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:28:35,195 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:28:35,195 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:29:35,199 tasks Current time in Karachi: 2025-07-04 15:29:35 PKT
+INFO 2025-07-04 15:29:35,199 tasks Current time in Karachi: 2025-07-04 15:29:35 PKT
+INFO 2025-07-04 15:29:35,205 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:29:35,205 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:29:35,207 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:29:35,207 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:30:35,210 tasks Current time in Karachi: 2025-07-04 15:30:35 PKT
+INFO 2025-07-04 15:30:35,210 tasks Current time in Karachi: 2025-07-04 15:30:35 PKT
+INFO 2025-07-04 15:30:35,217 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:30:35,217 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:30:35,219 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:30:35,219 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:31:35,224 tasks Current time in Karachi: 2025-07-04 15:31:35 PKT
+INFO 2025-07-04 15:31:35,224 tasks Current time in Karachi: 2025-07-04 15:31:35 PKT
+INFO 2025-07-04 15:31:35,231 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:31:35,231 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:31:35,233 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:31:35,233 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:32:35,236 tasks Current time in Karachi: 2025-07-04 15:32:35 PKT
+INFO 2025-07-04 15:32:35,236 tasks Current time in Karachi: 2025-07-04 15:32:35 PKT
+INFO 2025-07-04 15:32:35,243 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:32:35,243 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:32:35,246 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:32:35,246 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:33:35,250 tasks Current time in Karachi: 2025-07-04 15:33:35 PKT
+INFO 2025-07-04 15:33:35,250 tasks Current time in Karachi: 2025-07-04 15:33:35 PKT
+INFO 2025-07-04 15:33:35,257 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:33:35,257 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:33:35,261 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:33:35,261 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:34:35,268 tasks Current time in Karachi: 2025-07-04 15:34:35 PKT
+INFO 2025-07-04 15:34:35,268 tasks Current time in Karachi: 2025-07-04 15:34:35 PKT
+INFO 2025-07-04 15:34:35,276 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:34:35,276 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:34:35,277 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:34:35,277 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:35:35,281 tasks Current time in Karachi: 2025-07-04 15:35:35 PKT
+INFO 2025-07-04 15:35:35,281 tasks Current time in Karachi: 2025-07-04 15:35:35 PKT
+INFO 2025-07-04 15:35:35,291 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:35:35,291 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:35:35,293 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:35:35,293 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:36:35,297 tasks Current time in Karachi: 2025-07-04 15:36:35 PKT
+INFO 2025-07-04 15:36:35,297 tasks Current time in Karachi: 2025-07-04 15:36:35 PKT
+INFO 2025-07-04 15:36:35,305 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:36:35,305 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:36:35,307 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:36:35,307 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:37:35,310 tasks Current time in Karachi: 2025-07-04 15:37:35 PKT
+INFO 2025-07-04 15:37:35,310 tasks Current time in Karachi: 2025-07-04 15:37:35 PKT
+INFO 2025-07-04 15:37:35,316 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:37:35,316 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:37:35,318 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:37:35,318 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:38:35,320 tasks Current time in Karachi: 2025-07-04 15:38:35 PKT
+INFO 2025-07-04 15:38:35,320 tasks Current time in Karachi: 2025-07-04 15:38:35 PKT
+INFO 2025-07-04 15:38:35,326 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:38:35,326 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:38:35,329 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:38:35,329 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:39:35,333 tasks Current time in Karachi: 2025-07-04 15:39:35 PKT
+INFO 2025-07-04 15:39:35,333 tasks Current time in Karachi: 2025-07-04 15:39:35 PKT
+INFO 2025-07-04 15:39:35,343 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:39:35,343 tasks Office hours for friday: 09:30:00 - 18:30:00
+INFO 2025-07-04 15:39:35,344 tasks Break time: 14:00:00 - 15:00:00
+INFO 2025-07-04 15:39:35,344 tasks Break time: 14:00:00 - 15:00:00

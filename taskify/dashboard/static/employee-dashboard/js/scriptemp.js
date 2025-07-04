@@ -1447,13 +1447,6 @@ function renderPendingTasks(tasks) {
                         <span>Read More</span>
                     </button>
                     ${['employee', 'teamlead', 'project_manager', 'admin'].includes(window.USER_ROLE) ? `
-                        <button class="btn btn-outline-danger task-action-btn delete-task-btn"
-                                type="button"
-                                data-task-id="${task.id}"
-                                data-project-id="${task.project_id}">
-                            <i class="fa fa-trash"></i>
-                            <span>Delete</span>
-                        </button>
                     ` : ''}
                 </div>
             </div>

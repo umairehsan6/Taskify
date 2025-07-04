@@ -8,7 +8,7 @@ import os
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from .models import Tasks, TaskActivityLog
-from django.db.models import Sum, Q, F
+from django.db.models import Sum, Q, F, Max
 from datetime import datetime, timedelta
 from .models import Notification
 import logging
@@ -1498,6 +1498,9 @@ def get_project_tasks(request, project_id):
         
         tasks = Tasks.objects.filter(project=project).select_related('assigned_to__user')
         logging.info(f"Found {tasks.count()} tasks for project {project.name}.")
+        
+        # Annotate each task with the latest message timestamp
+        tasks = tasks.annotate(latest_message=Max('messages__timestamp')).order_by('-latest_message', '-id')
         
         tasks_data = []
         for task in tasks:
