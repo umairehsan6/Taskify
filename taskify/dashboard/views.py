@@ -162,6 +162,22 @@ def UpdateProjectStatus(request, project_id, new_status):
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     try:
         project = Projects.objects.get(id=project_id)
+        # If trying to mark as completed, check all tasks
+        if new_status == 'completed':
+            incomplete_tasks = project.tasks.exclude(status='completed')
+            if incomplete_tasks.exists():
+                msg = "Cannot complete project: some tasks are not completed yet."
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': msg}, status=400)
+                messages.error(request, msg)
+                # Redirect back without changing status
+                user_role = request.session.get('user_role')
+                if user_role == 'admin':
+                    return redirect('all-projects')
+                elif user_role in ['employee', 'project_manager', 'teamlead']:
+                    return redirect('new_employee_dashboard')
+                else:
+                    return redirect('login')
         project.status = new_status
         project.save()
         msg = f"Project status updated to {project.get_status_display()}."

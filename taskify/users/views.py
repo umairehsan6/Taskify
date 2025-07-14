@@ -13,50 +13,50 @@ from dashboard.models import Department, UserDepartment
 from django.core.mail import send_mail
 
 # Create your views here.
-def Register(request):
-    message = None
-    if request.method == 'POST':
-        fname = request.POST.get('fname')
-        lname = request.POST.get('lname')
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        if password == confirm_password:
-            if User.objects.filter(email=email).exists():
-                message = "This email is already registered as a superuser or staff user."
-            elif SignupUser.objects.filter(email=email).exists():
-                message = "This email is already registered."
-            elif SignupUser.objects.filter(username=username).exists():
-                message = "This username is already taken."
-            else:
-                hashed_password = make_password(password)
-                signup_user = SignupUser.objects.create(
-                    first_name=fname,
-                    last_name=lname,
-                    username=username,
-                    email=email,
-                    password=hashed_password,
-                    role='employee',
-                )
-                signup_user.is_verified = False
-                signup_user.save()
-                otp_obj , created = UserVerification.objects.get_or_create(user=signup_user)
-                raw_otp = otp_obj.generate_verification_code()
-                send_mail(
-                    subject='OTP Verification',
-                    message=f'Your verification code is {raw_otp}',
-                    from_email='arshadotpwala@gmail.com',
-                    recipient_list=[signup_user.email],
-                )
-                request.session['user_id'] = signup_user.id
-                return redirect('verify_otp')
+# def Register(request):
+#     message = None
+#     if request.method == 'POST':
+#         fname = request.POST.get('fname')
+#         lname = request.POST.get('lname')
+#         username = request.POST.get('username')
+#         email = request.POST.get('email')
+#         password = request.POST.get('password')
+#         confirm_password = request.POST.get('confirm_password')
+#         if password == confirm_password:
+#             if User.objects.filter(email=email).exists():
+#                 message = "This email is already registered as a superuser or staff user."
+#             elif SignupUser.objects.filter(email=email).exists():
+#                 message = "This email is already registered."
+#             elif SignupUser.objects.filter(username=username).exists():
+#                 message = "This username is already taken."
+#             else:
+#                 hashed_password = make_password(password)
+#                 signup_user = SignupUser.objects.create(
+#                     first_name=fname,
+#                     last_name=lname,
+#                     username=username,
+#                     email=email,
+#                     password=hashed_password,
+#                     role='employee',
+#                 )
+#                 signup_user.is_verified = False
+#                 signup_user.save()
+#                 otp_obj , created = UserVerification.objects.get_or_create(user=signup_user)
+#                 raw_otp = otp_obj.generate_verification_code()
+#                 send_mail(
+#                     subject='OTP Verification',
+#                     message=f'Your verification code is {raw_otp}',
+#                     from_email='arshadotpwala@gmail.com',
+#                     recipient_list=[signup_user.email],
+#                 )
+#                 request.session['user_id'] = signup_user.id
+#                 return redirect('verify_otp')
 
-                # messages.success(request, "Account successfully created.")
-                # return redirect('login')
-        else:
-            message = "Passwords do not match."
-    return render(request, 'users/register.html', {'message': message})
+#                 # messages.success(request, "Account successfully created.")
+#                 # return redirect('login')
+#         else:
+#             message = "Passwords do not match."
+#     return render(request, 'users/register.html', {'message': message})
 
 def VerifyOTP(request):
     user_id = request.session.get('user_id')
