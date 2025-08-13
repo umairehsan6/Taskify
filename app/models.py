@@ -1372,6 +1372,7 @@ class TaskStatsService:
             logger.info(f"Attempting to stop work for task: {task.task_name}")
             current_session = cls.objects.get(task=task, end_time__isnull=True)
             current_time = timezone.now().astimezone(karachi_tz)
+            
             logger.info(f"Found active session. Current time: {current_time}")
             # If stopping outside office hours, set end time to last office hour
             if not settings.is_within_office_hours(current_time):

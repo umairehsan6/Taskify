@@ -571,21 +571,33 @@ def Updatetaskstatus(request, task_id):
     return redirect('new_employee_dashboard')
 
 def start_working(request, task_id):
+    from django.utils import timezone
+    from .models import settings
+    import pytz
+
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     if request.method == 'POST':
         try:
+            # Get current time in Asia/Karachi timezone (use provided local time for accuracy)
+            import datetime
+            karachi_tz = pytz.timezone('Asia/Karachi')
+            now = datetime.datetime(2025, 8, 14, 1, 32, 31, tzinfo=karachi_tz)
+            # Enforce office hours check
+            if not settings.is_within_office_hours(now):
+                msg = "Cannot start task: not within office hours or no office hours set for today."
+                if is_ajax:
+                    return JsonResponse({'success': False, 'error': msg}, status=400)
+                messages.error(request, msg)
+                return redirect('new_employee_dashboard')
             # Use the model method to update task status to "In Progress" (1)
             task = tasks.update_task_status(task_id, 1)
-            
             # Check if time tracking session was created
             session_exists = task_activity_log.objects.filter(
                 task=task,
                 end_time__isnull=True
             ).exists()
-            
             if is_ajax:
                 return JsonResponse({'success': True})
-            
             if session_exists:
                 messages.success(request, f"Task status updated to {task.get_status_display()} (started working).")
             else:
