@@ -1,0 +1,185 @@
+{% extends "admin/basee.html" %}
+{% block content %}
+    <div id="allProjectsSection" class="glass-card">
+        <h3 class="text-center mb-4">All Projects</h3>
+        <!-- Project Status Filter -->
+        <div class="mb-3">
+            <label for="projectStatusFilter" class="form-label">Filter by Project Status</label>
+            <select id="projectStatusFilter" class="form-select custom-dropdown">
+                <option value="all" selected>All</option>
+                <option value="ongoing">Ongoing</option>
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Project Name</th>
+                        <th>department</th>
+                        <th>Description</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for project in projects %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ project.name }}</td>
+                        <td>{{ project.department.name }}</td>
+                        <td>{{ project.description }}</td>
+                        <td>{{ project.start_date }}</td>
+                        <td>{{ project.end_date }}</td>
+                        <td>
+                            <span class="badge {% if project.status == 0 %}bg-warning 
+                                {% elif project.status == 1 %}bg-primary
+                                {% elif project.status == 2 %}bg-success 
+                                {% elif project.status == 3 %}bg-warning 
+                                {% elif project.status == 4 %}bg-danger
+                                {% endif %} rounded-pill" id="status-badge-{{ project.id }}">
+                                {{ project.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="align-middle">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        Change Status
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="1">Ongoing</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="2">Completed</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="3">Hold</button></li>
+                                        <li><button class="dropdown-item update-status-btn" data-project-id="{{ project.id }}" data-new-status="4">Cancel</button></li>
+                                    </ul>
+                                </div>
+                                {% if project.status == 1 %}
+                                {% if user_role == 'admin' %}
+                                <a href="#" class="btn btn-sm border border-primary text-primary assign-task-link" data-project-id="{{ project.id }}">
+                                    Assign Task
+                                </a>
+                                {% endif %}
+                                {% else %}
+                                <span class="text-muted small">
+                                    {% if project.status == 0 %}
+                                    Project not started
+                                    {% elif project.status == 2 %}
+                                    Project completed
+                                    {% elif project.status == 3 %}
+                                    Project on hold
+                                    {% elif project.status == 4 %}
+                                    Project cancelled
+                                    {% endif %}
+                                </span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center">No projects found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% if selected_project %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = new bootstrap.Modal(document.getElementById('createTaskModal'));
+            modal.show();
+        });
+    </script>
+    {% endif %}
+
+    <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content"
+                style="background: rgba(54, 54, 54, 0.89); color: white; border-radius: 10px; backdrop-filter: blur(10px);">
+                <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+                    <h5 class="modal-title" id="createTaskModalLabel">Create New Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        style="filter: invert(1);"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createTaskForm" method="POST" action="{% url 'create_task' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="project_id" value="{{ selected_project.id }}">
+
+                        <div class="mb-3">
+                            <label for="project_name" class="form-label">Project Name</label>
+                            <input type="text" class="form-control" name="project_name" readonly
+                                value="{{ selected_project.name }}"
+                                style="background: rgba(54, 54, 54, 0.89); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 5px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="assigned_to" class="form-label">Assigned To</label>
+                            <select id="assignedToSelect" name="assigned_to" class="form-select">
+                                {% for emp in filtered_employees %}
+                                <option value="{{ emp.user.id }}">
+                                    {{ emp.user.first_name }} {{ emp.user.last_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="task_name" class="form-label">Task Name</label>
+                            <input type="text" class="form-control" id="task_name" name="task_name" required
+                                style="background: rgba(54, 54, 54, 0.89); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 5px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="task_description" class="form-label">Description</label>
+                            <textarea class="form-control" id="task_description" name="task_description" required rows="3"
+                                style="background: rgba(54, 54, 54, 0.89); border: 1px solid rgba(255, 255, 255, 0.2); color: white; border-radius: 5px;"></textarea>
+                        </div>
+
+                        <div class="mb-3 row">
+                            <div class="col-md-6">
+                                <label for="priority" class="form-label">Priority</label>
+                                <select class="form-select bg-dark text-white border-secondary" id="priority" name="priority" required>
+                                    {% for priority_value, priority_label in task_priorities %}
+                                        <option value="{{ priority_value }}">{{ priority_label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="duedate" class="form-label">Due Date</label>
+                                <input type="date" class="form-control bg-dark text-white border-secondary" id="duedate" name="duedate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 row">
+                            <label for="expected_time" class="form-label">Expected Time</label>
+                            <div class="col">
+                                <label for="expected_time_hours">Hours</label>
+                                <input type="number" class="form-control bg-dark text-white border-secondary" id="expected_time_hours" name="expected_time_hours" placeholder="HH" required>
+                            </div>
+                            <div class="col">
+                                <label for="expected_time_minutes">Minutes</label>
+                                <input type="number" class="form-control bg-dark text-white border-secondary" id="expected_time_minutes" name="expected_time_minutes" placeholder="MM" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Assign</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSRF token for AJAX requests -->
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}" id="csrf-token-for-ajax" />
+{% endblock %}

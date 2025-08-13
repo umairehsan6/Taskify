@@ -1,0 +1,107 @@
+body {
+      background-color: #000000e2;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      padding: 2rem;
+    }
+    .glassCard {
+      /* background: rgba(255, 255, 255, 0.08); */
+      background-image: radial-gradient(
+      circle at -80% -80%,
+        rgba(255, 255, 255, 0.068) 60%,
+        rgba(0, 0, 0, 0.449) 60%);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border-radius: 35px;
+      
+      box-shadow:
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+    0 4px 6px rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .formControl, .formSelect {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+    }
+    .formControl:focus, .formSelect:focus {
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .checkboxContainer {
+      display: flex;
+      flex-direction: column;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 5px;
+    }
+    .checkboxContainer input[type="checkbox"] {
+      display: none;
+    }
+    .checkboxContainer label {
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 10px;
+      margin: 0.3rem 0;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .checkboxContainer input[type="checkbox"]:checked + label {
+      background-color: rgba(255, 255, 255, 0.4);
+      color: black;
+    }
+    .checkboxContainer::-webkit-scrollbar {
+      width: 8px;
+    }
+    .checkboxContainer::-webkit-scrollbar-thumb {
+      background-color: #000;
+      border-radius: 10px;
+    }
+    .title {
+      font-size: 2rem;
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      font-weight: bold;
+      /* text-shadow: 0 0 5px white; */
+    }
+    .btnGlass {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.5rem 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .btnGlass:hover {
+      background: white;
+      color: black;
+    }
+    .sectionTitle {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .sectionHeader {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-align: center;
+      text-shadow: 0 0 3px rgba(255,255,255,0.5);
+    }
+    .scrollList {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .scrollList::-webkit-scrollbar {
+      width: 8px;
+    }
+    .scrollList::-webkit-scrollbar-thumb {
+      background-color: #000;
+      border-radius: 10px;
+    }
+    .container{
+          padding-right: 0px;
+          padding-left: 0px;
+    }

@@ -1,0 +1,92 @@
+{% extends "admin/basee.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/admin/employeeprofile.css' %}" />
+{% endblock %}
+{% block content %}
+  <div class="container d-flex flex-column" style="gap: 1rem;">
+    <div class="glassCard text-center">
+      <div class="title">Employee Profile</div>
+      <div class="row mt-4 text-start">
+        <div class="col-md-2 d-flex align-items-center justify-content-center">
+          
+          <div class="rounded-circle bg-white" style="width: 80px; height: 80px;"><img {% if user_details.profile_picture %} src="{{ user_details.profile_picture.url }}" {% else %} src="#" {% endif %} alt="Profile Picture" class="img-fluid rounded-circle mx-auto"></div>
+          
+        </div>
+        <div class="col-md-10">
+          <div class="row">
+            <div class="col-md-4">Name : {{user.first_name}}<br><hr></div>
+            <div class="col-md-4">Email : {{user.email}}<br><hr></div>
+            {% comment %} {% if user_designation %}
+              
+                <div class="col-md-4">Designations : 
+                  {% for designation in user_designation %} 
+                     {{designation.designation}} ,
+                  {% endfor %}
+                  <br><hr></div>
+            {% endif %} {% endcomment %}
+            <div class="col-md-4">Department :{{user.department}} <br><hr></div>
+            <div class="col-md-4">Role : {{user.role}}<br><hr></div>
+            
+            <div class="col-md-4">Date of birth : {{user_details.date_of_birth}} <br><hr></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sectionHeader">Departments, Designations & Permissions</div>
+
+    <form class="d-flex flex-column gap-3" action="{% url 'admin-emp-edit' %}" method="post">
+        {# Add CSRF token for security #} 
+        {% csrf_token %}
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <div class="glassCard">
+            <div class="sectionTitle">Edit Department</div>
+            <div class="row g-2">
+                <div class="col-md-12 mb-2">
+                    <label>Current Department</label>
+                    <input type="text" class="formControl" disabled value="{{ user.department|default_if_none:'Not Assigned' }}" />
+                </div>
+                <div class="col-md-12 ">
+                    <label>New Department</label>
+                    <select name="department">
+                        {% for dept in departments %}
+                        <option value="{{ dept.id }}">{{ dept.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glassCard">
+        <div class="sectionTitle">Designations</div>
+        <div class="checkboxContainer">
+          {% for key, value in designation_choices %}
+          <input type="checkbox" id="{{ key }}" name="designations" value="{{ key }}" {% if key in current_designations %} checked {% endif %} />
+          <label for="{{ key }}" >{{ value }}</label>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="glassCard">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="sectionTitle">All Permissions</div>
+                  <div class="checkboxContainer">
+                      <input type="checkbox" id="viewDash" /><label for="viewDash">View Dashboard</label>
+                      <input type="checkbox" id="editUsers" /><label for="editUsers">Edit Users</label>
+                      <input type="checkbox" id="manageProjects" /><label for="manageProjects">Manage Projects</label>
+                      <input type="checkbox" id="deleteReports" /><label for="deleteReports">Delete Reports</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-end d-flex justify-content-end gap-2">
+          <a class="btnGlass" href="{% url 'dashboard' %}">Cancel</a>
+          <button type="submit" class="btnGlass">Save Changes</button>
+        </div>
+    </form>
+  </div>
+{% endblock %}

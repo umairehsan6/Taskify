@@ -1,0 +1,39 @@
+{% extends "admin/basee.html" %}
+{% block content %}
+    <div id="departmentSection" class="glass-card">
+        <h3 class="text-center mb-4">Manage departments</h3>
+        <form method="POST" action="{% url 'add_department' %}">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <input type="text" name="department_name" class="form-control" placeholder="New department" required />
+                <button class="btn btn-success" type="submit">Add</button>
+            </div>
+        </form>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>department Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for dept in departments %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ dept.name }}</td>
+                        <td>
+                            <a href="{% url 'delete_department' dept.id %}" class="btn btn-danger btn-sm rounded-pill">Delete</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">No departments found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

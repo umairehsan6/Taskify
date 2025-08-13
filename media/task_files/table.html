@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RestaurantOS Waiter Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            /* Dark Theme Colors */
+            --bg-primary: #0a0a0b;
+            --bg-secondary: #111113;
+            --bg-tertiary: #1a1a1d;
+            --bg-card: #141416;
+            --bg-glass: rgba(20, 20, 22, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --text-muted: #737373;
+            
+            /* Accent Colors */
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #06b6d4;
+            --accent-tertiary: #10b981;
+            --accent-quaternary: #f59e0b;
+            --accent-danger: #ef4444;
+            --accent-info: #3b82f6;
+
+            /* Borders & Shadows */
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.7);
+            
+            /* Blur for Glassmorphism */
+            --blur-sm: blur(4px);
+            --blur-md: blur(8px);
+            --blur-lg: blur(16px);
+        }
+
+        /* Light Theme Overrides */
+        [data-theme="light"] {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f5f5;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.8);
+            --text-primary: #0a0a0b;
+            --text-secondary: #525252;
+            --text-muted: #a3a3a3;
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-strong: rgba(0, 0, 0, 0.12);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+        }
+        
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles - Same as previous doc */
+        .sidebar {
+            width: 80px;
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-lg);
+            border-right: 1px solid var(--border-subtle);
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar:hover {
+            width: 280px;
+        }
+        .sidebar-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .brand {
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            flex-shrink: 0;
+        }
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+        .brand-text {
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-10px);
+            white-space: nowrap;
+        }
+        .sidebar:hover .brand-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2px;
+        }
+        .brand-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .nav {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        .nav-group {
+            margin-bottom: 16px;
+        }
+        .nav-group-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 0 20px 12px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+            white-space: nowrap;
+        }
+        .sidebar:hover .nav-group-title {
+            opacity: 1;
+            visibility: visible;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            gap: 16px;
+            margin: 2px 8px;
+            border-radius: 12px;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(4px);
+        }
+        [data-theme="light"] .nav-item:hover {
+            background: rgba(0, 0, 0, 0.03);
+        }
+        .nav-item.active {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            color: var(--accent-primary);
+        }
+        [data-theme="light"] .nav-item.active {
+            background: rgba(139, 92, 246, 0.08);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+            color: var(--accent-primary);
+        }
+        .nav-item.active::before {
+            height: 32px;
+        }
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+            position: relative;
+        }
+        .nav-label {
+            font-weight: 500;
+            font-size: 15px;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-10px);
+            white-space: nowrap;
+        }
+        .sidebar:hover .nav-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .nav-badge {
+            background: var(--accent-danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 8px;
+            margin-left: auto;
+            min-width: 18px;
+            text-align: center;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            white-space: nowrap;
+        }
+        .sidebar:hover .nav-badge {
+            opacity: 1;
+        }
+
+        /* Main Content Area */
+        .main {
+            flex: 1;
+            margin-left: 80px; /* Initial margin for collapsed sidebar */
+            background: var(--bg-primary);
+            min-height: 100vh;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar:hover + .main {
+            margin-left: 280px; /* Adjust margin when sidebar expands */
+        }
+
+        /* Waiter-specific styling */
+        .header {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-lg);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 20px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            gap: 16px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        /* Minimalistic Table Card Styling */
+        .table-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .table-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            background: var(--bg-secondary);
+        }
+        .table-card.active-table {
+            border-color: var(--accent-primary);
+        }
+        .table-card.bill-due-table {
+            border-color: var(--accent-danger);
+        }
+
+        .table-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .table-id-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .table-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            background: var(--bg-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        .table-name {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .table-guests {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .status-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            color: white;
+            white-space: nowrap;
+            background: var(--text-secondary); /* Consistent badge background */
+        }
+        .status-badge.active-status {
+            background: var(--accent-primary);
+        }
+        .status-badge.bill-due-status {
+            background: var(--accent-danger);
+        }
+        .status-badge.empty-status {
+            background: var(--accent-tertiary);
+        }
+        
+        .table-card-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .table-stats {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .table-card-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .action-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-primary);
+            border: 1px solid var(--border-subtle);
+            background: var(--bg-secondary);
+        }
+        .action-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .action-button.bill-button {
+            color: var(--accent-danger);
+            border-color: var(--accent-danger);
+        }
+        .action-button.bill-button:hover {
+            color: white;
+            background: var(--accent-danger);
+            border-color: var(--accent-danger);
+        }
+
+        .action-button.order-button {
+            color: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+        .action-button.order-button:hover {
+            color: white;
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+        }
+
+
+        /* Floating 'Add Order' button */
+        .floating-add-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 50;
+            width: 56px;
+            height: 56px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .floating-add-button:hover {
+            transform: scale(1.1) translateY(-2px);
+        }
+        
+        /* My Active Orders Section */
+        .my-orders-section {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-strong);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .my-orders-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .my-orders-title {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--accent-primary);
+        }
+
+        .order-list {
+            display: grid;
+            gap: 16px;
+            max-height: 70vh;
+            overflow-y: auto;
+            padding-right: 12px;
+        }
+        
+        /* Scrollbar styles for the order list */
+        .order-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .order-list::-webkit-scrollbar-thumb {
+            background: var(--border-strong);
+            border-radius: 10px;
+        }
+        .order-list::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+        }
+
+        .order-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            border: 1px solid var(--border-subtle);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            background: var(--bg-tertiary);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border-subtle);
+        }
+
+        .order-id-meta {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .order-id-meta .table-id {
+            color: var(--accent-info);
+        }
+
+        .order-status {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 9999px;
+            background: rgba(139, 92, 246, 0.1);
+            color: var(--accent-primary);
+            text-transform: capitalize;
+        }
+        .order-status.preparing {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-quaternary);
+        }
+        .order-status.ready {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-tertiary);
+        }
+        
+        .order-items-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .order-item {
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .order-item::before {
+            content: '•';
+            color: var(--accent-primary);
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        .order-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px dashed var(--border-subtle);
+        }
+
+        .order-time {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .served-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-subtle);
+            color: var(--accent-tertiary);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .served-btn:hover {
+            background: var(--accent-tertiary);
+            color: white;
+            border-color: var(--accent-tertiary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Custom Message Box Styling */
+        .message-box-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: var(--blur-sm);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .message-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-strong);
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .message-box-text {
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        
+        .message-box-btn {
+            padding: 12px 24px;
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .message-box-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .theme-toggle {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 8px;
+            border-radius: 9999px;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-primary);
+        }
+        
+        .theme-toggle:hover svg {
+            stroke: white;
+        }
+        
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Responsive Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+            }
+            .sidebar.mobile-open {
+                width: 280px;
+            }
+            .main {
+                margin-left: 0;
+            }
+        }
+
+        /* Mobile Menu Toggle button */
+        .mobile-menu-toggle {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+            .main {
+                margin-left: 0 !important; /* Force override for mobile */
+            }
+        }
+    </style>
+</head>
+<body data-theme="dark" class="bg-primary min-h-screen">
+
+    <!-- Mobile Menu Toggle Button -->
+    <button id="menuToggle" class="mobile-menu-toggle fixed top-4 left-4 z-[2000] p-3 rounded-full bg-bg-card border border-border-subtle shadow-lg">
+        <i class="fa-solid fa-bars text-xl text-text-primary"></i>
+    </button>
+    
+    <!-- Ultra Modern Sidebar -->
+    <aside id="sidebar" class="sidebar">
+        <div class="sidebar-content">
+            <!-- Brand Logo -->
+            <div class="brand">
+                <div class="brand-icon">🍽️</div>
+                <div class="brand-text">
+                    <h1 class="brand-title">RestaurantOS</h1>
+                    <p class="brand-subtitle">Waiter Panel</p>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="nav">
+                <div class="nav-group">
+                    <p class="nav-group-title">Main</p>
+                    <a href="#" class="nav-item active">
+                        <div class="nav-icon"><i class="fas fa-home"></i></div>
+                        <span class="nav-label">Home</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon"><i class="fas fa-list-ul"></i></div>
+                        <span class="nav-label">Orders</span>
+                        <div class="nav-badge">7</div>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon"><i class="fas fa-table"></i></div>
+                        <span class="nav-label">Tables</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon"><i class="fas fa-utensils"></i></div>
+                        <span class="nav-label">Kitchen</span>
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <p class="nav-group-title">Settings</p>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+                        <span class="nav-label">Profile</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <div class="nav-icon"><i class="fas fa-sign-out-alt"></i></div>
+                        <span class="nav-label">Logout</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main">
+        <!-- Top Navbar / Header -->
+        <header class="header">
+            <div class="flex items-center gap-4">
+                <div class="flex flex-col">
+                    <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-accent-primary to-accent-secondary">Assigned Tables</h2>
+                    <p class="text-text-secondary text-sm">Overview of your current table assignments.</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 text-text-secondary text-sm md:text-base">
+                    <span id="current-time" class="font-medium"></span>
+                    <span class="text-text-muted hidden md:inline-block">|</span>
+                    <span class="flex items-center gap-1 font-medium hidden md:flex">
+                        <i class="fa-solid fa-clock"></i>
+                        <span>Shift: <span id="shift-timer">00:00:00</span></span>
+                    </span>
+                </div>
+                <button id="theme-toggle" class="theme-toggle" onclick="toggleTheme()">
+                    <i id="sun-icon" class="fa-solid fa-sun" style="display: none;"></i>
+                    <i id="moon-icon" class="fa-solid fa-moon" style="display: block;"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Screen Content -->
+        <div class="main-content">
+            <!-- Tables Grid Section -->
+            <section>
+                <div id="tables-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <!-- Table cards will be injected here by JS -->
+                </div>
+            </section>
+            
+            <!-- My Active Orders Section -->
+            <section class="my-orders-section">
+                <header class="my-orders-header">
+                    <h3 class="my-orders-title">
+                        <i class="fa-solid fa-bell"></i>
+                        My Active Orders
+                    </h3>
+                </header>
+                <div id="my-orders-list" class="order-list">
+                    <!-- Static order cards to demonstrate layout -->
+                    <div class="order-card">
+                        <header class="order-header">
+                            <div class="order-id-meta">Order for Table <span class="table-id">3</span></div>
+                            <span class="order-status preparing">preparing</span>
+                        </header>
+                        <ul class="order-items-list">
+                            <li class="order-item">Caesar Salad</li>
+                            <li class="order-item">Steak Frites</li>
+                        </ul>
+                        <footer class="order-card-footer">
+                            <div class="order-time">
+                                <i class="fa-solid fa-stopwatch-20"></i>
+                                <span>21m 32s</span>
+                            </div>
+                            <button class="served-btn" onclick="markAsServed(3)">
+                                <i class="fa-solid fa-check-double"></i>
+                                Served
+                            </button>
+                        </footer>
+                    </div>
+                    
+                    <div class="order-card">
+                        <header class="order-header">
+                            <div class="order-id-meta">Order for Table <span class="table-id">5</span></div>
+                            <span class="order-status ready">ready</span>
+                        </header>
+                        <ul class="order-items-list">
+                            <li class="order-item">Chicken Alfredo</li>
+                            <li class="order-item">Side of Fries</li>
+                        </ul>
+                        <footer class="order-card-footer">
+                            <div class="order-time">
+                                <i class="fa-solid fa-stopwatch-20"></i>
+                                <span>12m 15s</span>
+                            </div>
+                            <button class="served-btn" onclick="markAsServed(5)">
+                                <i class="fa-solid fa-check-double"></i>
+                                Served
+                            </button>
+                        </footer>
+                    </div>
+
+                    <div class="order-card">
+                        <header class="order-header">
+                            <div class="order-id-meta">Order for Table <span class="table-id">1</span></div>
+                            <span class="order-status preparing">preparing</span>
+                        </header>
+                        <ul class="order-items-list">
+                            <li class="order-item">Truffle Risotto</li>
+                            <li class="order-item">Spicy Tuna Roll</li>
+                            <li class="order-item">Green Tea</li>
+                        </ul>
+                        <footer class="order-card-footer">
+                            <div class="order-time">
+                                <i class="fa-solid fa-stopwatch-20"></i>
+                                <span>08m 50s</span>
+                            </div>
+                            <button class="served-btn" onclick="markAsServed(1)">
+                                <i class="fa-solid fa-check-double"></i>
+                                Served
+                            </button>
+                        </footer>
+                    </div>
+                    
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Floating 'Add Order' Button -->
+    <button onclick="handleFloatingAction('take_order')" class="floating-add-button">
+        <i class="fa-solid fa-plus"></i>
+    </button>
+
+    <!-- Custom Message Box -->
+    <div class="message-box-overlay" id="message-box-overlay">
+        <div class="message-box">
+            <p class="message-box-text" id="message-box-text"></p>
+            <button class="message-box-btn" onclick="closeMessageBox()">OK</button>
+        </div>
+    </div>
+    
+    <script>
+        const body = document.body;
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        const currentTimeEl = document.getElementById('current-time');
+        const shiftTimerEl = document.getElementById('shift-timer');
+        const messageBoxOverlay = document.getElementById('message-box-overlay');
+        const messageBoxText = document.getElementById('message-box-text');
+
+        let shiftStartTime = new Date();
+
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('mobile-open');
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menuToggle');
+            
+            if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                sidebar.classList.remove('mobile-open');
+            }
+        });
+
+        /**
+         * Simulates a data source for assigned tables and orders.
+         */
+        const tables = [
+            { id: 1, guests: 2, status: 'Order Placed', time: '12m' },
+            { id: 2, guests: 4, status: 'Empty', time: '' },
+            { id: 3, guests: 3, status: 'Waiting Bill', time: '5m' },
+            { id: 4, guests: 2, status: 'Empty', time: '' },
+            { id: 5, guests: 6, status: 'Order Placed', time: '30m' },
+            { id: 6, guests: 1, status: 'Empty', time: '' },
+            { id: 7, guests: 5, status: 'Order Placed', time: '7m' },
+            { id: 8, guests: 2, status: 'Order Placed', time: '21m' }
+        ];
+
+        /**
+         * Renders the table cards to the DOM with a minimalistic design.
+         */
+        function renderTables() {
+            const container = document.getElementById('tables-grid');
+            container.innerHTML = tables.map(table => {
+                let cardClass = '';
+                let statusClass = '';
+                let statusText = '';
+                
+                switch(table.status) {
+                    case 'Order Placed':
+                        cardClass = 'active-table';
+                        statusClass = 'active-status';
+                        statusText = 'Active';
+                        break;
+                    case 'Waiting Bill':
+                        cardClass = 'bill-due-table';
+                        statusClass = 'bill-due-status';
+                        statusText = 'Bill Due';
+                        break;
+                    case 'Empty':
+                        cardClass = ''; // No special class for empty
+                        statusClass = 'empty-status';
+                        statusText = 'Empty';
+                        break;
+                }
+                
+                return `
+                    <div class="table-card ${cardClass}">
+                        <div class="table-card-header">
+                            <div class="table-id-group">
+                                <div class="table-icon">
+                                    <i class="fa-solid fa-chair text-text-primary"></i>
+                                </div>
+                                <div>
+                                    <h4 class="table-name">Table ${table.id}</h4>
+                                    <p class="table-guests">${table.guests} Guests</p>
+                                </div>
+                            </div>
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="table-card-body">
+                            <div class="table-stats">
+                                <span class="flex items-center gap-1">
+                                    <i class="fa-solid fa-stopwatch-20"></i>
+                                    <span>${table.time ? table.time : 'New'}</span>
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <i class="fa-solid fa-handshake"></i>
+                                    <span>Order Taken</span>
+                                </span>
+                            </div>
+                            <div class="table-card-actions">
+                                <button class="action-button order-button" onclick="handleTableAction('open_order', ${table.id})">
+                                    <i class="fa-solid fa-utensils"></i> Order
+                                </button>
+                                <button class="action-button bill-button" onclick="handleTableAction('bill', ${table.id})">
+                                    <i class="fa-solid fa-file-invoice"></i> Bill
+                                </button>
+                                <button class="action-button" onclick="handleTableAction('clear_table', ${table.id})">
+                                    <i class="fa-solid fa-broom"></i> Clear
+                                </button>
+                                <button class="action-button" onclick="handleTableAction('transfer', ${table.id})">
+                                    <i class="fa-solid fa-shuffle"></i> Transfer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /**
+         * Updates the current time and shift timer every second.
+         */
+        function updateTimers() {
+            const now = new Date();
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            currentTimeEl.textContent = now.toLocaleTimeString('en-US', timeOptions);
+
+            const elapsed = Math.floor((now - shiftStartTime) / 1000);
+            const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+            const seconds = String(elapsed % 60).padStart(2, '0');
+            shiftTimerEl.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        /**
+         * Shows a custom message box.
+         * @param {string} message The message to display.
+         */
+        function showMessageBox(message) {
+            messageBoxText.textContent = message;
+            messageBoxOverlay.style.display = 'flex';
+        }
+
+        /**
+         * Hides the custom message box.
+         */
+        function closeMessageBox() {
+            messageBoxOverlay.style.display = 'none';
+        }
+
+        /**
+         * Handles the click on the floating `+` button.
+         */
+        function handleFloatingAction(action) {
+            if (action === 'take_order') {
+                showMessageBox(`Ready to take a new order! Connect your backend here.`);
+            }
+        }
+
+        /**
+         * Handles actions from the table cards.
+         * @param {string} action The action to perform (e.g., 'open_order', 'bill').
+         * @param {number} tableId The ID of the table.
+         */
+        function handleTableAction(action, tableId) {
+            let message = '';
+            switch(action) {
+                case 'open_order':
+                    showMessageBox(`Opening order for Table ${tableId}.`);
+                    break;
+                case 'bill':
+                    showMessageBox(`Sending bill request for Table ${tableId}.`);
+                    break;
+                case 'clear_table':
+                    showMessageBox(`Clearing Table ${tableId}.`);
+                    break;
+                case 'transfer':
+                    showMessageBox(`Transferring Table ${tableId} to another waiter.`);
+                    break;
+                default:
+                    showMessageBox(`Action '${action}' requested for Table ${tableId}.`);
+                    break;
+            }
+        }
+        
+        /**
+         * Marks an order as served.
+         * @param {number} tableId The ID of the table the order is for.
+         */
+        function markAsServed(tableId) {
+            showMessageBox(`Order for Table ${tableId} has been marked as served.`);
+            // Here, you would send a request to your backend to update the order status.
+        }
+        
+        /**
+         * Toggles between dark and light themes.
+         */
+        function toggleTheme() {
+            const currentTheme = body.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        // Initial setup and event listeners
+        window.onload = function() {
+            // Render the initial data
+            renderTables();
+
+            // Set up the timers
+            updateTimers();
+            setInterval(updateTimers, 1000);
+        };
+    </script>
+</body>
+</html>

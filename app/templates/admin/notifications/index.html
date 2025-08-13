@@ -1,0 +1,49 @@
+{% extends "admin/basee.html" %}
+{% load static %}
+
+{% block title %}Admin Notifications | Taskify{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 row">
+        <div class="d-flex justify-content-between align-items-center col-md-6">
+            <h2>All Notifications</h2>
+        </div>
+        <div class="col-md-6 row justify-content-end">
+            <a href="{% url 'admin_statistics' %}" class="btn btn-primary col-md-5">
+                <i class="fa fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="glass-card h-100">
+                <div class="card-body">
+                    {% if notifications %}
+                        <div class="notification-list-vertical" id="notificationsContainer">
+                            {% for notification in notifications %}
+                                <div class="notification-item-vertical d-flex align-items-start mb-4 p-3 {% if not notification.is_read %}unread{% endif %}" 
+                                     data-notification-id="{{ notification.id }}" 
+                                     style="border-bottom: 1px solid #444;{% if forloop.last %} border-bottom: none;{% endif %}">
+                                    <i class="fa fa-bell notification-icon-vertical me-3"></i>
+                                    <div class="notification-content-vertical flex-grow-1">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <span class="notification-title-vertical me-2">{{ notification.message }}</span>
+                                            {% if not notification.is_read %}
+                                                <span class="notification-new-vertical ms-2 badge bg-primary" id="new-badge-{{ notification.id }}">New</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="notification-status-vertical text-muted small">{{ notification.timestamp|date:"F j, Y, g:i a" }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text">No notifications to display.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

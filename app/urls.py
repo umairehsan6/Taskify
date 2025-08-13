@@ -1,0 +1,80 @@
+from . import views
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from .views import employee_today_stats_json
+
+urlpatterns = [
+    path('', views.Login, name='login'),   
+    path('register/', views.Register, name='register'),  
+    path('logout/', views.Logout, name='logout'),
+    path('toggle-status/<int:user_id>/', views.ToggleUserStatus, name='toggle_status'), 
+    path('promote-user/<int:user_id>/<str:new_role>/', views.PromoteUser, name='promote_user'), 
+    path('register-user-by-admin/', views.Register_UserbyAdmin, name='register_user_by_admin'),
+    path('verify-otp/', views.VerifyOTP, name='verify_otp'),
+    path('forgot-password/', views.ForgetPassword, name='forgot_password'),
+    path('confirm-newpass/', views.ConfirmNewPassword, name='confirm_newpass'),
+    path('admin_statistics/', views.admindashboard_stats, name='admin_statistics'),
+    path('employee/', views.dashboard, name='dashboard'),  
+    # path('employee_dashboard/', views.employee_dashboard, name='employee_dashboard'),
+    path('employee-dashboard/', views.new_employee_dashboard, name='new_employee_dashboard'),
+    path('employee_statistics/' , views.employee_statistics, name='employee_statistics'),
+    path('employee-today-stats-json/', employee_today_stats_json, name='employee-today-stats-json'),
+    #department management
+    path('add-department/', views.Adddepartments, name='add_department'),
+    path('delete-department/<int:department_id>/', views.Deletedepartment, name='delete_department'),
+    path('assign-department/<int:user_id>/<int:department_id>/', views.Assigndepartment, name='assign_department'),
+    #projects management
+    path('add-projects/', views.Addprojects, name='add-projects'),
+    path('update-project-status/<int:project_id>/<int:new_status>/', views.Updateprojectstatus, name='update-project-status'),
+    path('all-projects/', views.Allprojects, name='all-projects'),
+    path('get-project-tasks/<int:project_id>/', views.get_project_tasks, name='get-project-tasks'),
+    path('check-project-unread/<int:project_id>/', views.check_project_unread, name='check-project-unread'),
+    path('test-project-notification/<int:project_id>/', views.test_project_notification, name='test-project-notification'),
+    path('get-project-employees/<int:project_id>/', views.get_project_employees, name='get_project_employees'),
+    #tasks
+    path('create-task/', views.CreateTask, name='create_task'),
+    path('update-task-status/<int:task_id>/', views.Updatetaskstatus, name='update_task_status'),
+    path('start-task/<int:task_id>/', views.start_task, name='start_task'),
+    path('complete-task/<int:task_id>/', views.Updatetaskstatus, name='complete_task'),
+    path('start-working/<int:task_id>/', views.start_working, name='start_working'),
+    path('stop-working/<int:task_id>/', views.stop_working, name='stop_working'),
+    path('delete-task/<int:project_id>/', views.DeleteTask, name='delete_task'),
+    path('get-tasks/', views.Gettasks, name='get-tasks'),
+    path('assigned-tasks/', views.Assignedtasks, name='assigned_tasks'),
+    # path('assigned-tasks-team/', views.AssignedtasksTeam, name='assigned_tasks_team'),
+    path('upload_task_file/<int:task_id>/', views.upload_task_file, name='upload_task_file'),
+    path('upload_task_report/<int:task_id>/', views.upload_task_report, name='upload_task_report'),
+    path('download_task_file/<int:task_id>/', views.download_task_file, name='download_task_file'),
+    path('approve-task/<int:task_id>/', views.approve_task, name='approve_task'),
+    # Task Time Tracking
+    path('dashboard/settings/', views.dashboard_settings, name='dashboard_settings'),
+    path('dashboard/settings/add/', views.add_office_hours, name='add_office_hours'),
+    path('dashboard/settings/edit/', views.edit_office_hours, name='edit_office_hours'),
+    path('dashboard/settings/delete/', views.delete_office_hours, name='delete_office_hours'),
+    path('dashboard/settings/start-tracking/', views.start_tracking, name='start_tracking'),
+    path('about-company/', views.about_company, name='about_company'),
+    path('employee/company-profile/', views.employee_company_profile, name='employee_company_profile'),
+    path('employee_profile/', views.employee_profile, name='employee_profile'),
+    # get task comments
+    path('get-task-comments/<int:task_id>/', views.get_task_comments, name='get-task-comments'),
+    # path('add-task-comment/', views.add_task_comment, name='add-task-comment'),
+    # path('check-unread-messages/<int:task_id>/', views.check_unread_messages, name='check-unread-messages'),
+
+    path('pending-tasks/' , views.pending_tasks_json , name ='pending-tasks'),
+    path('pending-tasks-json/', views.pending_tasks_json, name='pending-tasks-json'),
+    path('approval-pending-tasks-json/', views.approval_pending_tasks_json, name='approval-pending-tasks-json'),
+    path('ongoing-tasks/', views.ongoing_tasks_json, name='ongoing_tasks_json'),
+    path('ongoing-tasks-json/', views.ongoing_tasks_json, name='ongoing-tasks-json'),
+    path('get-task-report/<int:task_id>/', views.get_task_report, name='get_task_report'),
+    path('get-task-file/<int:task_id>/', views.get_task_file, name='get_task_file'),
+    path('employee-notifications-json/', views.employee_notifications_json, name='employee-notifications-json'),
+    path('mark-notifications-read/', views.mark_notifications_read, name='mark-notifications-read'),
+#all notifications
+    path('all-notifications/', views.allNotificaations, name='all-notifications'),
+    path('read-all-notifications/', views.readAllNotifications, name='read-all-notifications'),
+    path('admin-notifications-json/', views.admin_notifications_json, name='admin-notifications-json'),
+    path('admin-all-notifications/', views.adminAllNotifications, name='admin-all-notifications'),
+    path('employee-profile-admin/<int:user_id>/', views.employee_profile_admin, name='employee-profile-admin'),
+    path('admin-editing-emp-profile/' , views.admin_editing_emp_profile, name = 'admin-emp-edit'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

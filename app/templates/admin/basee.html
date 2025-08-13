@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% if company_name %}{{ company_name }} - {% endif %}Admin Dashboard</title>
+    {% if company_logo %}
+    <link rel="icon" type="image/x-icon" href="{{ company_logo.url }}">
+    {% endif %}
+    <link href="{% static 'assets/css/bootstrap/bootstrap.min.css' %}" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'assets/css/admin/dashboard.css' %}" />
+    <{% block extra_css %}{% endblock %}
+    
+  </head>
+  <body>
+    {% include "admin/components/topbar.html" %}
+    {% include "admin/components/sidebar.html" %}
+    <div class="main-content ">
+        {% if messages %}
+        <div class="text-center">
+          {% for message in messages %}
+          <p class="fw-bold text-{{ message.tags }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+        {% block extra_js %}
+        {% endblock %}  
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="{% static 'assets/js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'assets/js/admin/script.js' %}"></script>
+  </body>
+</html>
