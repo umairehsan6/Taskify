@@ -39,8 +39,9 @@
         <button type="submit" class="signup-button">Login</button>
         </form>
         <div class="register-link">
-          {% comment %} <p>Dont have an account? <a href="{% url 'register' %}">SignUp</a></p> {% endcomment %}
+          <p>Dont have an account? <a href="{% url 'register' %}">SignUp</a></p>
           <p>Forgot Password? <a href="{% url 'forgot_password' %}">Click Here</a></p>
+          <p>Need Login Credentials? <a href="{% url 'credentials' %}" style="color: #007bff; font-weight: 600;">View Credentials</a></p>
       </div>
     </div>
   </div>

@@ -691,7 +691,20 @@ class task_activity_log(models.Model):
 
     def calculate_duration(self):
         if self.end_time:
-            self.duration = self.end_time - self.start_time
+            # Ensure both times are timezone-aware for proper calculation
+            start_time = self.start_time
+            end_time = self.end_time
+            
+            # If start_time is naive, assume it's UTC
+            if start_time.tzinfo is None:
+                start_time = timezone.make_aware(start_time)
+            
+            # If end_time is naive, assume it's UTC
+            if end_time.tzinfo is None:
+                end_time = timezone.make_aware(end_time)
+            
+            # Calculate duration
+            self.duration = end_time - start_time
             self.save()
         return self.duration
     @classmethod
@@ -753,11 +766,12 @@ class task_activity_log(models.Model):
             end_time__isnull=True
         )
         for session in ongoing_sessions:
+            # Use current UTC time for consistency
             session.end_time = timezone.now()
             session.calculate_duration()
             session.save()
 
-        # Create new session
+        # Create new session with current UTC time
         return cls.objects.create(task=task)
     
 
@@ -769,24 +783,40 @@ class task_activity_log(models.Model):
         try:
             logger.info(f"Attempting to stop work for task: {task.task_name}")
             current_session = cls.objects.get(task=task, end_time__isnull=True)
+            
+            # Get current time in Karachi timezone
             current_time = timezone.now().astimezone(karachi_tz)
             logger.info(f"Found active session. Current time: {current_time}")
+            
             # If stopping outside office hours, set end time to last office hour
+            # but ensure it's not before the start time
             if not settings.is_within_office_hours(current_time):
                 day_name = current_time.strftime('%A').lower()
                 try:
                     office_hours = settings.objects.get(day=day_name)
-                    current_time = karachi_tz.localize(
+                    # Create timezone-aware datetime for office end time
+                    office_end_datetime = karachi_tz.localize(
                         timezone.datetime.combine(current_time.date(), office_hours.end_time)
                     )
-                    logger.info(f"Adjusted end time to office hours end: {current_time}")
+                    # Convert start time to Karachi timezone for comparison
+                    start_time_karachi = current_session.start_time.astimezone(karachi_tz)
+                    # Only use office end time if it's after the start time
+                    if office_end_datetime > start_time_karachi:
+                        current_time = office_end_datetime
+                        logger.info(f"Adjusted end time to office hours end: {current_time}")
+                    else:
+                        logger.info(f"Office end time is before start time, using current time: {current_time}")
                 except settings.DoesNotExist:
                     logger.warning(f"No office hours found for {day_name}")
-            current_session.end_time = current_time
-            logger.info(f"Set end_time to: {current_time}")
+            
+            # Convert to UTC for storage (Django stores in UTC)
+            current_session.end_time = current_time.astimezone(pytz.UTC)
+            logger.info(f"Set end_time to: {current_session.end_time} (UTC)")
+            
             # Calculate duration
             duration = current_session.calculate_duration()
             logger.info(f"Calculated duration: {duration}")
+            
             # Force save to ensure duration is stored
             current_session.save(force_update=True)
             logger.info("Saved session with duration")
@@ -1347,59 +1377,6 @@ class TaskStatsService:
 
 
 
-    @classmethod
-    def start_work(cls, task):
-        # End any ongoing sessions for this task
-        ongoing_sessions = cls.objects.filter(
-            task=task,
-            end_time__isnull=True
-        )
-        for session in ongoing_sessions:
-            session.end_time = timezone.now()
-            session.calculate_duration()
-            session.save()
-
-        # Create new session
-        return cls.objects.create(task=task)
-    
-
-
-    @classmethod
-    def stop_work(cls, task):
-        logger = logging.getLogger(__name__)
-        karachi_tz = pytz.timezone('Asia/Karachi')
-        try:
-            logger.info(f"Attempting to stop work for task: {task.task_name}")
-            current_session = cls.objects.get(task=task, end_time__isnull=True)
-            current_time = timezone.now().astimezone(karachi_tz)
-            
-            logger.info(f"Found active session. Current time: {current_time}")
-            # If stopping outside office hours, set end time to last office hour
-            if not settings.is_within_office_hours(current_time):
-                day_name = current_time.strftime('%A').lower()
-                try:
-                    office_hours = settings.objects.get(day=day_name)
-                    current_time = karachi_tz.localize(
-                        timezone.datetime.combine(current_time.date(), office_hours.end_time)
-                    )
-                    logger.info(f"Adjusted end time to office hours end: {current_time}")
-                except settings.DoesNotExist:
-                    logger.warning(f"No office hours found for {day_name}")
-            current_session.end_time = current_time
-            logger.info(f"Set end_time to: {current_time}")
-            # Calculate duration
-            duration = current_session.calculate_duration()
-            logger.info(f"Calculated duration: {duration}")
-            # Force save to ensure duration is stored
-            current_session.save(force_update=True)
-            logger.info("Saved session with duration")
-            return current_session
-        except cls.DoesNotExist:
-            logger.warning(f"No active session found for task: {task.task_name}")
-            return None
-        except Exception as e:
-            logger.error(f"Error stopping work: {str(e)}")
-            return None
 
     @staticmethod
     def get_agency_monthly_stats(year, month):

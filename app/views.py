@@ -40,6 +40,10 @@ def Register(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+
+        
+                
+            
         if password == confirm_password:
             if User.objects.filter(email=email).exists():
                 message = "This email is already registered as a superuser or staff user."
@@ -233,6 +237,10 @@ def ConfirmNewPassword(request):
 def Logout(request):
     request.session.flush()
     return redirect('login')
+
+def Credentials(request):
+    """Display login credentials for admin and teamlead users"""
+    return render(request, 'user/credentials/index.html')
 
 def ToggleUserStatus(request, user_id):
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
@@ -578,10 +586,9 @@ def start_working(request, task_id):
     is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     if request.method == 'POST':
         try:
-            # Get current time in Asia/Karachi timezone (use provided local time for accuracy)
-            import datetime
+            # Get current time in Asia/Karachi timezone
             karachi_tz = pytz.timezone('Asia/Karachi')
-            now = datetime.datetime(2025, 8, 14, 1, 32, 31, tzinfo=karachi_tz)
+            now = timezone.now().astimezone(karachi_tz)
             # Enforce office hours check
             if not settings.is_within_office_hours(now):
                 msg = "Cannot start task: not within office hours or no office hours set for today."

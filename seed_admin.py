@@ -6,15 +6,15 @@ class Command(BaseCommand):
     help = 'Seeds a default admin user (without department) if not present.'
 
     def handle(self, *args, **options):
-        username = 'admin'
-        email = 'admin@example.com'
+        username = 'teamlead'
+        email = 'admin12@example.com'
         password = '1111'  # Change this after first login!
-        first_name = 'Admin'
+        first_name = 'Teamlead'
         last_name = 'User'
 
-        if users.objects.filter(username=username, role='admin').exists():
+        if users.objects.filter(username=username, role='teamlead').exists():
             self.stdout.write(
-                self.style.WARNING(f"Admin user '{username}' already exists. No action taken.")
+                self.style.WARNING(f"Teamlead user '{username}' already exists. No action taken.")
             )
             return
 
@@ -24,10 +24,10 @@ class Command(BaseCommand):
             password=make_password(password),
             first_name=first_name,
             last_name=last_name,
-            role='admin',
+            role='teamlead',
             status=True,
             is_verified=True
         )
         self.stdout.write(
-            self.style.SUCCESS(f"Admin user '{username}' created with password '{password}'. Please change this password after first login!")
+            self.style.SUCCESS(f"Teamlead user '{username}' created with password '{password}'. Please change this password after first login!")
         ) 
