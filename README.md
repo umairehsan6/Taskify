@@ -18,7 +18,7 @@
 
 | Admin Dashboard | Task Board | Analytics |
 |----------------|-----------|-----------|
-| ![dashboard](add-screenshot-url) | ![tasks](add-screenshot-url) | ![analytics](add-screenshot-url) |
+| ![dashboard](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/admin/admin-dashboard.png) | ![tasks](add-screenshot-url) | ![analytics](add-screenshot-url) |
 
 ---
 
