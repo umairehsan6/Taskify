@@ -16,9 +16,9 @@
 
 > Add screenshots here — dashboard, task board, team view, analytics
 
-| Admin Dashboard | Task Board | Analytics |
+| Admin Dashboard | Employee Dashboard | Manage Users |
 |----------------|-----------|-----------|
-| ![dashboard](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/admin/admin-dashboard.png) | ![Employee Dashboard](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/employee/Home%20Page.png) | ![analytics](add-screenshot-url) |
+| ![dashboard](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/admin/admin-dashboard.png) | ![Employee Dashboard](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/employee/Home%20Page.png) | ![Manage Users]([add-screenshot-url](https://github.com/umairehsan6/Taskify/blob/master/screen%20shots/admin/manage-users.png)) |
 
 ---
 
