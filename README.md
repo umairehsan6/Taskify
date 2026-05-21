@@ -1,6 +1,5 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=11,20,24&height=150&section=header&text=Taskify&fontSize=52&fontColor=fff&animation=twinkling&fontAlignY=38&desc=Team%20Management%20%26%20Collaboration%20Tool&descAlignY=60&descSize=16"/>
 
 [![Django](https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white)](https://djangoproject.com/)
 [![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
@@ -14,7 +13,6 @@
 
 ## 📸 Screenshots
 
-> Add screenshots here — dashboard, task board, team view, analytics
 
 | Admin Dashboard | Employee Dashboard | Manage Users |
 |----------------|-----------|-----------|
